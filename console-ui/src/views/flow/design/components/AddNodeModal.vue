@@ -21,33 +21,93 @@ const handleClick = (e: MouseEvent) => {
 };
 
 const flowNodes = [
-  {
-    name: '方法节点',
-    type: ElementType.METHOD,
-    icon: IconMethod,
-  },
+  // {
+  //   name: '方法节点',
+  //   type: ElementType.METHOD,
+  //   icon: IconMethod,
+  // },
   {
     name: '判断节点',
     type: ElementType.CONDITION,
     icon: IconCondition,
   },
+  // {
+  //   name: '赋值节点',
+  //   type: ElementType.ASSIGN,
+  //   icon: IconAssign,
+  // },
+  // {
+  //   name: '代码节点',
+  //   type: ElementType.CODE,
+  //   icon: IconCode,
+  // },
   {
-    name: '赋值节点',
-    type: ElementType.ASSIGN,
-    icon: IconAssign,
+    name: 'DynamicRoute',
+    type: ElementType.DYNAMIC_ROUTE,
+    icon: IconCode,
   },
   {
-    name: '代码节点',
-    type: ElementType.CODE,
+    name: 'Marshal',
+    type: ElementType.MARSHAL,
+    icon: IconCode,
+  },
+  {
+    name: 'UnMarshal',
+    type: ElementType.UNMARSHAL,
+    icon: IconCode,
+  },
+  {
+    name: 'Set Header',
+    type: ElementType.SET_HEADER,
+    icon: IconCode,
+  },
+  {
+    name: 'Transform',
+    type: ElementType.TRANSFORM,
+    icon: IconCode,
+  },
+  {
+    name: 'Log',
+    type: ElementType.LOG,
+    icon: IconCode,
+  },
+  {
+    name: 'ConvertBodyTo',
+    type: ElementType.CONVERT_BODY_TO,
+    icon: IconCode,
+  },
+  {
+    name: 'RecipientList',
+    type: ElementType.RECIPIENT_LIST,
+    icon: IconCode,
+  },
+  {
+    name: 'WebService',
+    type: ElementType.WEBSERVICE,
     icon: IconCode,
   },
 ];
 
 const flowDataNodes = [
+  // {
+  //   name: 'MySql节点',
+  //   type: ElementType.MYSQL,
+  //   icon: IconMysql,
+  // },
   {
-    name: 'MySql节点',
-    type: ElementType.MYSQL,
-    icon: IconMysql,
+    name: 'netty-http',
+    type: ElementType.NETTY_HTTP,
+    icon: IconCode,
+  },
+  {
+    name: 'http',
+    type: ElementType.HTTP,
+    icon: IconCode,
+  },
+  {
+    name: 'direct',
+    type: ElementType.DIRECT,
+    icon: IconCode,
   },
 ];
 
@@ -72,14 +132,14 @@ defineExpose({ open });
 <template>
   <el-dialog v-model="visible" title="" class="design-add-node-modal" :width="500" :show-close="false" align-center>
     <el-anchor :offset="70" :container="containerRef" direction="horizontal" @click="handleClick">
-      <el-anchor-link href="#baseNodes" title="基础节点" />
-      <el-anchor-link href="#dataNodes" title="数据节点" />
+      <el-anchor-link href="#baseNodes" title="处理器节点" />
+      <el-anchor-link href="#dataNodes" title="组件节点" />
     </el-anchor>
     <el-row>
       <el-col>
         <div ref="containerRef" style="height: 300px; overflow-y: auto">
           <div id="baseNodes" class="node-types">
-            <div class="node-type-name">基础节点</div>
+            <div class="node-type-name">处理器节点</div>
             <div class="node-type" v-for="item in flowNodes" :key="item.type" @click="addNode(item)">
               <span
                 ><el-icon :size="25"><component :is="item.icon"></component></el-icon
@@ -89,7 +149,7 @@ defineExpose({ open });
           </div>
 
           <div id="dataNodes" class="node-types">
-            <div class="node-type-name">数据节点</div>
+            <div class="node-type-name">组件节点</div>
             <div class="node-type" v-for="item in flowDataNodes" :key="item.type" @click="addNode(item)">
               <el-icon :size="25"><component :is="item.icon"></component></el-icon>
               <span class="node-text">{{ item.name }}</span>

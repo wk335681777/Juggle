@@ -50,5 +50,19 @@ public enum ElementTypeEnum {
      * 判断节点
      */
     CONDITION,
+
+    NETTY_HTTP,
+    CONVERT_BODY_TO,
+    DIRECT,
+    DYNAMIC_ROUTE,
+    RECIPIENT_LIST,
+    HTTP ,
+    MARSHAL,
+    UNMARSHAL ,
+    SET_HEADER,
+    TRANSFORM,
+    LOG,
+    WEBSERVICE,
+
     ASSIGN;
 }

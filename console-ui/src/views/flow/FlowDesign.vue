@@ -82,6 +82,7 @@ onMounted(async () => {
                 const branch = parentRaw?.conditions?.[data.branchIndex];
                 if (branch) {
                   branch.conditionName = val.conditionName;
+                  branch.expression = val.expression;
                   branch.conditionExpressions = val.conditionExpressions;
                 }
               });

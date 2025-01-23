@@ -25,4 +25,52 @@ export const nodeMap = {
     nodeName: 'AI节点',
     nodeHeaderColor: '#640505',
   },
+  [ElementType.LOG]: {
+    nodeName: 'Log',
+    nodeHeaderColor: '#b471e7',
+  },
+  [ElementType.NETTY_HTTP]: {
+    nodeName: 'Netty Http',
+    nodeHeaderColor: '#b471e7',
+  },
+  [ElementType.CONVERT_BODY_TO]: {
+    nodeName: 'Convert Body To',
+    nodeHeaderColor: '#b471e7',
+  },
+  [ElementType.DIRECT]: {
+    nodeName: 'Direct',
+    nodeHeaderColor: '#b471e7',
+  },
+  [ElementType.DYNAMIC_ROUTE]: {
+    nodeName: 'Dynamic Route',
+    nodeHeaderColor: '#b471e7',
+  },
+  [ElementType.HTTP]: {
+    nodeName: 'Http',
+    nodeHeaderColor: '#b471e7',
+  },
+  [ElementType.MARSHAL]: {
+    nodeName: 'Marshal',
+    nodeHeaderColor: '#b471e7',
+  },
+  [ElementType.UNMARSHAL]: {
+    nodeName: 'Unmarshal',
+    nodeHeaderColor: '#b471e7',
+  },
+  [ElementType.SET_HEADER]: {
+    nodeName: 'Set Header',
+    nodeHeaderColor: '#b471e7',
+  },
+  [ElementType.TRANSFORM]: {
+    nodeName: 'Transform',
+    nodeHeaderColor: '#b471e7',
+  },
+  [ElementType.RECIPIENT_LIST]: {
+    nodeName: 'RecipientList',
+    nodeHeaderColor: '#b471e7',
+  },
+  [ElementType.WEBSERVICE]: {
+    nodeName: 'WebService',
+    nodeHeaderColor: '#b471e7',
+  },
 };

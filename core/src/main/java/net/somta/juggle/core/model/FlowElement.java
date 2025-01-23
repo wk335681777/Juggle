@@ -40,6 +40,18 @@ import net.somta.juggle.core.model.node.data.MysqlNode;
         @JsonSubTypes.Type(value = AssignNode.class, name = "ASSIGN"),
         @JsonSubTypes.Type(value = CodeNode.class, name = "CODE"),
         @JsonSubTypes.Type(value = MysqlNode.class, name = "MYSQL"),
+        @JsonSubTypes.Type(value = DirectNode.class, name = "DIRECT"),
+        @JsonSubTypes.Type(value = NettyHttpNode.class, name = "NETTY_HTTP"),
+        @JsonSubTypes.Type(value = HttpNode.class, name = "HTTP"),
+        @JsonSubTypes.Type(value = DynamicRouteNode.class, name = "DYNAMIC_ROUTE"),
+        @JsonSubTypes.Type(value = RecipientListNode.class, name = "RECIPIENT_LIST"),
+        @JsonSubTypes.Type(value = TransformNode.class, name = "TRANSFORM"),
+        @JsonSubTypes.Type(value = MarshalNode.class, name = "MARSHAL"),
+        @JsonSubTypes.Type(value = UnmarshalNode.class, name = "UNMARSHAL"),
+        @JsonSubTypes.Type(value = SetHeaderNode.class, name = "SET_HEADER"),
+        @JsonSubTypes.Type(value = ConvertBodyToNode.class, name = "CONVERT_BODY_TO"),
+        @JsonSubTypes.Type(value = WebServiceNode.class, name = "WEBSERVICE"),
+        @JsonSubTypes.Type(value = LogNode.class, name = "LOG"),
 })
 public class FlowElement {
     /**

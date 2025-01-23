@@ -44,3 +44,9 @@ npm run build
 ```sh
 npm run lint
 ```
+
+运行以下命令安装所有依赖项
+npm install npm-run-all --save-dev
+
+编译为生产环境代码
+npm run build

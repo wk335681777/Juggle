@@ -24,6 +24,18 @@ export class DrawNodeHelper {
             case ElementType.METHOD:
             case ElementType.ASSIGN:
             case ElementType.CODE:
+            case ElementType.LOG:
+            case ElementType.NETTY_HTTP:
+            case ElementType.CONVERT_BODY_TO:
+            case ElementType.DIRECT:
+            case ElementType.DYNAMIC_ROUTE:
+            case ElementType.HTTP:
+            case ElementType.TRANSFORM:
+            case ElementType.MARSHAL:
+            case ElementType.SET_HEADER:
+            case ElementType.UNMARSHAL:
+            case ElementType.RECIPIENT_LIST:
+            case ElementType.WEBSERVICE:
             case ElementType.MYSQL:
                 this.drawNormal(container, node, type);
                 break;
@@ -52,7 +64,9 @@ export class DrawNodeHelper {
             const flowNode = container.selectChild('.flow-node');
             flowNode.select('text').text(data.raw.name);
         }
-        if ([ElementType.METHOD, ElementType.CODE, ElementType.MYSQL].includes(data.type)) {
+        if ([ElementType.METHOD, ElementType.CODE, ElementType.MYSQL,ElementType.LOG,ElementType.HTTP,ElementType.MARSHAL,
+            ElementType.UNMARSHAL,ElementType.DIRECT,ElementType.DYNAMIC_ROUTE,ElementType.SET_HEADER,ElementType.TRANSFORM
+            ,ElementType.NETTY_HTTP,ElementType.CONVERT_BODY_TO,ElementType.RECIPIENT_LIST,ElementType.WEBSERVICE].includes(data.type)) {
             this.drawAddIcon(container, node, type);
         }
     }

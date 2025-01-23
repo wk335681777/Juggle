@@ -42,3 +42,6 @@ dist/
 esm/
 cjs/
 sdk/juggle-sdk-nodejs/types/
+
+console/src/main/resources/static
+console-ui/package-lock.json

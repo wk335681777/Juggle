@@ -54,7 +54,11 @@ defineExpose({ open });
   <el-dialog title="设置分支条件" :width="640" v-model="visible" class="condition-filter-modal">
     <div class="condition-name-label">分支名称</div>
     <el-input v-model="condition.conditionName" class="condition-name-input" placeholder="请输入" />
-    <FilterGroup :value="condition.conditionExpressions" @change="onChange" :sourceList="sourceList" :targetList="sourceList" />
+    <div v-if="condition.conditionType === 'CUSTOM'">
+      <div class="condition-name-label">表达式</div>
+      <el-input v-model="condition.expression" class="condition-name-input" placeholder="请输入" />
+    </div>
+        <FilterGroup :value="condition.conditionExpressions" @change="onChange" :sourceList="sourceList" :targetList="sourceList" />
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="onCancel">取消</el-button>

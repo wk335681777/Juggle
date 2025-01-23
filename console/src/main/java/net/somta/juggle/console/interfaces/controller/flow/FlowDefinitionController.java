@@ -16,6 +16,7 @@ along with this program; if not, visit <https://www.gnu.org/licenses/gpl-3.0.htm
 */
 package net.somta.juggle.console.interfaces.controller.flow;
 
+import cn.hutool.http.HttpUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -109,10 +110,18 @@ public class FlowDefinitionController {
     @Operation(summary = "保存流程内容")
     @PutMapping("/save")
     public ResponseDataResult<Boolean> saveFlowDefinitionContent(@RequestBody FlowDefinitionContentParam flowDefinitionContentParam){
+        logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
         if(flowDefinitionContentParam == null){
             return ResponseDataResult.setErrorResponseResult(FLOW_PARAM_ERROR);
         }
         Boolean result = flowDefinitionService.saveFlowDefinitionContent(flowDefinitionContentParam);
+        try {
+            String url = "http://localhost:30888/router/buildNode?id=" + flowDefinitionContentParam.getId();
+            String response = HttpUtil.get(url);
+            logger.info("buildNode result: {}", response);
+        } catch (Throwable e) {
+            logger.error("buildNode error", e);
+        }
         return ResponseDataResult.setResponseResult(result);
     }
 
