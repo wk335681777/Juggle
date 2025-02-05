@@ -16,6 +16,8 @@ along with this program; if not, visit <https://www.gnu.org/licenses/gpl-3.0.htm
 */
 package net.somta.juggle.console.application.service.flow.impl;
 
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -41,7 +43,9 @@ import net.somta.juggle.core.model.FlowResult;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author husong
@@ -119,9 +123,37 @@ public class FlowDefinitionServiceImpl implements IFlowDefinitionService {
         Page<FlowDefinitionInfoDTO> page = PageHelper.startPage(flowDefinitionPageParam.getPageNum(), flowDefinitionPageParam.getPageSize());
         List<FlowDefinitionInfoVO> flowDefinitionList = flowDefinitionRepository.queryFlowDefinitionList(flowDefinitionInfoQueryVo);
         List<FlowDefinitionInfoDTO> flowDefinitionInfoDtoList = IFlowDefinitionAssembler.IMPL.voListToDtoList(flowDefinitionList);
+        processFirstComponentNode(flowDefinitionInfoDtoList);
         PageInfo pageInfo = new PageInfo(flowDefinitionInfoDtoList);
         pageInfo.setTotal(page.getTotal());
         return pageInfo;
+    }
+
+    private void processFirstComponentNode(List<FlowDefinitionInfoDTO> flowDefinitionInfoDtoList) {
+        for (FlowDefinitionInfoDTO dto : flowDefinitionInfoDtoList) {
+            String flowContent = dto.getFlowContent();
+            JSONArray jsonArray = new JSONArray(flowContent);
+            Map<String, JSONObject> map = new HashMap<>();
+            JSONObject startNode = null;
+            for (int i = 0; i < jsonArray.size(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                map.put(jsonObject.getStr("key"), jsonObject);
+                String type = jsonObject.getStr("elementType");
+                if ("START".equals(type)) {
+                    startNode = jsonObject;
+                }
+            }
+
+            if (startNode != null) {
+                JSONArray outgoings = startNode.getJSONArray("outgoings");
+                String nextNodeId = outgoings.getStr(0);
+                JSONObject nextNode = map.get(nextNodeId);
+                if ("NETTY_HTTP".equals(nextNode.getStr("elementType"))) {
+                    String uri = nextNode.getStr("uri");
+                    dto.setDebugUri(uri);
+                }
+            }
+        }
     }
 
     @Override

@@ -33,6 +33,8 @@ public class FlowDefinitionInfoVO {
 
     private Date createdAt;
 
+    private String flowContent;
+
     public Long getId() {
         return id;
     }
@@ -79,5 +81,13 @@ public class FlowDefinitionInfoVO {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getFlowContent() {
+        return flowContent;
+    }
+
+    public void setFlowContent(String flowContent) {
+        this.flowContent = flowContent;
     }
 }

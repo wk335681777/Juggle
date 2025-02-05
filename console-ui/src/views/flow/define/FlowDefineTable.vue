@@ -24,12 +24,15 @@ function editRow(row: any) {
   emit('edit', row);
 }
 
-function goDebugPage(flowDefinitionId: number, flowKey: string) {
+function goDebugPage(flowDefinitionId: number, flowKey: string, debugUri: string) {
   router.push({
     name: 'flow-debug',
     params: {
       flowDefinitionId: flowDefinitionId,
       flowKey: flowKey,
+    },
+    query: {
+      debugUri: debugUri,                         // 将 uri 放在 query 中
     },
   });
 }
@@ -55,7 +58,7 @@ function goDesignPage(flowDefinitionId: number, flowKey: string) {
     <el-table-column label="操作" width="250">
       <template #default="scope">
         <el-button link type="primary" size="small" @click="goDesignPage(scope.row.id, scope.row.flowKey)"> 设计 </el-button>
-        <el-button link type="primary" size="small" @click="goDebugPage(scope.row.id, scope.row.flowKey)"> 调试 </el-button>
+        <el-button link type="primary" size="small" @click="goDebugPage(scope.row.id, scope.row.flowKey, scope.row.debugUri)"> 调试 </el-button>
         <el-button link type="primary" size="small" @click.prevent="deployFlow(scope.row)"> 部署 </el-button>
         <el-button link type="primary" size="small" @click.prevent="editRow(scope.row)"> 编辑 </el-button>
         <el-button link type="primary" size="small" @click.prevent="deleteRow(scope.row, scope.$index)"> 删除 </el-button>

@@ -32,6 +32,8 @@ public class FlowDefinitionInfoDTO {
 
     private String flowContent;
 
+    private String debugUri;
+
     /**
      * 流程描述
      */
@@ -124,6 +126,14 @@ public class FlowDefinitionInfoDTO {
 
     public void setFlowVariables(List<VariableInfoVO> flowVariables) {
         this.flowVariables = flowVariables;
+    }
+
+    public String getDebugUri() {
+        return debugUri;
+    }
+
+    public void setDebugUri(String debugUri) {
+        this.debugUri = debugUri;
     }
 
     @Override

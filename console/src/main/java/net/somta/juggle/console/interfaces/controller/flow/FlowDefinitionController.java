@@ -153,18 +153,24 @@ public class FlowDefinitionController {
     @Operation(summary = "调试流程")
     @PostMapping("/debug/{flowKey}")
     public ResponseDataResult<FlowResult> debugFlow(@PathVariable String flowKey, @RequestBody TriggerDataParam triggerData){
-        if(StringUtils.isEmpty(flowKey)){
-            return ResponseDataResult.setErrorResponseResult(FLOW_KEY_IS_EMPTY);
-        }
-        FlowDefinitionAO flowDefinitionAo = flowDefinitionService.getFlowDefinitionByKey(flowKey);
-        if(flowDefinitionAo == null){
-            return ResponseDataResult.setErrorResponseResult(FLOW_DEFINITION_NOT_EXIST);
-        }
-        if(StringUtils.isEmpty(flowDefinitionAo.getFlowContent())){
-            return ResponseDataResult.setErrorResponseResult(FlowDefinitionErrorEnum.FLOW_DEFINITION_CONTENT_IS_NULL_ERROR);
-        }
-        FlowResult rst = flowDefinitionService.debugFlow(flowDefinitionAo,triggerData);
-        return ResponseDataResult.setResponseResult(rst);
+        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+//        if(StringUtils.isEmpty(flowKey)){
+//            return ResponseDataResult.setErrorResponseResult(FLOW_KEY_IS_EMPTY);
+//        }
+//        FlowDefinitionAO flowDefinitionAo = flowDefinitionService.getFlowDefinitionByKey(flowKey);
+//        if(flowDefinitionAo == null){
+//            return ResponseDataResult.setErrorResponseResult(FLOW_DEFINITION_NOT_EXIST);
+//        }
+//        if(StringUtils.isEmpty(flowDefinitionAo.getFlowContent())){
+//            return ResponseDataResult.setErrorResponseResult(FlowDefinitionErrorEnum.FLOW_DEFINITION_CONTENT_IS_NULL_ERROR);
+//        }
+//        FlowResult rst = flowDefinitionService.debugFlow(flowDefinitionAo,triggerData);
+//        return ResponseDataResult.setResponseResult(rst);
+        String uri = (String) triggerData.getFlowData().get("uri");
+        String requestBody = (String) triggerData.getFlowData().get("requestBody");
+        String responseBody = HttpUtil.post(uri, requestBody);
+
+        return ResponseDataResult.setResponseResult(responseBody);
     }
 
     /**
