@@ -1,4 +1,7 @@
 <script lang="ts" setup>
+import { useRouter } from 'vue-router';
+const router = useRouter();
+
 defineProps({
   dataRows: {
     type: Array,
@@ -31,6 +34,13 @@ function buildFullTriggerUrl(triggerUrl: string) {
   const origin = window.location.origin;
   return origin + triggerUrl;
 }
+
+function goDesignViewPage(flowVersionId: number, flowKey: string) {
+  const path = "/design/view/"+flowVersionId+"/"+flowKey;
+  const { href } = router.resolve({ path })
+  window.open(href, '_blank')
+}
+
 </script>
 
 <template>
@@ -55,6 +65,7 @@ function buildFullTriggerUrl(triggerUrl: string) {
           {{ flowVersionStatusOptFormat(scope.row.flowVersionStatus) }}
         </el-button>
         <el-button link type="primary" size="small" @click.prevent="deleteRow(scope.row, scope.$index)"> 删除 </el-button>
+        <el-button link type="primary" size="small" @click.prevent="goDesignViewPage(scope.row.id, scope.row.flowKey)"> 查看 </el-button>
       </template>
     </el-table-column>
   </el-table>

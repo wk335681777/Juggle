@@ -150,7 +150,12 @@ public class FlowDefinitionServiceImpl implements IFlowDefinitionService {
                 JSONObject nextNode = map.get(nextNodeId);
                 if ("NETTY_HTTP".equals(nextNode.getStr("elementType"))) {
                     String uri = nextNode.getStr("uri");
+                    if ("async".equalsIgnoreCase(dto.getFlowType())) {
+                        uri = "/v0" + uri;
+                    }
+
                     dto.setDebugUri(uri);
+                    dto.setEnableDebug(true);
                 }
             }
         }
@@ -170,6 +175,7 @@ public class FlowDefinitionServiceImpl implements IFlowDefinitionService {
         flowInfoAo.setFlowName(flowDefinitionAo.getFlowName());
         flowInfoAo.setFlowType(flowDefinitionAo.getFlowType());
         flowInfoAo.setFlowContent(flowDefinitionAo.getFlowContent());
+        flowInfoAo.setFlowType(flowDefinitionAo.getFlowType());
         flowInfoAo.setRemark(flowDefinitionAo.getRemark());
         flowInfoAo.setFlowVersionRemark(flowDefinitionDeployParam.getFlowVersionRemark());
 
@@ -200,5 +206,4 @@ public class FlowDefinitionServiceImpl implements IFlowDefinitionService {
         flow.setVariables(flowDefinitionAo.getFlowRuntimeVariables());
         return flowRuntimeService.triggerFlow(flow, flowDefinitionAo.getFlowType(),triggerData);
     }
-
 }

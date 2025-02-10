@@ -7,7 +7,10 @@
 <resultMap id="BaseResultMap" type="net.somta.juggle.console.infrastructure.po.flow.FlowVersionPO" >
 	<result column="id" property="id"/>
 	<result column="flow_id" property="flowId"/>
+	<result column="flow_name" property="flowName"/>
+	<result column="flow_key" property="flowKey"/>
 	<result column="flow_version" property="flowVersion"/>
+	<result column="flow_type" property="flowType"/>
 	<result column="flow_version_status" property="flowVersionStatus"/>
 	<result column="flow_version_remark" property="flowVersionRemark"/>
 	<result column="flow_content" property="flowContent"/>
@@ -32,12 +35,12 @@
 </sql>
        
 <sql id="Base_Column_List" >
-	id, flow_id, flow_version,flow_version_status, flow_version_remark, flow_content, inputs, outputs, variables, created_at, created_by, updated_at, updated_by
+	id, flow_id, flow_name, flow_version,flow_version_status, flow_version_remark, flow_content, flow_type, inputs, outputs, variables, created_at, created_by, updated_at, updated_by
 </sql>
    
 <insert id="add" parameterType="net.somta.juggle.console.infrastructure.po.flow.FlowDefinitionInfoPO" >
-	insert into t_flow_version (id, flow_id, flow_version,flow_version_status, flow_version_remark, flow_content, inputs, outputs, variables, deleted,created_at, created_by, updated_at, updated_by)
-	values (#{id},#{flowId},#{flowVersion},#{flowVersionStatus},#{flowVersionRemark},#{flowContent},#{inputs},#{outputs},#{variables},0,#{createdAt},#{createdBy},#{updatedAt},#{updatedBy});
+	insert into t_flow_version (id, flow_id, flow_name, flow_key, flow_version,flow_version_status, flow_version_remark, flow_content, flow_type, inputs, outputs, variables, deleted,created_at, created_by, updated_at, updated_by)
+	values (#{id},#{flowId},#{flowName},#{flowKey},#{flowVersion},#{flowVersionStatus},#{flowVersionRemark},#{flowContent},#{flowType},#{inputs},#{outputs},#{variables},0,#{createdAt},#{createdBy},#{updatedAt},#{updatedBy});
 </insert>
 
 <delete id="deleteById" parameterType="java.lang.Long">
@@ -50,6 +53,12 @@
 	<if test="flowId != null">
 		flow_id=#{flowId},
 	</if>
+		<if test="flowName != null and flowName != ''">
+			flow_name=#{flowName},
+		</if>
+	<if test="flowKey != null and flowKey != ''">
+		flow_key=#{flowKey},
+	</if>
 	<if test="flowVersion != null and flowVersion != ''">
 		flow_version=#{flowVersion},
 	</if>
@@ -61,6 +70,9 @@
 	</if>
 	<if test="flowContent != null and flowContent != ''">
 		flow_content=#{flowContent},
+	</if>
+	<if test="flowType != null and flowType != ''">
+		flow_type=#{flowType},
 	</if>
 	<if test="inputs != null and inputs != ''">
 		inputs=#{inputs},

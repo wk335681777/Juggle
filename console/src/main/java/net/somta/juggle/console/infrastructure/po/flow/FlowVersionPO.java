@@ -10,7 +10,12 @@ public class FlowVersionPO extends BaseModel {
 
     private Long flowId;
 
+    private String flowName;
+
+    private String flowKey;
+
     private String flowVersion;
+
     /**
      * 流程状态   0:禁用  1:启用
      */
@@ -21,6 +26,8 @@ public class FlowVersionPO extends BaseModel {
     private String flowVersionRemark;
 
     private String flowContent;
+
+    private String flowType;
 
     private String inputs;
 
@@ -108,5 +115,29 @@ public class FlowVersionPO extends BaseModel {
 
     public void setDeleted(Integer deleted) {
         this.deleted = deleted;
+    }
+
+    public String getFlowType() {
+        return flowType;
+    }
+
+    public void setFlowType(String flowType) {
+        this.flowType = flowType;
+    }
+
+    public String getFlowKey() {
+        return flowKey;
+    }
+
+    public void setFlowKey(String flowKey) {
+        this.flowKey = flowKey;
+    }
+
+    public String getFlowName() {
+        return flowName;
+    }
+
+    public void setFlowName(String flowName) {
+        this.flowName = flowName;
     }
 }

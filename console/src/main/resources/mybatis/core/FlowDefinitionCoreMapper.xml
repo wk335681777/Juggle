@@ -43,6 +43,7 @@
 
 <update id="update" parameterType="net.somta.juggle.console.infrastructure.po.flow.FlowDefinitionInfoPO" >
 	update t_flow_definition set
+	updated_at = now(),
 	<trim  suffixOverrides="," >
 	<if test="flowKey != null and flowKey != ''">
 		flow_key=#{flowKey},
@@ -67,9 +68,6 @@
 	</if>
 	<if test="createdBy != null">
 		created_by=#{createdBy},
-	</if>
-	<if test="updatedAt != null">
-		updated_at=#{updatedAt},
 	</if>
 	<if test="updatedBy != null">
 		updated_by=#{updatedBy},

@@ -88,19 +88,19 @@ defineExpose({ open });
         </el-form-item>
         <el-form-item label="流程类型" prop="flowType">
           <el-select placeholder="请选择流程类型" v-model="flowDefineFormValue.flowType">
-            <el-option label="同步" value="sync" />
-            <el-option label="异步" value="async" />
+            <el-option label="单流程" value="sync" />
+            <el-option label="多流程" value="async" />
           </el-select>
         </el-form-item>
         <el-form-item label="流程描述">
           <el-input type="textarea" v-model="flowDefineFormValue.remark" maxlength="120" />
         </el-form-item>
-        <el-form-item label="流程入参">
-          <ParamSetting v-model="flowDefineFormValue.flowInputParams" addText="新增入参" showRequired />
-        </el-form-item>
-        <el-form-item label="流程出参">
-          <ParamSetting v-model="flowDefineFormValue.flowOutputParams" addText="新增出参" />
-        </el-form-item>
+<!--        <el-form-item label="流程入参">-->
+<!--          <ParamSetting v-model="flowDefineFormValue.flowInputParams" addText="新增入参" showRequired />-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="流程出参">-->
+<!--          <ParamSetting v-model="flowDefineFormValue.flowOutputParams" addText="新增出参" />-->
+<!--        </el-form-item>-->
         <el-form-item>
           <el-button type="primary" @click="onSubmit">确定</el-button>
           <el-button @click="onCancel">取消</el-button>

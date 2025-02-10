@@ -1,4 +1,4 @@
-package net.somta.juggle.console.application.ssr;
+package net.somta.juggle.console.application.sse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,8 +12,8 @@ import java.util.Map;
 import java.util.concurrent.*;
 
 @Component
-public class SsrManager {
-    private static final Logger log = LoggerFactory.getLogger(SsrManager.class);
+public class SseManager {
+    private static final Logger log = LoggerFactory.getLogger(SseManager.class);
 
     private static final Map<String, SseEmitter> EMITTER_MAP = new ConcurrentHashMap<>();
     private static final ScheduledExecutorService EXECUTOR = Executors.newSingleThreadScheduledExecutor();
@@ -32,15 +32,12 @@ public class SsrManager {
 
         emitter.onCompletion(() -> {
             EMITTER_MAP.remove(id);
-//            log.info("emitter.onCompletion, remove emitter");
         });
         emitter.onTimeout(() ->  {
             EMITTER_MAP.remove(id);
-//            log.info("emitter.onTimeout, remove emitter");
         });
         emitter.onError((throwable) -> {
             EMITTER_MAP.remove(id);
-//            log.info("emitter.onError, remove emitter");
         });
     }
 
@@ -49,7 +46,7 @@ public class SsrManager {
      */
     private void sendHeartBeat() {
         if (!EMITTER_MAP.isEmpty()) {
-            log.info("sendHeartBeat...");
+//            log.info("sendHeartBeat...");
         }
 
         Map<String, SseEmitter> emitterMap = new HashMap<>(EMITTER_MAP);
@@ -66,7 +63,7 @@ public class SsrManager {
 
         String content = data.replace("\n\r", "<br>").replace("\r\n", "<br>")
                 .replace("\n", "<br>").replace("\r", "<br>");
-        System.out.println(content);
+//        System.out.println(content);
         send(sseEmitter, content);
     }
 

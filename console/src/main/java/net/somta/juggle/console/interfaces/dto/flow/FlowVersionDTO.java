@@ -11,6 +11,8 @@ public class FlowVersionDTO {
 
     private String flowVersion;
 
+    private String flowKey;
+
     private String triggerUrl;
 
     private Integer flowVersionStatus;
@@ -63,6 +65,14 @@ public class FlowVersionDTO {
 
     public void setFlowVersionRemark(String flowVersionRemark) {
         this.flowVersionRemark = flowVersionRemark;
+    }
+
+    public String getFlowKey() {
+        return flowKey;
+    }
+
+    public void setFlowKey(String flowKey) {
+        this.flowKey = flowKey;
     }
 
     @Override

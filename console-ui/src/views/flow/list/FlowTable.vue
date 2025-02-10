@@ -29,12 +29,12 @@ function goFlowVersionListPage(flowId: number) {
 
 <template>
   <el-table v-loading="loading" :data="dataRows" size="large" header-cell-class-name="table-header">
-    <el-table-column prop="flowKey" label="流程编码" width="180" />
+    <el-table-column prop="flowKey" label="流程编码~" width="180" />
     <el-table-column prop="flowName" label="流程名称" width="220" />
     <el-table-column prop="flowType" label="流程类型" width="140">
       <template #default="scope">
-        <el-tag v-if="scope.row.flowType == 'sync'" type="success">同步</el-tag>
-        <el-tag v-else type="warning">异步</el-tag>
+        <el-tag v-if="scope.row.flowType == 'sync'" type="success">单流程</el-tag>
+        <el-tag v-else type="warning">多流程</el-tag>
       </template>
     </el-table-column>
     <el-table-column prop="remark" label="流程描述" width="480" show-overflow-tooltip />

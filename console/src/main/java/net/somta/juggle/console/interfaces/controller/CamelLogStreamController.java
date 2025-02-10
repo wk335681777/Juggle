@@ -1,6 +1,6 @@
 package net.somta.juggle.console.interfaces.controller;
 
-import net.somta.juggle.console.application.ssr.SsrManager;
+import net.somta.juggle.console.application.sse.SseManager;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +19,7 @@ import java.util.concurrent.Executors;
 @RequestMapping("/camelLogStream")
 public class CamelLogStreamController {
     @Resource
-    private SsrManager ssrConnectionManager;
+    private SseManager sseManager;
     private static final Logger log = LoggerFactory.getLogger(CamelLogStreamController.class);
 
 //    private static final List<SseEmitter> emitters = new ArrayList<>();
@@ -45,9 +45,9 @@ public class CamelLogStreamController {
             throw new RuntimeException("debugConnId is empty");
         }
 
-        System.out.println("-------------------streamLog");
+//        System.out.println("-------------------streamLog");
         SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
-        ssrConnectionManager.addSseEmitter(debugConnId, emitter);
+        sseManager.addSseEmitter(debugConnId, emitter);
 
         return emitter;
     }

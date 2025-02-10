@@ -26,6 +26,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import net.somta.core.protocol.ResponseDataResult;
 import net.somta.core.protocol.ResponsePaginationDataResult;
 import net.somta.juggle.console.application.assembler.flow.IFlowDefinitionAssembler;
+import net.somta.juggle.console.application.service.flow.IDeployMaster;
 import net.somta.juggle.console.domain.flow.definition.FlowDefinitionAO;
 import net.somta.juggle.console.domain.flow.definition.enums.FlowDefinitionErrorEnum;
 import net.somta.juggle.console.interfaces.dto.flow.FlowDefinitionInfoDTO;
@@ -40,7 +41,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.util.List;
+import java.util.UUID;
 
 import static net.somta.juggle.common.constants.ApplicationConstants.JUGGLE_SERVER_VERSION;
 import static net.somta.juggle.console.domain.flow.definition.enums.FlowDefinitionErrorEnum.*;
@@ -59,6 +62,8 @@ public class FlowDefinitionController {
 
     private final IFlowDefinitionService flowDefinitionService;
     private final ObjectMapper objectMapper;
+    @Resource
+    private IDeployMaster iDeployMaster;
 
     public FlowDefinitionController(IFlowDefinitionService flowDefinitionService,ObjectMapper objectMapper) {
         this.flowDefinitionService = flowDefinitionService;
@@ -110,19 +115,21 @@ public class FlowDefinitionController {
     @Operation(summary = "保存流程内容")
     @PutMapping("/save")
     public ResponseDataResult<Boolean> saveFlowDefinitionContent(@RequestBody FlowDefinitionContentParam flowDefinitionContentParam){
-        logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        // logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
         if(flowDefinitionContentParam == null){
             return ResponseDataResult.setErrorResponseResult(FLOW_PARAM_ERROR);
         }
         Boolean result = flowDefinitionService.saveFlowDefinitionContent(flowDefinitionContentParam);
         try {
-            String url = "http://localhost:30888/router/buildNode?id=" + flowDefinitionContentParam.getId();
-            String response = HttpUtil.get(url);
-            logger.info("buildNode result: {}", response);
+//            String url = "http://localhost:30888/router/buildNode?id=" + flowDefinitionContentParam.getId() + "&env=DEV";
+//            String response = HttpUtil.get(url);
+            iDeployMaster.deployRouteDev(flowDefinitionContentParam.getId());
+//            logger.info("buildNode result: {}", response);
+            return ResponseDataResult.setResponseResult(result);
         } catch (Throwable e) {
             logger.error("buildNode error", e);
+            return ResponseDataResult.setErrorResponseResult(FLOW_PARAM_ERROR.getErrorCode(), e.getMessage());
         }
-        return ResponseDataResult.setResponseResult(result);
     }
 
     @Operation(summary = "查询流程定义详情")
@@ -153,7 +160,7 @@ public class FlowDefinitionController {
     @Operation(summary = "调试流程")
     @PostMapping("/debug/{flowKey}")
     public ResponseDataResult<FlowResult> debugFlow(@PathVariable String flowKey, @RequestBody TriggerDataParam triggerData){
-        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+//        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 //        if(StringUtils.isEmpty(flowKey)){
 //            return ResponseDataResult.setErrorResponseResult(FLOW_KEY_IS_EMPTY);
 //        }

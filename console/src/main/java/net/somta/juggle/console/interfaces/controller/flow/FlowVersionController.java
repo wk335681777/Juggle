@@ -16,27 +16,38 @@ along with this program; if not, visit <https://www.gnu.org/licenses/gpl-3.0.htm
 */
 package net.somta.juggle.console.interfaces.controller.flow;
 
+import cn.hutool.http.HttpUtil;
 import com.github.pagehelper.PageInfo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.somta.core.protocol.ResponseDataResult;
 import net.somta.core.protocol.ResponsePaginationDataResult;
+import net.somta.juggle.common.param.TriggerDataParam;
+import net.somta.juggle.console.application.assembler.flow.IFlowDefinitionAssembler;
+import net.somta.juggle.console.application.service.flow.IDeployMaster;
 import net.somta.juggle.console.application.service.flow.IFlowRuntimeService;
 import net.somta.juggle.console.application.service.flow.IFlowVersionService;
+import net.somta.juggle.console.domain.flow.definition.FlowDefinitionAO;
 import net.somta.juggle.console.domain.flow.version.FlowVersionAO;
 import net.somta.juggle.console.domain.flow.version.enums.FlowVersionStatusEnum;
+import net.somta.juggle.console.interfaces.dto.flow.FlowDefinitionInfoDTO;
 import net.somta.juggle.console.interfaces.dto.flow.FlowVersionDTO;
 import net.somta.juggle.console.interfaces.param.flow.FlowVersionPageParam;
 import net.somta.juggle.console.interfaces.param.flow.FlowVersionStatusParam;
-import net.somta.juggle.common.param.TriggerDataParam;
 import net.somta.juggle.core.model.FlowResult;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.util.Map;
 
 import static net.somta.juggle.common.constants.ApplicationConstants.JUGGLE_SERVER_VERSION;
-import static net.somta.juggle.console.domain.flow.flowinfo.enums.FlowErrorEnum.*;
+import static net.somta.juggle.console.domain.flow.definition.enums.FlowDefinitionErrorEnum.FLOW_PARAM_ERROR;
+import static net.somta.juggle.console.domain.flow.flowinfo.enums.FlowErrorEnum.FLOW_KEY_IS_EMPTY;
+import static net.somta.juggle.console.domain.flow.flowinfo.enums.FlowErrorEnum.FLOW_NOT_EXIST;
 import static net.somta.juggle.console.domain.flow.version.enums.FlowVersionErrorEnum.ENABLE_FLOW_NOT_DELETE;
 import static net.somta.juggle.console.domain.flow.version.enums.FlowVersionErrorEnum.FLOW_NOT_ENABLE;
 
@@ -48,9 +59,13 @@ import static net.somta.juggle.console.domain.flow.version.enums.FlowVersionErro
 @RestController
 @RequestMapping(JUGGLE_SERVER_VERSION + "/flow/version/")
 public class FlowVersionController {
+    private final static Logger logger = LoggerFactory.getLogger(FlowVersionController.class);
+
 
     private final IFlowVersionService flowVersionService;
     private final IFlowRuntimeService flowRuntimeService;
+    @Resource
+    private IDeployMaster iDeployMaster;
 
     public FlowVersionController(IFlowVersionService flowVersionService, IFlowRuntimeService flowRuntimeService) {
         this.flowVersionService = flowVersionService;
@@ -65,6 +80,25 @@ public class FlowVersionController {
             return ResponseDataResult.setErrorResponseResult(FLOW_NOT_EXIST);
         }
         flowVersionAo.setNegateStatus(FlowVersionStatusEnum.getByCode(flowVersionStatusParam.getFlowVersionStatus()));
+
+        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        try {
+            String url;
+            if (flowVersionStatusParam.getFlowVersionStatus() == 0) {
+//                url = "http://localhost:30888/router/deployFlowForPod?flowVersionId=" + flowVersionStatusParam.getFlowVersionId();
+                iDeployMaster.deployRouteProd(flowVersionStatusParam.getFlowVersionId());
+            } else {
+//                url = "http://localhost:30888/router/stopFlowForPod?flowVersionId=" + flowVersionStatusParam.getFlowVersionId();
+                iDeployMaster.stopRouteProd(flowVersionStatusParam.getFlowVersionId());
+            }
+//            String response = HttpUtil.get(url);
+            //todo: 对结果进行校验是否成功
+//            logger.info("deploy result: {}", response);
+        } catch (Throwable e) {
+            logger.error("buildNode error", e);
+            return ResponseDataResult.setErrorResponseResult(FLOW_PARAM_ERROR.getErrorCode(), e.getMessage());
+        }
+
         flowVersionService.updateFlowVersionStatus(flowVersionAo);
         return ResponseDataResult.setResponseResult();
     }
@@ -132,6 +166,15 @@ public class FlowVersionController {
     public ResponseDataResult<Map<String,Object>> getAsyncFlowResult(@PathVariable String flowInstanceId){
         Map<String,Object> flowResult = flowRuntimeService.getAsyncFlowResult(flowInstanceId);
         return ResponseDataResult.setResponseResult(flowResult);
+    }
+
+    @Operation(summary = "查询流程定义详情")
+    @GetMapping("/info/{flowVersionId}")
+    public ResponseDataResult<FlowDefinitionInfoDTO> getFlowDefinitionInfo(@PathVariable Long flowVersionId){
+        FlowVersionAO flowVersionAO = flowVersionService.getFlowVersionInfo(flowVersionId);
+        FlowDefinitionInfoDTO flowDefinitionInfoDto = new FlowDefinitionInfoDTO();
+        BeanUtils.copyProperties(flowVersionAO,flowDefinitionInfoDto);
+        return ResponseDataResult.setResponseResult(flowDefinitionInfoDto);
     }
 
 }

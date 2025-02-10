@@ -8,6 +8,8 @@ import ObjectList from '@/views/object/ObjectList.vue';
 import { SystemRoutes } from '@/views/system';
 import { SuiteRoutes } from '@/views/suite';
 import FlowDesign from "@/views/flow/FlowDesign.vue";
+import FlowDesignView from "@/views/flow/FlowDesignView.vue";
+
 import {MarketRoutes} from "@/views/market";
 
 const router = createRouter({
@@ -24,6 +26,12 @@ const router = createRouter({
       name: 'flow-design',
       component: FlowDesign,
       meta: { name: '流程设计' },
+    },
+    {
+      path: '/design/view/:flowVersionId/:flowKey',
+      name: 'flow-design-view',
+      component: FlowDesignView,
+      meta: { name: '流程设计查看' },
     },
     {
       path: '/',

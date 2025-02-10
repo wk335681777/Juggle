@@ -1,4 +1,5 @@
 import { flowVersionAPI } from '@/service/api';
+import {getFlowDefinition} from "@/service/api/flowVersion.ts";
 
 export async function getLatestDeployVersion(flowId: number) {
   return flowVersionAPI.getLatestDeployVersion(flowId);
@@ -15,6 +16,11 @@ export async function queryFlowVersionPage(params: Parameters<typeof flowVersion
 export async function deleteFlowVersionById(params: Parameters<typeof flowVersionAPI.deleteFlowVersion>[0]) {
   return flowVersionAPI.deleteFlowVersion(params);
 }
+
+export async function getFlowDefinition(flowVersionId: number) {
+  return flowVersionAPI.getFlowDefinition(flowVersionId);
+}
+
 
 export async function getAsyncFlowResult(flowInstanceId: string) {
   return flowVersionAPI.getAsyncFlowResult(flowInstanceId);

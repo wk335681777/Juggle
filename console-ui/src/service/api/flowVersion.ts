@@ -19,3 +19,8 @@ export async function deleteFlowVersion(id: number): ResponseResult<boolean> {
 export async function getAsyncFlowResult(flowInstanceId: string): ResponseResult<boolean> {
   return request.get(`/v1/flow/version/getAsyncFlowResult/${flowInstanceId}`);
 }
+
+export async function getFlowDefinition(id: number): ResponseResult<boolean> {
+  return request.get(`/v1/flow/version/info/${id}`);
+}
+

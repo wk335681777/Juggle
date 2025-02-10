@@ -19,34 +19,34 @@ import IconInterface from '@/components/icons/IconInterface.vue';
         <el-menu-item index="/flow/define">流程定义</el-menu-item>
         <el-menu-item index="/flow/list">流程列表</el-menu-item>
       </el-sub-menu>
-      <el-sub-menu index="3">
-        <template #title>
-          <el-icon><IconInterface /></el-icon>
-          <span>套件</span>
-        </template>
-        <el-menu-item index="/suite/list">套件</el-menu-item>
-        <el-menu-item index="/suite/api">接口</el-menu-item>
-      </el-sub-menu>
-      <el-menu-item index="/object/list">
-        <el-icon><Coin /></el-icon>
-        <span>对象</span>
-      </el-menu-item>
-      <el-sub-menu index="4">
-        <template #title>
-          <el-icon><ShoppingBag /></el-icon>
-          <span>市场</span>
-        </template>
-        <el-menu-item index="/market/suite">套件市场</el-menu-item>
-        <el-menu-item index="/market/template">模板市场</el-menu-item>
-      </el-sub-menu>
-      <el-sub-menu index="5">
-        <template #title>
-          <el-icon><Setting /></el-icon>
-          <span>系统</span>
-        </template>
-        <el-menu-item index="/system/token">令牌</el-menu-item>
-        <el-menu-item index="/system/datasource">数据源</el-menu-item>
-      </el-sub-menu>
+<!--      <el-sub-menu index="3">-->
+<!--        <template #title>-->
+<!--          <el-icon><IconInterface /></el-icon>-->
+<!--          <span>套件</span>-->
+<!--        </template>-->
+<!--        <el-menu-item index="/suite/list">套件</el-menu-item>-->
+<!--        <el-menu-item index="/suite/api">接口</el-menu-item>-->
+<!--      </el-sub-menu>-->
+<!--      <el-menu-item index="/object/list">-->
+<!--        <el-icon><Coin /></el-icon>-->
+<!--        <span>对象</span>-->
+<!--      </el-menu-item>-->
+<!--      <el-sub-menu index="4">-->
+<!--        <template #title>-->
+<!--          <el-icon><ShoppingBag /></el-icon>-->
+<!--          <span>市场</span>-->
+<!--        </template>-->
+<!--        <el-menu-item index="/market/suite">套件市场</el-menu-item>-->
+<!--        <el-menu-item index="/market/template">模板市场</el-menu-item>-->
+<!--      </el-sub-menu>-->
+<!--      <el-sub-menu index="5">-->
+<!--        <template #title>-->
+<!--          <el-icon><Setting /></el-icon>-->
+<!--          <span>系统</span>-->
+<!--        </template>-->
+<!--        <el-menu-item index="/system/token">令牌</el-menu-item>-->
+<!--        <el-menu-item index="/system/datasource">数据源</el-menu-item>-->
+<!--      </el-sub-menu>-->
     </el-menu>
   </div>
 </template>

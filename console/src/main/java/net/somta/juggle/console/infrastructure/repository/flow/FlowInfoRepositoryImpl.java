@@ -91,6 +91,8 @@ public class FlowInfoRepositoryImpl implements IFlowInfoRepository {
         flowVersionPo.setFlowVersionStatus(FlowVersionStatusEnum.DISABLED.getCode());
         flowVersionPo.setCreatedAt(currentDate);
         flowVersionPo.setCreatedBy(IdentityContext.getIdentity().getUserId());
+        flowVersionPo.setFlowType(flowInfoAo.getFlowType());
+        flowVersionPo.setFlowKey(flowInfoAo.getFlowKey());
         flowVersionMapper.add(flowVersionPo);
         return true;
     }

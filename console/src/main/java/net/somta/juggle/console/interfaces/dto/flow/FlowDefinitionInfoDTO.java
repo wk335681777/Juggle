@@ -32,6 +32,8 @@ public class FlowDefinitionInfoDTO {
 
     private String flowContent;
 
+    private boolean enableDebug;
+
     private String debugUri;
 
     /**
@@ -39,8 +41,10 @@ public class FlowDefinitionInfoDTO {
      */
     private String remark;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createdAt;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date updatedAt;
 
     private List<InputParameterVO> flowInputParams;
 
@@ -134,6 +138,22 @@ public class FlowDefinitionInfoDTO {
 
     public void setDebugUri(String debugUri) {
         this.debugUri = debugUri;
+    }
+
+    public boolean isEnableDebug() {
+        return enableDebug;
+    }
+
+    public void setEnableDebug(boolean enableDebug) {
+        this.enableDebug = enableDebug;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     @Override

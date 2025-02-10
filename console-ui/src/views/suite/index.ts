@@ -9,7 +9,7 @@ export const SuiteRoutes = [
     name: 'suite',
     component: RouterNest,
     redirect: () => ({ name: 'suite-list' }),
-    meta: { name: '套件' },
+    meta: { name: '套件123' },
     children: [
       {
         path: 'list',

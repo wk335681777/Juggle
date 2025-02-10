@@ -30,10 +30,10 @@ const debugId = crypto.randomUUID();
 
 async function queryFlowDefineInfo() {
   const res = await flowDefineService.getDefineInfo(paramsData.params.flowDefinitionId as number);
+  debugger
   if (res.success) {
-    debugUrl.value = "http://" + window.location.hostname  + ":10888"+ paramsData.query.debugUri + "?debugConnId=" + debugId;
+    debugUrl.value = "http://" + window.location.hostname  + ":20888"+ paramsData.query.debugUri + "?debugConnId=" + debugId;
     flowDefine.value = res.result;
-
 
   } else {
     ElMessage({ type: 'error', message: res.errorMsg });
@@ -50,11 +50,12 @@ async function sendFlowDebug() {
   };
   const res = await flowDefineService.debugFlow(paramsData.params.flowKey as string, params);
   if (res.success) {
-    if (flowDefine.value?.flowType === 'sync') {
-      flowResponseJson.value = res.result;
-    } else {
-      timerId = setInterval(getAsyncFlowResult, 1000, res.result.flowInstanceId);
-    }
+    // if (flowDefine.value?.flowType === 'sync') {
+    //   flowResponseJson.value = res.result;
+    // } else {
+    //   timerId = setInterval(getAsyncFlowResult, 1000, res.result.flowInstanceId);
+    // }
+    flowResponseJson.value = res.result;
   } else {
     ElMessage({ type: 'error', message: res.errorMsg });
   }
@@ -161,7 +162,15 @@ watch(flowResponseJson, (newJson) => {
 </script>
 
 <template>
+
   <div class="flow-debug">
+    <div class="flow-header">
+      <el-breadcrumb separator="/">
+        <el-breadcrumb-item>{{ flowDefine.flowName }} - {{ paramsData.params.flowKey }}</el-breadcrumb-item>
+      </el-breadcrumb>
+      <!--      <el-button class="flow-submit" type="primary" @click="flowSubmit">保存</el-button>-->
+    </div>
+
     <el-row :gutter="16">
       <el-col :span="20">
         <el-input v-model="debugUrl" />
