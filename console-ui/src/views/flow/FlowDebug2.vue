@@ -30,7 +30,6 @@ const debugId = crypto.randomUUID();
 
 async function queryFlowDefineInfo() {
   const res = await flowDefineService.getDefineInfo(paramsData.params.flowDefinitionId as number);
-  debugger
   if (res.success) {
     debugUrl.value = "http://" + window.location.hostname  + ":20888"+ paramsData.query.debugUri + "?debugConnId=" + debugId;
     flowDefine.value = res.result;
@@ -151,7 +150,6 @@ onBeforeRouteLeave((to, from, next) => {
 
 watch(flowResponseJson, (newJson) => {
   try {
-    debugger
     const jsonObject = JSON.parse(newJson); // 将原始字符串转为对象
     flowResponseJson.value = JSON.stringify(jsonObject, null, 2); // 格式化为 JSON 字符串
   } catch (error) {

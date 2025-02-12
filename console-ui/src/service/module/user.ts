@@ -1,6 +1,8 @@
 import { userAPI } from '@/service/api';
 import CryptoJS from 'crypto-js';
+import { useGlobalStore } from "@/store/globaleStore.ts";
 
+// const globalStore = useGlobalStore();
 const userNameKey = 'Juggle-userName';
 const authKey = 'Juggle-Authorization';
 
@@ -17,6 +19,8 @@ export async function login(data: Parameters<typeof userAPI.login>[0]) {
 }
 
 export function logout() {
+  const globalStore = useGlobalStore();
+  globalStore.reset()
   window.localStorage.removeItem(authKey);
   return Promise.resolve(true);
 }

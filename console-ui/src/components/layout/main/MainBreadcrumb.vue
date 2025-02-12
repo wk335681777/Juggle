@@ -7,7 +7,6 @@ $router.afterEach(to => {
   matched.value = to.matched;
 });
 
-debugger
 const getBreadcrumbLink = (item) => {
   // 如果路由路径中有动态参数 :appCode，生成带参数的完整路径
   if (item.path.includes(':')) {

@@ -18,13 +18,14 @@ let appForm = ref({
 
 const apps = ref<Record<string, any>[]>([]);
 
-function goToApp (appCode) {
-  debugger
-  // globalStore.setAppCode(appCode);
+function goToApp (app) {
+  globalStore.setAppCode(app.appCode);
+  globalStore.setAppName(app.appName);
+
   router.push({
     name: 'main',
     params: {
-      appCode: appCode,
+      appCode: app.appCode,
     },
   });
 }
@@ -35,7 +36,7 @@ async function queryApps() {
     apps.value = res.result;
   } else {
     ElMessage({ type: 'error', message: res.errorMsg });
-    apps.value = [{"id": 1, "appCode": "11111", "appName": "11111"}];
+    apps.value = [{"id": 1, "appCode": "11111", "appName": "测试应用"}];
   }
 }
 
@@ -84,7 +85,7 @@ queryApps();
       <div
           v-for="app in apps"
           :key="app.id"
-          class="app-card" @click.prevent="goToApp(app.appCode)"
+          class="app-card" @click.prevent="goToApp(app)"
       >
         <div class="app-icon">
           <!-- 这里可以放置图标或图片 -->

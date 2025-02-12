@@ -1,5 +1,12 @@
+<script setup lang="ts">
+import {useGlobalStore} from "@/store/globaleStore.ts";
+import {storeToRefs} from "pinia";
+
+const globalStore = useGlobalStore();
+const { appName, appCode } = storeToRefs(globalStore);
+</script>
 <template>
-  <div class="app-logo">JUGGLE</div>
+  <div class="app-logo">{{ appName }}</div>
 </template>
 <style lang="less" scoped>
 .app-logo {

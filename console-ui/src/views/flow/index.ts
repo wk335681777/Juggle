@@ -39,7 +39,6 @@ export const FlowRoutes = [
         component: FlowDebug2,
         meta: { name: '流程调试' },
         beforeRouteLeave(to, from, next) {
-          debugger
         },
       },
     ],

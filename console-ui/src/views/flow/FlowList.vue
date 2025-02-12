@@ -32,7 +32,6 @@ function onSearch(param: typeof filter.value) {
 
 async function queryFlowPage() {
   loading.value = true;
-  debugger
   const res = await flowService.queryFlowPage({
     pageSize: pageSize.value,
     pageNum: pageNum.value,
