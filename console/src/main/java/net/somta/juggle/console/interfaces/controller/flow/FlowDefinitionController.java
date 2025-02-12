@@ -76,11 +76,13 @@ public class FlowDefinitionController {
      * @return Boolean
      */
     @Operation(summary = "创建流程定义")
-    @PostMapping("/add")
-    public ResponseDataResult<Boolean> addFlowDefinition(@RequestBody FlowDefinitionAddParam flowDefinitionAddParam){
-        if(flowDefinitionAddParam == null){
+    @PostMapping("/{appCode}/add")
+    public ResponseDataResult<Boolean> addFlowDefinition(@PathVariable String appCode, @RequestBody FlowDefinitionAddParam flowDefinitionAddParam){
+        if(flowDefinitionAddParam == null) {
             return ResponseDataResult.setErrorResponseResult(FLOW_PARAM_ERROR);
         }
+
+        flowDefinitionAddParam.setAppCode(appCode);
         Boolean result = flowDefinitionService.addFlowDefinition(flowDefinitionAddParam);
         return ResponseDataResult.setResponseResult(result);
     }
@@ -146,8 +148,9 @@ public class FlowDefinitionController {
      * @return Boolean
      */
     @Operation(summary = "获取流程定义分页列表")
-    @PostMapping("/page")
-    public ResponsePaginationDataResult<FlowDefinitionInfoDTO> getFlowDefinitionPageList(@RequestBody FlowDefinitionPageParam flowDefinitionPageParam){
+    @PostMapping("/{appCode}/page")
+    public ResponsePaginationDataResult<FlowDefinitionInfoDTO> getFlowDefinitionPageList(@PathVariable String appCode, @RequestBody FlowDefinitionPageParam flowDefinitionPageParam){
+        flowDefinitionPageParam.setAppCode(appCode);
         PageInfo pageInfo = flowDefinitionService.getFlowDefinitionPageList(flowDefinitionPageParam);
         return ResponsePaginationDataResult.setPaginationDataResult(pageInfo.getTotal(),pageInfo.getList());
     }

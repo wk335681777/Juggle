@@ -11,6 +11,7 @@ import * as orderAPI from './order.ts';
 import * as tokenAPI from './token.ts';
 import * as datasourceAPI from './dataSource.ts';
 import * as commonAPI from './common.ts';
+import * as appApi from './app.ts';
 
 export {
     userAPI,
@@ -25,5 +26,6 @@ export {
     orderAPI,
     tokenAPI,
     datasourceAPI,
-    commonAPI
+    commonAPI,
+    appApi
 };

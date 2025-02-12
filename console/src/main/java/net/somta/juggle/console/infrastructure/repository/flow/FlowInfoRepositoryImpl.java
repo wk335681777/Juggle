@@ -93,6 +93,7 @@ public class FlowInfoRepositoryImpl implements IFlowInfoRepository {
         flowVersionPo.setCreatedBy(IdentityContext.getIdentity().getUserId());
         flowVersionPo.setFlowType(flowInfoAo.getFlowType());
         flowVersionPo.setFlowKey(flowInfoAo.getFlowKey());
+        flowVersionPo.setAppCode(flowInfoAo.getAppCode());
         flowVersionMapper.add(flowVersionPo);
         return true;
     }

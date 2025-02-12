@@ -10,6 +10,13 @@ const dataTotal = ref(0);
 const dataRows = ref<Record<string, any>[]>([]);
 const loading = ref(false);
 
+const props = defineProps({
+  appCode: {
+    type: String,
+    required: true
+  }
+});
+
 const filter = ref<{
   flowName?: string;
   flowType?: string;
@@ -25,9 +32,11 @@ function onSearch(param: typeof filter.value) {
 
 async function queryFlowPage() {
   loading.value = true;
+  debugger
   const res = await flowService.queryFlowPage({
     pageSize: pageSize.value,
     pageNum: pageNum.value,
+    appCode: props.appCode,
     ...filter.value,
   });
   if (res.success) {

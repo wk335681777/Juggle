@@ -11,6 +11,7 @@ import * as orderService from './orderService.ts';
 import * as tokenService from './token';
 import * as dataSourceService from './dataSource.ts';
 import * as commonService from './common';
+import * as appService from './app.ts'
 
 export {
   userService,
@@ -26,4 +27,5 @@ export {
   tokenService,
   dataSourceService,
   commonService,
+  appService,
 };

@@ -15,6 +15,8 @@ public class FlowDefinitionInfoQueryVO {
      */
     private String flowType;
 
+    private String appCode;
+
     public String getFlowName() {
         return flowName;
     }
@@ -31,4 +33,11 @@ public class FlowDefinitionInfoQueryVO {
         this.flowType = flowType;
     }
 
+    public String getAppCode() {
+        return appCode;
+    }
+
+    public void setAppCode(String appCode) {
+        this.appCode = appCode;
+    }
 }

@@ -21,7 +21,7 @@ async function submit() {
     password: password.value,
   });
   if (result.success) {
-    await router.push({name: 'flow'});
+    await router.push({name: 'index'});
   } else {
     ElMessage.error(result.errorMsg || '登录失败');
   }

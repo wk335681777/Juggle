@@ -2,22 +2,22 @@ import { request, type ResponsePageResult, type ResponseResult } from '../base';
 import { FlowDefineInfo, InputParams, OutputParams } from '@/typings';
 import { FlowVariable } from '@/views/flow/design';
 
-export async function addDefineInfo(params: {
+export async function addDefineInfo(appCode: string, params: {
   flowName: string;
   flowType: string;
   remark?: string;
   flowInputParams?: InputParams[];
   flowOutputParams?: OutputParams[];
 }): ResponseResult<boolean> {
-  return request.post(`/v1/flow/definition/add`, params);
+  return request.post(`/v1/flow/definition/${appCode}/add`, params);
 }
 
 export async function getDefineInfo(id: number): ResponseResult<FlowDefineInfo> {
   return request.get(`/v1/flow/definition/info/${id}`);
 }
 
-export async function flowDefinePage(params: { pageNum: number; pageSize: number; flowName?: string; flowType?: string }): ResponsePageResult {
-  return request.post('/v1/flow/definition/page', params);
+export async function flowDefinePage(params: { appCode: string; pageNum: number; pageSize: number; flowName?: string; flowType?: string }): ResponsePageResult {
+  return request.post(`/v1/flow/definition/${params.appCode}/page`, params);
 }
 
 export async function deleteFlowDefine(id: number): ResponseResult<boolean> {

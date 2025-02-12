@@ -1,6 +1,6 @@
 package net.somta.juggle.console.domain.flow.definition.vo;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
 
 import java.util.Date;
 
@@ -10,6 +10,8 @@ import java.util.Date;
 public class FlowDefinitionInfoVO {
 
     private Long id;
+
+    private String appCode;
 
     /**
      * 流程Key,全局唯一
@@ -43,6 +45,14 @@ public class FlowDefinitionInfoVO {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getAppCode() {
+        return appCode;
+    }
+
+    public void setAppCode(String appCode) {
+        this.appCode = appCode;
     }
 
     public String getFlowKey() {
@@ -85,19 +95,19 @@ public class FlowDefinitionInfoVO {
         this.createdAt = createdAt;
     }
 
-    public String getFlowContent() {
-        return flowContent;
-    }
-
-    public void setFlowContent(String flowContent) {
-        this.flowContent = flowContent;
-    }
-
     public Date getUpdatedAt() {
         return updatedAt;
     }
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getFlowContent() {
+        return flowContent;
+    }
+
+    public void setFlowContent(String flowContent) {
+        this.flowContent = flowContent;
     }
 }

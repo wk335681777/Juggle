@@ -8,6 +8,8 @@ public class FlowInfoQueryVO {
 
     private String flowType;
 
+    private String appCode;;
+
     public String getFlowName() {
         return flowName;
     }
@@ -22,5 +24,13 @@ public class FlowInfoQueryVO {
 
     public void setFlowType(String flowType) {
         this.flowType = flowType;
+    }
+
+    public String getAppCode() {
+        return appCode;
+    }
+
+    public void setAppCode(String appCode) {
+        this.appCode = appCode;
     }
 }

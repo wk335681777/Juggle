@@ -6,6 +6,8 @@ package net.somta.juggle.console.domain.flow.flowinfo;
 public class FlowInfoAO {
     private Long id;
 
+    private String appCode;
+
     private String flowVersion;
 
     private String flowKey;
@@ -112,5 +114,13 @@ public class FlowInfoAO {
 
     public void setFlowVersionRemark(String flowVersionRemark) {
         this.flowVersionRemark = flowVersionRemark;
+    }
+
+    public String getAppCode() {
+        return appCode;
+    }
+
+    public void setAppCode(String appCode) {
+        this.appCode = appCode;
     }
 }

@@ -16,8 +16,8 @@ import IconInterface from '@/components/icons/IconInterface.vue';
           <el-icon><IconFlow /></el-icon>
           <span>流程</span>
         </template>
-        <el-menu-item index="/flow/define">流程定义</el-menu-item>
-        <el-menu-item index="/flow/list">流程列表</el-menu-item>
+        <el-menu-item :index="`/main/${$route.params.appCode}/flow/define`">流程定义</el-menu-item>
+        <el-menu-item :index="`/main/${$route.params.appCode}/flow/list`">流程列表</el-menu-item>
       </el-sub-menu>
 <!--      <el-sub-menu index="3">-->
 <!--        <template #title>-->

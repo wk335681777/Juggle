@@ -1,8 +1,21 @@
+
+<script lang="ts" setup>
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+const router = useRouter();
+
+function goToApp () {
+  router.push({
+    name: 'index',
+  });
+}
+
+</script>
 <template>
   <div class="header-menu">
     <ul>
       <li>
-        <a href="https://www.juggle.plus/" target="_blank" rel="noopener noreferrer">首页</a>
+        <a @click="goToApp" rel="noopener noreferrer">我的应用</a>
       </li>
       <li>
         <a href="https://www.juggle.plus/docs/guide/introduce/" target="_blank" rel="noopener noreferrer">文档</a>

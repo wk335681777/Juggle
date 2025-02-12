@@ -4,6 +4,20 @@ import { flowDefineService, flowVersionService } from '@/service';
 import { reactive, ref } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { Plus } from '@element-plus/icons-vue';
+import { useRouter } from 'vue-router';
+import {useGlobalStore} from "@/store/globaleStore.ts";
+import { storeToRefs } from 'pinia'
+
+const router = useRouter();
+const globalStore = useGlobalStore();
+const { appCode } = storeToRefs(globalStore);
+
+const props = defineProps({
+  appCode: {
+    type: String,
+    required: true
+  }
+});
 
 const pageNum = ref(1);
 const pageSize = ref(10);
@@ -37,6 +51,7 @@ async function queryFlowDefinePage() {
   const res = await flowDefineService.queryFlowDefinePage({
     pageSize: pageSize.value,
     pageNum: pageNum.value,
+    appCode: props.appCode,
     ...filter.value,
   });
   if (res.success) {
@@ -56,7 +71,7 @@ function openflowDefineAdd() {
 }
 
 async function addFlowDefineItem(row: any) {
-  const res = await flowDefineService.addDefineInfo(row);
+  const res = await flowDefineService.addDefineInfo(props.appCode, row);
   if (res.result) {
     ElMessage({ type: 'success', message: '新建成功' });
     await queryFlowDefinePage();

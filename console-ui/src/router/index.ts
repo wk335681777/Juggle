@@ -1,10 +1,13 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 import LayoutView from '../views/LayoutView.vue';
+import HomeView from "@/views/HomeView.vue";
+import HomeLayoutView from '../views/HomeLayoutView.vue';
 import LoginView from '../views/LoginView.vue';
 import NotFound from '../views/NotFound.vue';
 import { FlowRoutes } from '../views/flow';
 import { CommonRoutes } from '../views/common';
 import ObjectList from '@/views/object/ObjectList.vue';
+import App from '@/views/app/App.vue';
 import { SystemRoutes } from '@/views/system';
 import { SuiteRoutes } from '@/views/suite';
 import FlowDesign from "@/views/flow/FlowDesign.vue";
@@ -36,19 +39,40 @@ const router = createRouter({
     {
       path: '/',
       name: 'index',
+      component: HomeLayoutView,
+      redirect: () => ({ name: 'app' }),
+      meta: { name: '首页' },
+      children: [
+        {
+          path: 'app',
+          name: 'app',
+          component: App,
+          meta: { name: 'app' },
+        },
+      ]
+    },
+    {
+      path: '/main/:appCode',
+      name: 'main',
       component: LayoutView,
       redirect: () => ({ name: 'flow-define' }),
       meta: { name: '首页' },
       children: [
-        /*{
-          path: '',
-          name: 'home',
-          component: HomeView,
-          meta: { name: '首页' },
-        },*/
+        // {
+        //   path: '',
+        //   name: 'home',
+        //   component: HomeView,
+        //   meta: { name: '首页' },
+        // },
         ...CommonRoutes,
         ...FlowRoutes,
         ...SuiteRoutes,
+        // {
+        //   path: 'app',
+        //   name: 'app',
+        //   component: App,
+        //   meta: { name: 'app' },
+        // },
         {
           path: 'object/list',
           name: 'object-list',

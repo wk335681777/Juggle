@@ -8,6 +8,8 @@ import net.somta.core.base.BaseModel;
 public class FlowVersionPO extends BaseModel {
     private Long id;
 
+    private String appCode;
+
     private Long flowId;
 
     private String flowName;
@@ -139,5 +141,13 @@ public class FlowVersionPO extends BaseModel {
 
     public void setFlowName(String flowName) {
         this.flowName = flowName;
+    }
+
+    public String getAppCode() {
+        return appCode;
+    }
+
+    public void setAppCode(String appCode) {
+        this.appCode = appCode;
     }
 }

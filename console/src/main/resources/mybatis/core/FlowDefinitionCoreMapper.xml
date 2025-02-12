@@ -6,6 +6,7 @@
 <!-- Result Map-->
 <resultMap id="BaseResultMap" type="net.somta.juggle.console.infrastructure.po.flow.FlowDefinitionInfoPO" >
 	<result column="id" property="id"/>
+	<result column="app_code" property="appCode"/>
 	<result column="flow_key" property="flowKey"/>
 	<result column="flow_name" property="flowName"/>
 	<result column="flow_type" property="flowType"/>
@@ -29,12 +30,12 @@
 </sql>
        
 <sql id="Base_Column_List" >
-	id, flow_key, flow_name,flow_type, flow_content, remark, created_at, created_by, updated_at, updated_by
+	id, app_code, flow_key, flow_name,flow_type, flow_content, remark, created_at, created_by, updated_at, updated_by
 </sql>
    
 <insert id="add" parameterType="net.somta.juggle.console.infrastructure.po.flow.FlowDefinitionInfoPO" >
-	insert into t_flow_definition (id, flow_key, flow_name,flow_type, flow_content, remark, deleted, created_at, created_by, updated_at, updated_by)
-	values (#{id},#{flowKey},#{flowName},#{flowType},#{flowContent},#{remark},0,#{createdAt},#{createdBy},#{updatedAt},#{updatedBy});
+	insert into t_flow_definition (id, app_code, flow_key, flow_name,flow_type, flow_content, remark, deleted, created_at, created_by, updated_at, updated_by)
+	values (#{id},#{appCode},#{flowKey},#{flowName},#{flowType},#{flowContent},#{remark},0,#{createdAt},#{createdBy},#{updatedAt},#{updatedBy});
 </insert>
 
 <delete id="deleteById" parameterType="java.lang.Long">
@@ -44,6 +45,9 @@
 <update id="update" parameterType="net.somta.juggle.console.infrastructure.po.flow.FlowDefinitionInfoPO" >
 	update t_flow_definition set
 	updated_at = now(),
+	<if test="appCode != null and appCode != ''">
+		app_code=#{appCode},
+	</if>
 	<trim  suffixOverrides="," >
 	<if test="flowKey != null and flowKey != ''">
 		flow_key=#{flowKey},

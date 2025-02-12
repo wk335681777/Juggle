@@ -5,9 +5,12 @@ import ElementPlus from 'element-plus';
 import './assets/base.css';
 import 'element-plus/dist/index.css';
 import { userService } from './service';
+import { createPinia } from 'pinia'
 
+const pinia = createPinia()
 const app = createApp(App);
 
+app.use(pinia)
 app.use(ElementPlus);
 app.use(router);
 

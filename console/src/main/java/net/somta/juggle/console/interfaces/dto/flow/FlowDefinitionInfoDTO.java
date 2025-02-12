@@ -15,6 +15,7 @@ public class FlowDefinitionInfoDTO {
 
     private Long id;
 
+    private String appCode;
     /**
      * 流程Key,全局唯一
      */
@@ -154,6 +155,14 @@ public class FlowDefinitionInfoDTO {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getAppCode() {
+        return appCode;
+    }
+
+    public void setAppCode(String appCode) {
+        this.appCode = appCode;
     }
 
     @Override

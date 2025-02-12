@@ -12,6 +12,8 @@ public class FlowDefinitionInfoPO extends BaseModel {
 
     private Long id;
 
+    private String appCode;
+
     /**
      * 流程Key,全局唯一
      */
@@ -91,5 +93,13 @@ public class FlowDefinitionInfoPO extends BaseModel {
 
     public void setDeleted(Integer deleted) {
         this.deleted = deleted;
+    }
+
+    public String getAppCode() {
+        return appCode;
+    }
+
+    public void setAppCode(String appCode) {
+        this.appCode = appCode;
     }
 }

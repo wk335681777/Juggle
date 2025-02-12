@@ -154,6 +154,7 @@ public class FlowDefinitionServiceImpl implements IFlowDefinitionService {
                         uri = "/v0" + uri;
                     }
 
+                    uri = "/" + dto.getAppCode() + uri;
                     dto.setDebugUri(uri);
                     dto.setEnableDebug(true);
                 }
@@ -170,6 +171,7 @@ public class FlowDefinitionServiceImpl implements IFlowDefinitionService {
     @Override
     public Boolean deployFlowDefinition(FlowDefinitionDeployParam flowDefinitionDeployParam, FlowDefinitionAO flowDefinitionAo) {
         FlowInfoAO flowInfoAo = new FlowInfoAO();
+        flowInfoAo.setAppCode(flowDefinitionAo.getAppCode());
         flowInfoAo.setFlowVersion(flowDefinitionDeployParam.getFlowDeployVersion());
         flowInfoAo.setFlowKey(flowDefinitionAo.getFlowKey());
         flowInfoAo.setFlowName(flowDefinitionAo.getFlowName());

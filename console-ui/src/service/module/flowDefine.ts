@@ -1,7 +1,7 @@
 import { flowDefineAPI } from '@/service/api';
 
-export async function addDefineInfo(params: Parameters<typeof flowDefineAPI.addDefineInfo>[0]) {
-  return flowDefineAPI.addDefineInfo(params);
+export async function addDefineInfo(appCode: string, params: Parameters<typeof flowDefineAPI.addDefineInfo>[1]) {
+  return flowDefineAPI.addDefineInfo(appCode, params);
 }
 
 export async function getDefineInfo(id: number) {

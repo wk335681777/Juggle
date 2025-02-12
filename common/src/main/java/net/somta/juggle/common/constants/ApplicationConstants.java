@@ -53,4 +53,9 @@ public class ApplicationConstants {
      * 数据源错误码
      */
     public final static long DATASOURCE_CODE = (APPLICATION_CODE_PREFIX * 1000 + 8) * 10000;
+
+    /**
+     * 对象错误码
+     */
+    public final static long APP_CODE = (APPLICATION_CODE_PREFIX * 1000 + 9) * 10000;
 }

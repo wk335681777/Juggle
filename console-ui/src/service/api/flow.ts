@@ -4,7 +4,7 @@ export function updateFlowStatus(flowId: number, flowStatus: number): ResponsePa
   return request.put('/v1/flow/status', { flowId: flowId, flowStatus: flowStatus });
 }
 
-export async function flowPage(params: { pageNum: number; pageSize: number; flowName?: string; flowType?: string }): ResponsePageResult {
+export async function flowPage(params: { appCode: string, pageNum: number; pageSize: number; flowName?: string; flowType?: string }): ResponsePageResult {
   return request.post('/v1/flow/page', params);
 }
 

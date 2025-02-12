@@ -9,6 +9,7 @@
 	<result column="flow_key" property="flowKey"/>
 	<result column="flow_name" property="flowName"/>
 	<result column="flow_type" property="flowType"/>
+	<result column="app_code" property="appCode"/>
 	<result column="remark" property="remark"/>
 	<result column="deleted" property="deleted"/>
 	<result column="created_at" property="createdAt"/>
@@ -25,15 +26,16 @@
 	<if test="flowType != null and flowType != ''">
 		and flow_type = #{flowType}
 	</if>
+	and app_code = #{appCode}
 </sql>
        
 <sql id="Base_Column_List" >
-	id, flow_key, flow_name,flow_type, remark, created_at, created_by, updated_at, updated_by
+	id, flow_key, flow_name,flow_type, app_code, remark, created_at, created_by, updated_at, updated_by
 </sql>
    
 <insert id="add" parameterType="net.somta.juggle.console.infrastructure.po.flow.FlowDefinitionInfoPO" >
-	insert into t_flow_info (id, flow_key, flow_name,flow_type, remark,deleted, created_at, created_by, updated_at, updated_by)
-	values (#{id},#{flowKey},#{flowName},#{flowType},#{remark},0,#{createdAt},#{createdBy},#{updatedAt},#{updatedBy});
+	insert into t_flow_info (id, app_code, flow_key, flow_name,flow_type, remark,deleted, created_at, created_by, updated_at, updated_by)
+	values (#{id},#{appCode},#{flowKey},#{flowName},#{flowType},#{remark},0,now(),#{createdBy},now(),#{updatedBy});
 </insert>
 
 <delete id="deleteById" parameterType="java.lang.Long">
@@ -52,6 +54,9 @@
 	<if test="flowType != null and flowType != ''">
 		flow_type=#{flowType},
 	</if>
+	<if test="appCode != null and appCode != ''">
+		app_code=#{appCode},
+	</if>
 	<if test="remark != null and remark != ''">
 		remark=#{remark},
 	</if>
@@ -64,9 +69,7 @@
 	<if test="createdBy != null">
 		created_by=#{createdBy},
 	</if>
-	<if test="updatedAt != null">
-		updated_at=#{updatedAt},
-	</if>
+	updated_at=now(),
 	<if test="updatedBy != null">
 		updated_by=#{updatedBy},
 	</if>

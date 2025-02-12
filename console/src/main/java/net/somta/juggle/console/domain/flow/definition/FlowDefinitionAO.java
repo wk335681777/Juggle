@@ -28,6 +28,8 @@ import java.util.List;
 public class FlowDefinitionAO {
 
     private Long id;
+
+    private String appCode;
     /**
      * flow Key, globally unique
      */
@@ -194,5 +196,11 @@ public class FlowDefinitionAO {
         this.variableInfoList = variableInfoList;
     }
 
+    public String getAppCode() {
+        return appCode;
+    }
 
+    public void setAppCode(String appCode) {
+        this.appCode = appCode;
+    }
 }

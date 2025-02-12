@@ -18,12 +18,14 @@ export const FlowRoutes = [
         name: 'flow-define',
         component: FlowDefineList,
         meta: { name: '流程定义' },
+        props: (route) => ({ appCode: route.params.appCode }),
       },
       {
         path: 'list',
         name: 'flow-api',
         component: FlowList,
         meta: { name: '流程列表' },
+        props: (route) => ({ appCode: route.params.appCode }),
       },
       {
         path: 'version/:flowId',

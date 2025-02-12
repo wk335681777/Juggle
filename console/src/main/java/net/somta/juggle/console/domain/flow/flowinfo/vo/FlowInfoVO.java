@@ -12,6 +12,8 @@ public class FlowInfoVO {
 
     private String flowType;
 
+    private String appCode;
+
     private String remark;
 
     public Long getId() {
@@ -52,5 +54,13 @@ public class FlowInfoVO {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getAppCode() {
+        return appCode;
+    }
+
+    public void setAppCode(String appCode) {
+        this.appCode = appCode;
     }
 }

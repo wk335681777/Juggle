@@ -14,6 +14,8 @@ public class FlowInfoPO extends BaseModel {
 
     private String flowType;
 
+    private String appCode;
+
     private String remark;
 
     private Integer deleted;
@@ -64,5 +66,13 @@ public class FlowInfoPO extends BaseModel {
 
     public void setDeleted(Integer deleted) {
         this.deleted = deleted;
+    }
+
+    public String getAppCode() {
+        return appCode;
+    }
+
+    public void setAppCode(String appCode) {
+        this.appCode = appCode;
     }
 }
