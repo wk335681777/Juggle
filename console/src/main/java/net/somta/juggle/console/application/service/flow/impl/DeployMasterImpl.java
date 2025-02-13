@@ -101,6 +101,7 @@ public class DeployMasterImpl implements IDeployMaster {
                 ServerInfo serverInfo = new ServerInfo(ipPort[0], ipPort[1], ipPort[2], lastHeartBeatTime);
                 workerServers.put(key.toString(), serverInfo);
             } else {
+                workerServers.remove(key);
                 redisTemplate.opsForHash().delete(REDIS_WORKER_KEY, key);
                 log.info("worker lastBeatHeart time more than 1 mini");
             }
