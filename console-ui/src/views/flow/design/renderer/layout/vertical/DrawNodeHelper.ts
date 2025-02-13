@@ -21,6 +21,7 @@ export class DrawNodeHelper {
             case ElementType.START:
                 this.drawStartNode(container, node, type);
                 break;
+
             case ElementType.METHOD:
             case ElementType.ASSIGN:
             case ElementType.CODE:
@@ -36,15 +37,20 @@ export class DrawNodeHelper {
             case ElementType.UNMARSHAL:
             case ElementType.RECIPIENT_LIST:
             case ElementType.WEBSERVICE:
+            case ElementType.EN_AND_DE://加解密
+
             case ElementType.MYSQL:
                 this.drawNormal(container, node, type);
                 break;
+
             case ElementType.CONDITION:
                 this.drawCondition(container, node, type);
                 break;
+
             case ElementType.BRANCH:
                 this.drawBranch(container, node, type);
                 break;
+
             case ElementType.END:
                 this.drawEndNode(container);
                 break;
@@ -66,7 +72,8 @@ export class DrawNodeHelper {
         }
         if ([ElementType.METHOD, ElementType.CODE, ElementType.MYSQL,ElementType.LOG,ElementType.HTTP,ElementType.MARSHAL,
             ElementType.UNMARSHAL,ElementType.DIRECT,ElementType.DYNAMIC_ROUTE,ElementType.SET_HEADER,ElementType.TRANSFORM
-            ,ElementType.NETTY_HTTP,ElementType.CONVERT_BODY_TO,ElementType.RECIPIENT_LIST,ElementType.WEBSERVICE].includes(data.type)) {
+            ,ElementType.NETTY_HTTP,ElementType.CONVERT_BODY_TO,ElementType.RECIPIENT_LIST,ElementType.WEBSERVICE,
+            ElementType.EN_AND_DE].includes(data.type)) {
             this.drawAddIcon(container, node, type);
         }
     }

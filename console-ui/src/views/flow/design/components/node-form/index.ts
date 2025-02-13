@@ -16,6 +16,8 @@ import SetHeaderForm from "./SetHeaderForm.vue";
 import TransformForm from "./TransformForm.vue";
 import RecipientListForm from "./RecipientListForm.vue";
 import WebServiceForm from "./WebServiceForm.vue";
+import EnAndDeForm from "@/views/flow/design/components/node-form/EnAndDeForm.vue";
+
 
 const nodeFormMap = {
   [ElementType.CONDITION]: ConditionForm,
@@ -35,6 +37,8 @@ const nodeFormMap = {
   [ElementType.TRANSFORM]: TransformForm,
   [ElementType.RECIPIENT_LIST]: RecipientListForm,
   [ElementType.WEBSERVICE]: WebServiceForm,
+  [ElementType.EN_AND_DE]: EnAndDeForm,//加解密
+
 
 };
 

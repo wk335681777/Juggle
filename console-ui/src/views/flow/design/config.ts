@@ -73,4 +73,10 @@ export const nodeMap = {
     nodeName: 'WebService',
     nodeHeaderColor: '#b471e7',
   },
-};
+  //加解密
+  [ElementType.EN_AND_DE]: {
+    nodeName: 'EnAndDe',
+    nodeHeaderColor: '#b471e7',
+
+  },
+}

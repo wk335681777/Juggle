@@ -49,6 +49,7 @@ export enum ElementType {
   TRANSFORM = 'TRANSFORM',
   RECIPIENT_LIST = 'RECIPIENT_LIST',
   WEBSERVICE = 'WEBSERVICE',
+  EN_AND_DE = 'EN_AND_DE',//加解密
   LOG = 'LOG',
   END = 'END',
 

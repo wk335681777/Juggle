@@ -58,6 +58,7 @@ public class DeployMasterImpl implements IDeployMaster {
         for (ServerInfo serverInfo : servers.values()) {
             String fullUrl = serverInfo.getProtocol() + "://" + serverInfo.getIp() + ":" + serverInfo.getPort() + url;
             //try {
+            log.info("start deploy worker for {}", fullUrl);
             String result = HttpUtil.get(fullUrl);
             log.info("deploy server:{}, path: {}, deploy result:{}", serverInfo.getIp() + ":" + serverInfo.getPort(), url, result);
             processResult(result);
@@ -95,7 +96,7 @@ public class DeployMasterImpl implements IDeployMaster {
             String value = (String) redisTemplate.opsForHash().get(REDIS_WORKER_KEY, key);
             assert value != null;
             long lastHeartBeatTime = Long.parseLong(value);
-            if (System.currentTimeMillis() - lastHeartBeatTime <= 60 * 60 * 1000) {
+            if (System.currentTimeMillis() - lastHeartBeatTime <= 60 * 1000) {
                 String[] ipPort = key.toString().split(":");
                 ServerInfo serverInfo = new ServerInfo(ipPort[0], ipPort[1], ipPort[2], lastHeartBeatTime);
                 workerServers.put(key.toString(), serverInfo);

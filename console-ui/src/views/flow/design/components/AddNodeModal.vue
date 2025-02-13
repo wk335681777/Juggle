@@ -14,7 +14,7 @@ function open(params: typeof openParams) {
   openParams = params;
 }
 
-const containerRef = ref<HTMLElement | null>(null);
+// const containerRef = ref<HTMLElement | null>(null);
 
 const handleClick = (e: MouseEvent) => {
   e.preventDefault();
@@ -86,6 +86,13 @@ const flowNodes = [
     type: ElementType.WEBSERVICE,
     icon: IconCode,
   },
+    //加解密
+  {
+    name:'EnAndDe',
+    type: ElementType.EN_AND_DE,
+    icon: IconCode,
+  },
+
 ];
 
 const flowDataNodes = [

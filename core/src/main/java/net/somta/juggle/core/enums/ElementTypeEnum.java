@@ -63,6 +63,8 @@ public enum ElementTypeEnum {
     TRANSFORM,
     LOG,
     WEBSERVICE,
+    EN_AND_DE,//加解密
+
 
     ASSIGN;
 }
