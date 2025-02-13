@@ -3,6 +3,7 @@ package net.somta.juggle.console.application.service.flow;
 import com.github.pagehelper.PageInfo;
 import net.somta.juggle.console.domain.flow.definition.FlowDefinitionAO;
 import net.somta.juggle.common.param.TriggerDataParam;
+import net.somta.juggle.console.interfaces.dto.flow.FlowDefinitionInfoDTO;
 import net.somta.juggle.console.interfaces.param.flow.definition.*;
 import net.somta.juggle.core.model.FlowResult;
 
@@ -45,6 +46,13 @@ public interface IFlowDefinitionService {
      * @return
      */
     FlowDefinitionAO getFlowDefinitionInfo(Long flowDefinitionId);
+
+    /**
+     * 获取debug页面详情
+     * @param flowDefinitionId
+     * @return
+     */
+    FlowDefinitionInfoDTO getDebugInfo(Long flowDefinitionId);
 
     /**
      * 获取流程定义

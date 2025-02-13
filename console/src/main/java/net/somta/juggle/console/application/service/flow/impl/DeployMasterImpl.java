@@ -3,6 +3,7 @@ package net.somta.juggle.console.application.service.flow.impl;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONObject;
 import net.somta.juggle.console.application.service.flow.IDeployMaster;
+import net.somta.juggle.core.model.ServerInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -11,6 +12,8 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -108,48 +111,9 @@ public class DeployMasterImpl implements IDeployMaster {
         }
     }
 
-    public static class ServerInfo {
-        private String ip;
-        private String port;
-        private long lastHeartBeatTime;
-        private String protocol;
-        public ServerInfo(String protocol, String ip, String port, long lastHeartBeatTime) {
-            this.protocol = protocol;
-            this.ip = ip;
-            this.port = port;
-            this.lastHeartBeatTime = lastHeartBeatTime;
-        }
-
-        public String getIp() {
-            return ip;
-        }
-
-        public void setIp(String ip) {
-            this.ip = ip;
-        }
-
-        public String getPort() {
-            return port;
-        }
-
-        public void setPort(String port) {
-            this.port = port;
-        }
-
-        public long getLastHeartBeatTime() {
-            return lastHeartBeatTime;
-        }
-
-        public void setLastHeartBeatTime(long lastHeartBeatTime) {
-            this.lastHeartBeatTime = lastHeartBeatTime;
-        }
-
-        public String getProtocol() {
-            return protocol;
-        }
-
-        public void setProtocol(String protocol) {
-            this.protocol = protocol;
-        }
+    @Override
+    public List<ServerInfo> getServers() {
+        return new ArrayList<>(workerServers.values());
     }
+
 }

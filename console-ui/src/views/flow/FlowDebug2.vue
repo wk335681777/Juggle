@@ -26,14 +26,20 @@ const responseHeaderData = ref([]);
 
 queryFlowDefineInfo();
 
-const debugId = crypto.randomUUID();
+function generateUUID() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0,
+        v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+const debugId = generateUUID();
 
 async function queryFlowDefineInfo() {
-  const res = await flowDefineService.getDefineInfo(paramsData.params.flowDefinitionId as number);
+  const res = await flowDefineService.getDebugInfo(paramsData.params.flowDefinitionId as number);
   if (res.success) {
-    debugUrl.value = "http://" + window.location.hostname  + ":20888"+ paramsData.query.debugUri + "?debugConnId=" + debugId;
+    debugUrl.value = res.result.debugUri + "?debugConnId=" + debugId;
     flowDefine.value = res.result;
-
   } else {
     ElMessage({ type: 'error', message: res.errorMsg });
   }
@@ -164,9 +170,8 @@ watch(flowResponseJson, (newJson) => {
   <div class="flow-debug">
     <div class="flow-header">
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item>{{ flowDefine.flowName }} - {{ paramsData.params.flowKey }}</el-breadcrumb-item>
+        <el-breadcrumb-item>{{ flowDefine.flowName }} - {{ flowDefine.flowKey }}</el-breadcrumb-item>
       </el-breadcrumb>
-      <!--      <el-button class="flow-submit" type="primary" @click="flowSubmit">保存</el-button>-->
     </div>
 
     <el-row :gutter="16">

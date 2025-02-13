@@ -31,9 +31,6 @@ function goDebugPage(flowDefinitionId: number, flowKey: string, debugUri: string
       flowDefinitionId: flowDefinitionId,
       flowKey: flowKey,
     },
-    query: {
-      debugUri: debugUri,                         // 将 uri 放在 query 中
-    },
   });
 }
 function goDesignPage(flowDefinitionId: number, flowKey: string) {

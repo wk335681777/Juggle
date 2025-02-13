@@ -8,6 +8,10 @@ export async function getDefineInfo(id: number) {
   return flowDefineAPI.getDefineInfo(id);
 }
 
+export async function getDebugInfo(id: number) {
+  return flowDefineAPI.getDebugInfo(id);
+}
+
 export async function queryFlowDefinePage(params: Parameters<typeof flowDefineAPI.flowDefinePage>[0]) {
   return flowDefineAPI.flowDefinePage(params);
 }

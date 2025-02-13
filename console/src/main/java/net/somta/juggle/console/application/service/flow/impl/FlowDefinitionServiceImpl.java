@@ -24,6 +24,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import net.somta.core.helper.JsonSerializeHelper;
 import net.somta.juggle.console.application.assembler.flow.IFlowDefinitionAssembler;
+import net.somta.juggle.console.application.service.flow.IDeployMaster;
 import net.somta.juggle.console.application.service.flow.IFlowDefinitionService;
 import net.somta.juggle.console.application.service.flow.IFlowRuntimeService;
 import net.somta.juggle.console.domain.flow.definition.FlowDefinitionAO;
@@ -40,12 +41,16 @@ import net.somta.juggle.common.param.TriggerDataParam;
 import net.somta.juggle.console.interfaces.param.flow.definition.*;
 import net.somta.juggle.core.model.Flow;
 import net.somta.juggle.core.model.FlowResult;
+import net.somta.juggle.core.model.ServerInfo;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * @author husong
@@ -58,6 +63,10 @@ public class FlowDefinitionServiceImpl implements IFlowDefinitionService {
     private final IVariableInfoRepository variableInfoRepository;
     private final IFlowInfoRepository flowRepository;
     private final IFlowDefinitionRepository flowDefinitionRepository;
+    @Resource
+    private IDeployMaster deployMaster;
+    @Value("${camel.worker.rest.dev.port}")
+    private String camelWorkerRestDevPort;
 
     public FlowDefinitionServiceImpl(IFlowRuntimeService flowRuntimeService, IVariableInfoRepository variableInfoRepository, IFlowInfoRepository flowRepository, IFlowDefinitionRepository flowDefinitionRepository) {
         this.flowRuntimeService = flowRuntimeService;
@@ -110,6 +119,14 @@ public class FlowDefinitionServiceImpl implements IFlowDefinitionService {
     }
 
     @Override
+    public FlowDefinitionInfoDTO getDebugInfo(Long flowDefinitionId) {
+        FlowDefinitionAO flowDefinitionAo = flowDefinitionRepository.queryFlowDefinitionInfo(flowDefinitionId);
+        FlowDefinitionInfoDTO dto = IFlowDefinitionAssembler.IMPL.aoToDto(flowDefinitionAo);
+        processFirstComponentNode(dto);
+        return dto;
+    }
+
+    @Override
     public FlowDefinitionAO getFlowDefinitionByKey(String flowKey) {
         FlowDefinitionAO flowDefinitionAo = flowDefinitionRepository.queryFlowDefinitionByKey(flowKey);
         List<VariableInfoVO> variableInfoVoList = variableInfoRepository.queryVariableInfoList(flowDefinitionAo.getId());
@@ -129,35 +146,48 @@ public class FlowDefinitionServiceImpl implements IFlowDefinitionService {
         return pageInfo;
     }
 
-    private void processFirstComponentNode(List<FlowDefinitionInfoDTO> flowDefinitionInfoDtoList) {
-        for (FlowDefinitionInfoDTO dto : flowDefinitionInfoDtoList) {
-            String flowContent = dto.getFlowContent();
-            JSONArray jsonArray = new JSONArray(flowContent);
-            Map<String, JSONObject> map = new HashMap<>();
-            JSONObject startNode = null;
-            for (int i = 0; i < jsonArray.size(); i++) {
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                map.put(jsonObject.getStr("key"), jsonObject);
-                String type = jsonObject.getStr("elementType");
-                if ("START".equals(type)) {
-                    startNode = jsonObject;
-                }
+    private void processFirstComponentNode(List<FlowDefinitionInfoDTO> flowDefinitionInfoDTOList) {
+        for (FlowDefinitionInfoDTO dto : flowDefinitionInfoDTOList) {
+            processFirstComponentNode(dto);
+        }
+    }
+
+    private void processFirstComponentNode(FlowDefinitionInfoDTO flowDefinitionInfoDTO) {
+        List<ServerInfo> serverInfoList = deployMaster.getServers();
+        String serverUri;
+        if (serverInfoList.isEmpty()) {
+            serverUri = "http://localhost:" + camelWorkerRestDevPort;
+        } else {
+            ServerInfo serverInfo = serverInfoList.get(new Random().nextInt(serverInfoList.size()));
+            serverUri = serverInfo.getProtocol() + "://" + serverInfo.getIp() + ":" + camelWorkerRestDevPort;
+        }
+
+        String flowContent = flowDefinitionInfoDTO.getFlowContent();
+        JSONArray jsonArray = new JSONArray(flowContent);
+        Map<String, JSONObject> map = new HashMap<>();
+        JSONObject startNode = null;
+        for (int i = 0; i < jsonArray.size(); i++) {
+            JSONObject jsonObject = jsonArray.getJSONObject(i);
+            map.put(jsonObject.getStr("key"), jsonObject);
+            String type = jsonObject.getStr("elementType");
+            if ("START".equals(type)) {
+                startNode = jsonObject;
             }
+        }
 
-            if (startNode != null) {
-                JSONArray outgoings = startNode.getJSONArray("outgoings");
-                String nextNodeId = outgoings.getStr(0);
-                JSONObject nextNode = map.get(nextNodeId);
-                if ("NETTY_HTTP".equals(nextNode.getStr("elementType"))) {
-                    String uri = nextNode.getStr("uri");
-                    if ("async".equalsIgnoreCase(dto.getFlowType())) {
-                        uri = "/v0" + uri;
-                    }
-
-                    uri = "/" + dto.getAppCode() + uri;
-                    dto.setDebugUri(uri);
-                    dto.setEnableDebug(true);
+        if (startNode != null) {
+            JSONArray outgoings = startNode.getJSONArray("outgoings");
+            String nextNodeId = outgoings.getStr(0);
+            JSONObject nextNode = map.get(nextNodeId);
+            if ("NETTY_HTTP".equals(nextNode.getStr("elementType"))) {
+                String uri = nextNode.getStr("uri");
+                if ("async".equalsIgnoreCase(flowDefinitionInfoDTO.getFlowType())) {
+                    uri = "/v0" + uri;
                 }
+
+                String fullUri = serverUri + "/" + flowDefinitionInfoDTO.getAppCode() + uri;
+                flowDefinitionInfoDTO.setDebugUri(fullUri);
+                flowDefinitionInfoDTO.setEnableDebug(true);
             }
         }
     }

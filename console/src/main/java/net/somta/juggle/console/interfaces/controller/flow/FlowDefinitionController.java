@@ -142,6 +142,13 @@ public class FlowDefinitionController {
         return ResponseDataResult.setResponseResult(flowDefinitionInfoDto);
     }
 
+    @Operation(summary = "查询流程定义debug详情")
+    @GetMapping("/debugInfo/{flowDefinitionId}")
+    public ResponseDataResult<FlowDefinitionInfoDTO> getDebugInfo(@PathVariable Long flowDefinitionId){
+        FlowDefinitionInfoDTO flowDefinitionInfoDTO = flowDefinitionService.getDebugInfo(flowDefinitionId);
+        return ResponseDataResult.setResponseResult(flowDefinitionInfoDTO);
+    }
+
     /**
      * 获取流程列表
      * @param flowDefinitionPageParam 变量实体参数
