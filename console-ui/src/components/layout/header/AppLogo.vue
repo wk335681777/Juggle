@@ -1,12 +1,9 @@
 <script setup lang="ts">
-import {useGlobalStore} from "@/store/globaleStore.ts";
-import {storeToRefs} from "pinia";
-
-const globalStore = useGlobalStore();
-const { appName, appCode } = storeToRefs(globalStore);
+import { useRouter } from 'vue-router';
+const $router = useRouter();
 </script>
 <template>
-  <div class="app-logo">{{ appName }}</div>
+  <div class="app-logo">{{ $router.currentRoute.value.params.appCode }}</div>
 </template>
 <style lang="less" scoped>
 .app-logo {
