@@ -55,11 +55,6 @@ async function sendFlowDebug() {
   };
   const res = await flowDefineService.debugFlow(paramsData.params.flowKey as string, params);
   if (res.success) {
-    // if (flowDefine.value?.flowType === 'sync') {
-    //   flowResponseJson.value = res.result;
-    // } else {
-    //   timerId = setInterval(getAsyncFlowResult, 1000, res.result.flowInstanceId);
-    // }
     flowResponseJson.value = res.result;
   } else {
     ElMessage({ type: 'error', message: res.errorMsg });
