@@ -75,7 +75,7 @@ export const nodeMap = {
   },
   //加解密
   [ElementType.EN_AND_DE]: {
-    nodeName: 'EnAndDe',
+    nodeName: '加解密',
     nodeHeaderColor: '#b471e7',
 
   },

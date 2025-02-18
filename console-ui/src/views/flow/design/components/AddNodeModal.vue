@@ -88,7 +88,7 @@ const flowNodes = [
   },
     //加解密
   {
-    name:'EnAndDe',
+    name:'加解密',
     type: ElementType.EN_AND_DE,
     icon: IconCode,
   },
