@@ -19,7 +19,10 @@ const codeEditRef = ref<InstanceType<typeof CodeEditor>>();
 
 const debugUrl = ref('');
 let flowResponseJson = ref('');
-const flowDefine = ref<FlowDefineInfo>();
+const flowDefine = ref<FlowDefineInfo>({
+  flowName: '',
+  flowKey: ''
+});
 let requestBody = ref('');
 
 const responseHeaderData = ref([]);

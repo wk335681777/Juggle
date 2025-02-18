@@ -2,5 +2,5 @@
 import { RouterLink } from 'vue-router';
 </script>
 <template>
-  <div>页面未找到，返回<RouterLink to="/">首页</RouterLink></div>
+  <div>页面未找到，返回<RouterLink :to="`/main/${$route.params.appCode}`">首页</RouterLink></div>
 </template>

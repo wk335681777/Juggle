@@ -85,13 +85,13 @@ queryApps();
       <div
           v-for="app in apps"
           :key="app.id"
-          class="app-card" @click.prevent="goToApp(app)"
+          class="list-card" @click.prevent="goToApp(app)"
       >
         <div class="app-icon">
           <!-- 这里可以放置图标或图片 -->
           <span class="icon-placeholder">📱</span>
         </div>
-        <div class="app-content">
+        <div class="add-card-content">
           <h3>{{ app.appName }}</h3>
           <h3>{{ app.appCode }}</h3>
           <p class="description">{{ app.remark }}</p>
@@ -99,7 +99,7 @@ queryApps();
       </div>
 
       <!-- 如果没有应用，显示添加应用的豆腐块 -->
-      <div class="add-app-card" @click="openAddDialog">
+      <div class="add-list-card" @click="openAddDialog">
         <div class="add-app-icon">+</div>
         <div class="add-app-text">点击添加应用</div>
       </div>
@@ -238,5 +238,39 @@ h1 {
   font-size: 16px;
   color: #bbb;
   margin-top: 10px;
+}
+
+
+.list-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
+.card-content {
+  display: flex;
+  flex-direction: column;
+}
+.card-content h3 {
+  margin: 0 0 8px;
+  font-size: 18px;
+}
+.card-content p {
+  margin: 0;
+  font-size: 14px;
+  color: #555;
+}
+.add-list-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 </style>

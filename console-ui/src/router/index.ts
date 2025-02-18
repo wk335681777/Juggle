@@ -81,11 +81,20 @@ const router = createRouter({
         },
         ...MarketRoutes,
         ...SystemRoutes,
+        // {
+        //   path: '/main/:appCode/:pathMatch(.*)*',
+        //   name: 'notfound',
+        //   component: NotFound,
+        //   meta: { name: '页面不存在' },
+        // },
         {
           path: '/:pathMatch(.*)*',
           name: 'notfound',
           component: NotFound,
           meta: { name: '页面不存在' },
+          beforeEnter: (to, from, next) => {
+            next({ path: '/' });
+          },
         },
       ],
     },
