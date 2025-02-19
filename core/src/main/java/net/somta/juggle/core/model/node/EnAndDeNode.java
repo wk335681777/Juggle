@@ -11,6 +11,8 @@ public class EnAndDeNode extends FlowNode {
     private String decrypt_code;//解密字段
     private String sign_code;//加签字段
     private String secret;//密钥
+    private String checkSign;//是否验签
+    private String checkSignCode;//验签字段
 
     public String getEncrypt_type() {
         return encrypt_type;
@@ -92,4 +94,19 @@ public class EnAndDeNode extends FlowNode {
         this.secret = secret;
     }
 
+    public String getCheckSign() {
+        return checkSign;
+    }
+
+    public void setCheckSign(String checkSign) {
+        this.checkSign = checkSign;
+    }
+
+    public String getCheckSignCode() {
+        return checkSignCode;
+    }
+
+    public void setCheckSignCode(String checkSignCode) {
+        this.checkSignCode = checkSignCode;
+    }
 }

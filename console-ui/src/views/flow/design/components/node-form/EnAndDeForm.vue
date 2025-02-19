@@ -19,7 +19,9 @@ type EnAndDeData = RawData & {
   encrypt_code: string;
   decrypt_code: string;
   secret: string;
-  check_sign: string;
+  checkSign: string;
+  checkSignCode: string;
+
 };
 
 function getDefaultData() {
@@ -83,10 +85,15 @@ watch(() => nodeData.value.en_decrypt, (newVal) => {
   nodeData.value.decrypt_code = '';
   nodeData.value.countersign = '';
   nodeData.value.sign_code = '';
+  nodeData.value.checkSign='';
+  nodeData.value.checkSignCode='';
 });
 
 watch(() => nodeData.value.countersign, (newVal) => {
   nodeData.value.sign_code = '';
+});
+watch(() => nodeData.value.checkSign, (newVal) => {
+  nodeData.value.checkSignCode = '';
 });
 
 watch(() => nodeData.value.encrypt_type, (newVal) => {
@@ -96,7 +103,8 @@ watch(() => nodeData.value.encrypt_type, (newVal) => {
   nodeData.value.encrypt_code = '';
   nodeData.value.countersign = '';
   nodeData.value.sign_code = '';
-
+  nodeData.value.checkSign='';
+  nodeData.value.checkSignCode='';
 });
 
 watch(() => nodeData.value.decrypt_type, (newVal) => {
@@ -106,6 +114,8 @@ watch(() => nodeData.value.decrypt_type, (newVal) => {
   nodeData.value.decrypt_code = '';
   nodeData.value.countersign = '';
   nodeData.value.sign_code = '';
+  nodeData.value.checkSign='';
+  nodeData.value.checkSignCode='';
 });
 
 </script>
@@ -173,22 +183,20 @@ watch(() => nodeData.value.decrypt_type, (newVal) => {
           <el-option key="否" label="否" value="否" />
         </el-select>
       </el-form-item>
-
-      <el-form-item label="是否加签" required v-if="nodeData.en_decrypt === '解密'">
-        <el-select v-model="nodeData.countersign" placeholder="请选择是否加签">
-          <el-option key="是" label="是" value="是" />
-          <el-option key="否" label="否" value="否" />
-        </el-select>
-      </el-form-item>
-
       <el-form-item label="加签字段" required v-if="nodeData.countersign === '是' && nodeData.en_decrypt === '加密'">
         <el-input v-model="nodeData.sign_code" placeholder="请输入加签字段"></el-input>
       </el-form-item>
 
-      <el-form-item label="加签字段" required v-if="nodeData.countersign === '是' && nodeData.en_decrypt === '解密'">
-        <el-input v-model="nodeData.sign_code" placeholder="请输入加签字段"></el-input>
+       <!--验签-->
+      <el-form-item label="是否验签" required v-if="nodeData.en_decrypt === '解密'">
+        <el-select v-model="nodeData.checkSign" placeholder="请选择是否验签">
+          <el-option key="是" label="是" value="是" />
+          <el-option key="否" label="否" value="否" />
+        </el-select>
       </el-form-item>
-
+      <el-form-item label="验签字段" required v-if="nodeData.checkSign === '是' && nodeData.en_decrypt === '解密'">
+        <el-input v-model="nodeData.checkSignCode" placeholder="请输入验签字段"></el-input>
+      </el-form-item>
 
       <el-form-item>
         <el-button type="primary" @click="onSubmit">确定</el-button>
