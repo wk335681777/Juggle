@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { HomeFilled, Coin, Setting, ShoppingBag } from '@element-plus/icons-vue';
+import { HomeFilled, Coin, Setting, ShoppingBag, Monitor  } from '@element-plus/icons-vue';
 import IconFlow from '@/components/icons/IconFlow.vue';
 import IconInterface from '@/components/icons/IconInterface.vue';
 </script>
@@ -39,14 +39,22 @@ import IconInterface from '@/components/icons/IconInterface.vue';
 <!--        <el-menu-item index="/market/suite">套件市场</el-menu-item>-->
 <!--        <el-menu-item index="/market/template">模板市场</el-menu-item>-->
 <!--      </el-sub-menu>-->
-<!--      <el-sub-menu index="5">-->
-<!--        <template #title>-->
-<!--          <el-icon><Setting /></el-icon>-->
-<!--          <span>系统</span>-->
-<!--        </template>-->
+      <el-sub-menu index="5">
+        <template #title>
+          <el-icon><Setting /></el-icon>
+          <span>系统</span>
+        </template>
 <!--        <el-menu-item index="/system/token">令牌</el-menu-item>-->
-<!--        <el-menu-item index="/system/datasource">数据源</el-menu-item>-->
-<!--      </el-sub-menu>-->
+        <el-menu-item :index="`/main/${$route.params.appCode}/system/deployList`">部署记录</el-menu-item>
+        <el-menu-item :index="`/main/${$route.params.appCode}/system/datasource`">数据源</el-menu-item>
+      </el-sub-menu>
+      <el-sub-menu index="6">
+        <template #title>
+          <el-icon><Monitor /></el-icon>
+          <span>监控</span>
+        </template>
+        <el-menu-item :index="`/main/${$route.params.appCode}/system/flowMonitor`">流程监控</el-menu-item>
+      </el-sub-menu>
     </el-menu>
   </div>
 </template>
