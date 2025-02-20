@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -32,6 +33,8 @@ public class DeployMasterImpl implements IDeployMaster {
     private static final String REDIS_WORKER_KEY = "lowcode-integration-camel-worker";
     @Resource
     private RedisTemplate<String, String> redisTemplate;
+    @Resource
+    private RestTemplate restTemplate;
 
     private final ScheduledExecutorService scheduledExecutor = Executors.newScheduledThreadPool(2);
     private final Map<String, ServerInfo> workerServers = new ConcurrentHashMap<>();
@@ -62,7 +65,8 @@ public class DeployMasterImpl implements IDeployMaster {
             String fullUrl = serverInfo.getProtocol() + "://" + serverInfo.getIp() + ":" + serverInfo.getPort() + url;
             //try {
             log.info("start deploy worker for {}", fullUrl);
-            String result = HttpUtil.get(fullUrl);
+            String result = restTemplate.getForObject(fullUrl, String.class);
+
             log.info("deploy server:{}, path: {}, deploy result:{}", serverInfo.getIp() + ":" + serverInfo.getPort(), url, result);
             processResult(result);
 //            } catch (Exception e) {

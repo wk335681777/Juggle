@@ -16,7 +16,6 @@ along with this program; if not, visit <https://www.gnu.org/licenses/gpl-3.0.htm
 */
 package net.somta.juggle.console.interfaces.controller.flow;
 
-import cn.hutool.http.HttpUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,29 +24,33 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.somta.core.protocol.ResponseDataResult;
 import net.somta.core.protocol.ResponsePaginationDataResult;
+import net.somta.juggle.common.param.TriggerDataParam;
 import net.somta.juggle.console.application.assembler.flow.IFlowDefinitionAssembler;
 import net.somta.juggle.console.application.service.flow.IDeployMaster;
+import net.somta.juggle.console.application.service.flow.IFlowDefinitionService;
 import net.somta.juggle.console.domain.flow.definition.FlowDefinitionAO;
-import net.somta.juggle.console.domain.flow.definition.enums.FlowDefinitionErrorEnum;
 import net.somta.juggle.console.interfaces.dto.flow.FlowDefinitionInfoDTO;
 import net.somta.juggle.console.interfaces.param.flow.definition.*;
-import net.somta.juggle.console.application.service.flow.IFlowDefinitionService;
-import net.somta.juggle.common.param.TriggerDataParam;
 import net.somta.juggle.core.model.FlowElement;
 import net.somta.juggle.core.model.FlowResult;
 import net.somta.juggle.core.validator.NodeValidator;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.UUID;
+import java.util.Map;
 
 import static net.somta.juggle.common.constants.ApplicationConstants.JUGGLE_SERVER_VERSION;
 import static net.somta.juggle.console.domain.flow.definition.enums.FlowDefinitionErrorEnum.*;
-import static net.somta.juggle.console.domain.flow.flowinfo.enums.FlowErrorEnum.*;
 
 /**
  * 流程定义Controller
@@ -64,6 +67,8 @@ public class FlowDefinitionController {
     private final ObjectMapper objectMapper;
     @Resource
     private IDeployMaster iDeployMaster;
+    @Resource
+    private RestTemplate restTemplate;
 
     public FlowDefinitionController(IFlowDefinitionService flowDefinitionService,ObjectMapper objectMapper) {
         this.flowDefinitionService = flowDefinitionService;
@@ -185,9 +190,21 @@ public class FlowDefinitionController {
 //        return ResponseDataResult.setResponseResult(rst);
         String uri = (String) triggerData.getFlowData().get("uri");
         String requestBody = (String) triggerData.getFlowData().get("requestBody");
-        String responseBody = HttpUtil.post(uri, requestBody);
-
-        return ResponseDataResult.setResponseResult(responseBody);
+        List<Map<String, String>> headerList = (List<Map<String, String>>) triggerData.getFlowData().get("headers");
+        String method = (String) triggerData.getFlowData().get("httpMethod");
+        HttpHeaders headers = new HttpHeaders();
+        if (CollectionUtils.isNotEmpty(headerList)) {
+            for (int i = 0; i < headerList.size(); i++) {
+                Map<String, String> header = headerList.get(i);
+                if (StringUtils.isNotEmpty(header.get("key"))) {
+                    headers.add(header.get("key"), header.get("value"));
+                }
+            }
+        }
+        HttpMethod httpMethod = HttpMethod.POST.name().equalsIgnoreCase(method) ? HttpMethod.POST : HttpMethod.GET;
+        HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
+        ResponseEntity<String> response = restTemplate.exchange(uri, httpMethod, entity, String.class);
+        return ResponseDataResult.setResponseResult(response.getBody());
     }
 
     /**
