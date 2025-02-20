@@ -53,10 +53,13 @@ async function sendFlowDebug() {
   if (!validate()) {
     return;
   }
+
+  isLoading.value = true;
   const params = {
     flowData: getParams(),
   };
   const res = await flowDefineService.debugFlow(paramsData.params.flowKey as string, params);
+  isLoading.value = false;
   if (res.success) {
     flowResponseJson.value = res.result;
   } else {
@@ -116,6 +119,8 @@ function getParams() {
   });
   params['requestBody'] = requestBody.value;
   params['uri'] = debugUrl.value;
+  params['headers'] = headers.value;
+  params['httpMethod'] = httpMethod.value;
   return params;
 }
 
@@ -130,12 +135,11 @@ function resetParams() {
 const eventSource = new EventSource("/camelLogStream/logStream?debugConnId=" + debugId);
 
 eventSource.onmessage = function(event) {
-  var logContainer = document.getElementById("logContainer");
   if (event.data == '' || event.data == '\n') {
     return;
   }
-
-  var newLog = document.createElement("div");
+  const logContainer = document.getElementById("logContainer");
+  const newLog = document.createElement("div");
   newLog.textContent = event.data.replace(/<br>/g, '\n');
   console.log(event.data);
   logContainer.appendChild(newLog);
@@ -161,6 +165,31 @@ watch(flowResponseJson, (newJson) => {
   }
 });
 
+
+// 用来保存 HTTP headers 的数组
+const headers = ref([
+  { key: '', value: '' }, // 默认一行
+]);
+
+// 添加新的 HTTP header 行
+const addHeader = () => {
+  headers.value.push({ key: '', value: '' });
+};
+
+// 删除某一行
+const removeHeader = (index) => {
+  headers.value.splice(index, 1);
+};
+
+// 提交 HTTP headers，发送请求或其他操作
+const submitHeaders = () => {
+  // 模拟提交的操作
+  console.log('Submitting headers:', headers.value);
+};
+
+const httpMethod = ref('POST');
+// 状态管理：控制是否显示遮盖层
+const isLoading = ref(false);
 </script>
 
 <template>
@@ -173,7 +202,13 @@ watch(flowResponseJson, (newJson) => {
     </div>
 
     <el-row :gutter="16">
-      <el-col :span="20">
+      <el-col :span="2">
+        <el-select v-model="httpMethod" placeholder="请选择加密方式">
+          <el-option key="GET" label="GET" value="GET" />
+          <el-option key="POST" label="POST" value="POST" />
+        </el-select>
+      </el-col>
+      <el-col :span="18">
         <el-input v-model="debugUrl" />
       </el-col>
       <el-col :span="4">
@@ -181,48 +216,39 @@ watch(flowResponseJson, (newJson) => {
         <el-button @click="resetParams">重置</el-button>
       </el-col>
     </el-row>
-<!--    <el-tabs model-value="inputParam">-->
-<!--      <el-tab-pane label="请求参数" name="inputParam">-->
-<!--        <div class="input-param-head">-->
-<!--          <div class="input-param-tr">-->
-<!--            <div class="input-param-td"></div>-->
-<!--            <div class="input-param-td">参数编码</div>-->
-<!--            <div class="input-param-td">参数名称</div>-->
-<!--            <div class="input-param-td">参数类型</div>-->
-<!--            <div class="input-param-td td-value">参数值</div>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--        <div class="input-param-body">-->
-<!--          <div class="input-param-tr" v-for="param in flowDefine?.flowInputParams" :key="param.paramKey">-->
-<!--            <div class="input-param-td">-->
-<!--              <template v-if="param.required">*</template>-->
-<!--            </div>-->
-<!--            <div class="input-param-td" >{{ param.paramKey }}</div>-->
-<!--            <div class="input-param-td" :title="param.paramName">-->
-<!--              {{ param.paramName }}-->
-<!--              <el-tooltip v-if="param.paramDesc" effect="dark" placement="top" :content="param.paramDesc">-->
-<!--                <el-icon><InfoFilled /></el-icon>-->
-<!--              </el-tooltip>-->
-<!--            </div>-->
-<!--            <div class="input-param-td">-->
-<!--              <DataTypeDisplay :dataType="param.dataType"/>-->
-<!--            </div>-->
-<!--            <div class="input-param-td td-value">-->
-<!--              <FilterValue v-model="param.value" :dataType="param.dataType" />-->
-<!--            </div>-->
-<!--            <div class="input-param-td td-error">{{ param.error || '' }}</div>-->
-<!--          </div>-->
-<!--        </div>-->
+    <el-tabs model-value="body">
+      <el-tab-pane label="Headers" name="requestHeader">
+        <div id="app">
+          <div class="header-container">
+            <div v-for="(header, index) in headers" :key="index" class="header-row">
+              <input v-model="header.key" class="header-input" placeholder="Header 键">
+              <input v-model="header.value" class="header-input" placeholder="Header 值">
+              <button @click="removeHeader(index)" class="btn btn-remove">删除</button>
+            </div>
+            <button @click="addHeader" class="btn btn-add">添加参数</button>
+          </div>
+        </div>
+      </el-tab-pane>
+<!--      <el-tab-pane label="Params" name="params">-->
+
 <!--      </el-tab-pane>-->
-<!--    </el-tabs>-->
-    <el-form-item required>
-      <el-input v-model="requestBody" placeholder="请输入" :rows="13" type="textarea"></el-input>
-    </el-form-item>
+      <el-tab-pane label="Body" name="body">
+        <el-form-item required>
+          <el-input v-model="requestBody" placeholder="请输入" :rows="10" type="textarea"></el-input>
+        </el-form-item>
+      </el-tab-pane>
+    </el-tabs>
 
     <el-tabs model-value="result">
       <el-tab-pane label="响应内容" name="result">
         <el-text line-clamp="2">
-          <CodeEditor ref="codeEditRef" v-model="flowResponseJson" width="1000px" height="200px" language="json" />
+          <div class="code-editor-container" :style="{ position: 'relative' }">
+            <CodeEditor ref="codeEditRef" v-model="flowResponseJson" width="1000px" height="250px" language="json" />
+            <!-- 遮盖层，当 isLoading 为 true 时显示 -->
+            <div v-if="isLoading" class="overlay">
+<!--              <span class="loading-text">loading...</span>-->
+            </div>
+          </div>
         </el-text>
       </el-tab-pane>
       <el-tab-pane label="响应头" name="responseHeader">
@@ -272,5 +298,60 @@ watch(flowResponseJson, (newJson) => {
 }
 #logContainer {
   white-space: pre-wrap; /* 保留换行符并自动换行 */
+}
+.header-container {
+  max-width: 600px;
+  margin: 1px;
+}
+.header-row {
+  display: flex;
+  margin-bottom: 10px;
+  gap: 10px;
+}
+.header-input {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+.btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: white;
+}
+.btn-add {
+  background-color: #4CAF50;
+}
+.btn-remove {
+  background-color: #f44336;
+}
+
+.code-editor-container {
+  position: relative;
+  border: 1px solid #ccc; /* 添加边框 */
+  border-radius: 5px;      /* 可选：添加圆角效果 */
+  padding: 10px;           /* 可选：添加内边距 */
+  width: 100%
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.1); /* 半透明背景 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.loading-text {
+  z-index: 2;
 }
 </style>

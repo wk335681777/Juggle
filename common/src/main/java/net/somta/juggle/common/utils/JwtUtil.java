@@ -30,7 +30,7 @@ public class JwtUtil {
      */
     public static String generateToken(Map<String, Object> payload) {
         Calendar instance = Calendar.getInstance();
-        instance.add(Calendar.HOUR, 2);
+        instance.add(Calendar.HOUR, 24);
         Date expireDate = instance.getTime();
         return Jwts.builder()
                 .setClaims(payload)
