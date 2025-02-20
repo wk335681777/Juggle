@@ -17,6 +17,7 @@ import TransformForm from "./TransformForm.vue";
 import RecipientListForm from "./RecipientListForm.vue";
 import WebServiceForm from "./WebServiceForm.vue";
 import EnAndDeForm from "@/views/flow/design/components/node-form/EnAndDeForm.vue";
+import YingDaEncryptForm from "@/views/flow/design/components/node-form/YingDaEncryptForm.vue";
 
 
 const nodeFormMap = {
@@ -38,7 +39,7 @@ const nodeFormMap = {
   [ElementType.RECIPIENT_LIST]: RecipientListForm,
   [ElementType.WEBSERVICE]: WebServiceForm,
   [ElementType.EN_AND_DE]: EnAndDeForm,//加解密
-
+  [ElementType.YDA_SM4]: YingDaEncryptForm,//英大国密
 
 };
 

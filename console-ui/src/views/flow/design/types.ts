@@ -50,6 +50,7 @@ export enum ElementType {
   RECIPIENT_LIST = 'RECIPIENT_LIST',
   WEBSERVICE = 'WEBSERVICE',
   EN_AND_DE = 'EN_AND_DE',//加解密
+  YDA_SM4="YDA_SM4",//英大国密
   LOG = 'LOG',
   END = 'END',
 

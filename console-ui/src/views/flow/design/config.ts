@@ -79,4 +79,10 @@ export const nodeMap = {
     nodeHeaderColor: '#b471e7',
 
   },
+  //英大国密
+  [ElementType.YDA_SM4]: {
+    nodeName: '英大SM4国密加解密',
+    nodeHeaderColor: '#b471e7',
+
+  },
 }

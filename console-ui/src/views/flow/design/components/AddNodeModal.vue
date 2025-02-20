@@ -93,6 +93,13 @@ const flowNodes = [
     icon: IconCode,
   },
 
+  //英大国密
+  {
+    name:'英大SM4国密加解密',
+    type: ElementType.YDA_SM4,
+    icon: IconCode,
+  },
+
 ];
 
 const flowDataNodes = [
