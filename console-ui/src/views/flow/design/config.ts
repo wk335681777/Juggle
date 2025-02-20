@@ -85,4 +85,9 @@ export const nodeMap = {
     nodeHeaderColor: '#b471e7',
 
   },
+  [ElementType.FEIGN]: {
+    nodeName: 'Feign',
+    nodeHeaderColor: '#b471e7',
+
+  },
 }

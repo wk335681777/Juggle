@@ -99,6 +99,12 @@ const flowNodes = [
     type: ElementType.YDA_SM4,
     icon: IconCode,
   },
+  //Feign
+  {
+    name:'Feign',
+    type: ElementType.FEIGN,
+    icon: IconCode,
+  },
 
 ];
 

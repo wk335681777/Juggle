@@ -51,6 +51,7 @@ export enum ElementType {
   WEBSERVICE = 'WEBSERVICE',
   EN_AND_DE = 'EN_AND_DE',//加解密
   YDA_SM4="YDA_SM4",//英大国密
+  FEIGN="FEIGN",
   LOG = 'LOG',
   END = 'END',
 

@@ -65,6 +65,7 @@ public enum ElementTypeEnum {
     WEBSERVICE,
     EN_AND_DE,//加解密
     YDA_SM4,//英大国密
+    FEIGN,
 
     ASSIGN;
 }
