@@ -36,6 +36,7 @@ import net.somta.juggle.core.model.FlowResult;
 import net.somta.juggle.core.validator.NodeValidator;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
@@ -203,8 +204,13 @@ public class FlowDefinitionController {
         }
         HttpMethod httpMethod = HttpMethod.POST.name().equalsIgnoreCase(method) ? HttpMethod.POST : HttpMethod.GET;
         HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
-        ResponseEntity<String> response = restTemplate.exchange(uri, httpMethod, entity, String.class);
-        return ResponseDataResult.setResponseResult(response.getBody());
+        try {
+            ResponseEntity<String> response = restTemplate.exchange(uri, httpMethod, entity, String.class);
+            return ResponseDataResult.setResponseResult(response.getBody());
+        } catch (Exception e) {
+            logger.error("debugFlow error", e);
+            return ResponseDataResult.setResponseResult(ExceptionUtils.getStackTrace(e));
+        }
     }
 
     /**
