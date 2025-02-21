@@ -138,12 +138,9 @@ eventSource.onmessage = function(event) {
   if (event.data == '' || event.data == '\n') {
     return;
   }
-  const logContainer = document.getElementById("logContainer");
-  const newLog = document.createElement("div");
-  newLog.textContent = event.data.replace(/<br>/g, '\n');
-  console.log(event.data);
-  logContainer.appendChild(newLog);
-  logContainer.scrollTop = logContainer.scrollHeight;  // 滚动到底部
+
+  const line = event.data.replace(/<br>/g, '\n');
+  addMessage(line);
 };
 
 eventSource.onerror = function(error) {
@@ -190,6 +187,12 @@ const submitHeaders = () => {
 const httpMethod = ref('POST');
 // 状态管理：控制是否显示遮盖层
 const isLoading = ref(false);
+
+const messages = ref([]);
+const addMessage = (line) => {
+    messages.value.push(line);
+};
+
 </script>
 
 <template>
@@ -238,29 +241,30 @@ const isLoading = ref(false);
         </el-form-item>
       </el-tab-pane>
     </el-tabs>
-
-    <el-tabs model-value="result">
-      <el-tab-pane label="响应内容" name="result">
-        <el-text line-clamp="2">
-          <div class="code-editor-container" :style="{ position: 'relative' }">
-            <CodeEditor ref="codeEditRef" v-model="flowResponseJson" width="1000px" height="250px" language="json" />
-            <!-- 遮盖层，当 isLoading 为 true 时显示 -->
-            <div v-if="isLoading" class="overlay">
-<!--              <span class="loading-text">loading...</span>-->
-            </div>
-          </div>
-        </el-text>
-      </el-tab-pane>
-      <el-tab-pane label="响应头" name="responseHeader">
-        <el-table :data="responseHeaderData" style="width: 100%">
-          <el-table-column prop="headerKey" label="响应头" width="350" />
-          <el-table-column prop="headerValue" label="值" />
-        </el-table>
-      </el-tab-pane>
-      <el-tab-pane label="日志" name="log">
-        <div id="logContainer"></div>
-      </el-tab-pane>
-    </el-tabs>
+    <div class="code-editor-container" :style="{ position: 'relative' }">
+      <el-tabs model-value="result">
+        <el-tab-pane label="响应内容" name="result">
+          <el-text line-clamp="2">
+              <CodeEditor ref="codeEditRef" v-model="flowResponseJson" width="1000px" height="250px" language="json" />
+          </el-text>
+        </el-tab-pane>
+        <el-tab-pane label="响应头" name="responseHeader">
+          <el-table :data="responseHeaderData" style="width: 100%">
+            <el-table-column prop="headerKey" label="响应头" width="350" />
+            <el-table-column prop="headerValue" label="值" />
+          </el-table>
+        </el-tab-pane>
+        <el-tab-pane label="日志" name="log">
+          <el-card v-for="(item, index) in messages" :key="index" :body-style="{ padding: '10px' }">
+            <p>{{ item }}</p>
+          </el-card>
+        </el-tab-pane>
+      </el-tabs>
+      <!-- 遮盖层，当 isLoading 为 true 时显示 -->
+      <div v-if="isLoading" class="overlay">
+        <!-- <span class="loading-text">loading...</span>-->
+      </div>
+    </div>
   </div>
 </template>
 
@@ -353,5 +357,9 @@ const isLoading = ref(false);
 
 .loading-text {
   z-index: 2;
+}
+
+.card-content {
+  font-size: 18px;
 }
 </style>
