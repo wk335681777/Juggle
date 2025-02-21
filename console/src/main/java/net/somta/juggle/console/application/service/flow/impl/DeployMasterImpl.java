@@ -63,15 +63,15 @@ public class DeployMasterImpl implements IDeployMaster {
 
         for (ServerInfo serverInfo : servers.values()) {
             String fullUrl = serverInfo.getProtocol() + "://" + serverInfo.getIp() + ":" + serverInfo.getPort() + url;
-            //try {
+            try {
             log.info("start deploy worker for {}", fullUrl);
             String result = restTemplate.getForObject(fullUrl, String.class);
 
             log.info("deploy server:{}, path: {}, deploy result:{}", serverInfo.getIp() + ":" + serverInfo.getPort(), url, result);
             processResult(result);
-//            } catch (Exception e) {
-//                log.error("deploy server:{}, path: {}, error: {}", serverInfo.getIp() + ":" + serverInfo.getPort(), url, e.getMessage(), e);
-//            }
+            } catch (Exception e) {
+                log.error("deploy server:{}, path: {}, error: {}", serverInfo.getIp() + ":" + serverInfo.getPort(), url, e.getMessage(), e);
+            }
         }
     }
 

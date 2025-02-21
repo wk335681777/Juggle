@@ -9,11 +9,12 @@ import { useFlowDataInject } from "@/views/flow/design/hooks/flow-data.ts";
 const flowContext = useFlowDataInject();
 
 type FeignData = RawData & {
-  domainName: string;
+  serviceName: string;
   path: string;
   parameters: { key: string, value: string }[]; // 修改为包含 key 和 value 的对象数组
   method: string;
   contextType: string;
+  body: string;
 };
 
 function getDefaultData() {
@@ -92,7 +93,7 @@ function removeParameter(index: number) {
       </el-form-item>
 
       <el-form-item label="服务名" required>
-        <el-input v-model="nodeData.domainName" placeholder="请输入服务名"></el-input>
+        <el-input v-model="nodeData.serviceName" placeholder="请输入服务名"></el-input>
       </el-form-item>
 
       <el-form-item label="路径" required>
@@ -141,7 +142,9 @@ function removeParameter(index: number) {
       </el-form-item>
 
 
-
+      <el-form-item label="body">
+        <el-input v-model="nodeData.body" placeholder="请输入" :rows="2" type="textarea"></el-input>
+      </el-form-item>
 
       <el-form-item label="报文格式" required>
         <el-select v-model="nodeData.contextType" placeholder="请选接收报文数据格式">

@@ -39,7 +39,7 @@ export class DrawNodeHelper {
             case ElementType.WEBSERVICE:
             case ElementType.EN_AND_DE://加解密
             case ElementType.YDA_SM4://英大国密
-            case ElementType.FEIGN://英大国密
+            case ElementType.FEIGN:
 
             case ElementType.MYSQL:
                 this.drawNormal(container, node, type);
