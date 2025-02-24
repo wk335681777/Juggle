@@ -1,18 +1,30 @@
 package net.somta.juggle.core.model.node;
 
+import java.util.List;
+import java.util.Map;
+
 public class FeignNode  extends FlowNode{
-    private String domainName;//域名
+    private String serviceName;//服务名
     private String path;//路径
-    private String parameters;//入参
+    private List<Map<String, String>> parameters;//入参
     private String method;//请求方式
     private String contextType;//报文格式
+    private String body;
 
-    public String getDomainName() {
-        return domainName;
+    public String getBody() {
+        return body;
     }
 
-    public void setDomainName(String domainName) {
-        this.domainName = domainName;
+    public void setBody(String body) {
+        this.body = body;
+    }
+
+    public String getServiceName() {
+        return serviceName;
+    }
+
+    public void setServiceName(String serviceName) {
+        this.serviceName = serviceName;
     }
 
     public String getPath() {
@@ -23,11 +35,11 @@ public class FeignNode  extends FlowNode{
         this.path = path;
     }
 
-    public String getParameters() {
+    public List<Map<String, String>> getParameters() {
         return parameters;
     }
 
-    public void setParameters(String parameters) {
+    public void setParameters(List<Map<String, String>> parameters) {
         this.parameters = parameters;
     }
 
