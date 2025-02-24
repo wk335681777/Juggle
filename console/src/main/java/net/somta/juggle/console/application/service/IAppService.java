@@ -1,6 +1,5 @@
 package net.somta.juggle.console.application.service;
 
-import net.somta.juggle.console.domain.app.AppEntity;
 import net.somta.juggle.console.domain.app.vo.AppVO;
 import net.somta.juggle.console.interfaces.param.app.AppAddParam;
 import net.somta.juggle.console.interfaces.param.app.AppQueryParam;
