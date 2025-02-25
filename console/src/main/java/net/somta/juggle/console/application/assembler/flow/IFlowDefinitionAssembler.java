@@ -4,10 +4,7 @@ import net.somta.juggle.console.domain.flow.definition.FlowDefinitionAO;
 import net.somta.juggle.console.domain.flow.definition.vo.FlowDefinitionInfoQueryVO;
 import net.somta.juggle.console.domain.flow.definition.vo.FlowDefinitionInfoVO;
 import net.somta.juggle.console.interfaces.dto.flow.FlowDefinitionInfoDTO;
-import net.somta.juggle.console.interfaces.param.flow.definition.FlowDefinitionAddParam;
-import net.somta.juggle.console.interfaces.param.flow.definition.FlowDefinitionContentParam;
-import net.somta.juggle.console.interfaces.param.flow.definition.FlowDefinitionPageParam;
-import net.somta.juggle.console.interfaces.param.flow.definition.FlowDefinitionUpdateParam;
+import net.somta.juggle.console.interfaces.param.flow.definition.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -24,6 +21,8 @@ public interface IFlowDefinitionAssembler {
     FlowDefinitionAO paramToAo(FlowDefinitionAddParam flowDefinitionAddParam);
 
     FlowDefinitionAO paramToAo(FlowDefinitionUpdateParam flowDefinitionUpdateParam);
+
+//    FlowDefinitionAO paramToAo(FlowDefinitionCopyParam flowDefinitionCopyParam);
 
     @Mapping(target = "variableInfoList",source = "flowVariables")
     FlowDefinitionAO paramToAo(FlowDefinitionContentParam flowDefinitionContentParam);

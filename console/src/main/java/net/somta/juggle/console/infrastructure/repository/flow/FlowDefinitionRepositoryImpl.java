@@ -39,6 +39,7 @@ import net.somta.juggle.console.infrastructure.mapper.VariableInfoMapper;
 import net.somta.juggle.console.infrastructure.po.flow.FlowDefinitionInfoPO;
 import net.somta.juggle.console.infrastructure.po.ParameterPO;
 import net.somta.juggle.console.infrastructure.po.VariableInfoPO;
+import net.somta.juggle.console.interfaces.param.flow.definition.FlowDefinitionCopyParam;
 import net.somta.juggle.core.enums.VariablePrefixEnum;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
@@ -48,6 +49,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static jdk.nashorn.internal.runtime.regexp.joni.Config.log;
 
 /**
  * @author husong
@@ -105,7 +108,57 @@ public class FlowDefinitionRepositoryImpl implements IFlowDefinitionRepository {
         return true;
     }
 
+
     @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Boolean copyFlowDefinition(FlowDefinitionCopyParam flowDefinitionCopyParam) {
+        // 校验输入参数
+        if (flowDefinitionCopyParam == null || flowDefinitionCopyParam.getId() == null) {
+            log.print("FlowDefinitionAO or ID is null");
+            return false;
+        }
+
+        // 从数据库中检索原始流程定义信息
+        FlowDefinitionInfoPO originalFlowDefinition = flowDefinitionMapper.queryById(flowDefinitionCopyParam.getId());
+        if (originalFlowDefinition == null) {
+            return false;
+        }
+
+        // 创建并复制流程定义信息
+        FlowDefinitionInfoPO newFlowDefinition = createNewFlowDefinitionFrom(originalFlowDefinition, flowDefinitionCopyParam);
+
+        // 设置新流程定义的创建/更新时间以及创建/更新者
+        newFlowDefinition.setCreatedAt(new Date());
+        newFlowDefinition.setUpdatedAt(newFlowDefinition.getCreatedAt());
+
+        newFlowDefinition.setCreatedBy(IdentityContext.getIdentity().getUserId());
+        newFlowDefinition.setUpdatedBy(newFlowDefinition.getCreatedBy());
+
+        // 插入新的流程定义到数据库
+        flowDefinitionMapper.add(newFlowDefinition);
+
+        // 返回操作成功的标志
+        return true;
+    }
+    // 用于创建并复制流程定义信息
+    private FlowDefinitionInfoPO createNewFlowDefinitionFrom(FlowDefinitionInfoPO original,FlowDefinitionCopyParam flowDefinitionCopyParam) {
+        FlowDefinitionInfoPO newFlowDefinition = new FlowDefinitionInfoPO();
+
+        // 设置新流程名称和备注，如果传入的参数为空则使用原流程的值
+        newFlowDefinition.setFlowName(flowDefinitionCopyParam.getFlowName() != null ? flowDefinitionCopyParam.getFlowName() : original.getFlowName());
+        newFlowDefinition.setRemark(flowDefinitionCopyParam.getRemark() != null ? flowDefinitionCopyParam.getRemark() : original.getRemark());
+
+        // 复制其他字段
+        newFlowDefinition.setFlowContent(original.getFlowContent());
+        newFlowDefinition.setFlowKey(original.getFlowKey());
+        newFlowDefinition.setFlowType(original.getFlowType());
+        newFlowDefinition.setAppCode(original.getAppCode());
+        newFlowDefinition.setDeleted(original.getDeleted());
+
+
+        return newFlowDefinition;
+    }
+
     @Override
     public Boolean saveFlowDefinitionContent(FlowDefinitionAO flowDefinitionAo) {
         FlowDefinitionInfoPO flowDefinitionInfoPo = IFlowDefinitionConverter.IMPL.aoToPo(flowDefinitionAo);
@@ -117,6 +170,7 @@ public class FlowDefinitionRepositoryImpl implements IFlowDefinitionRepository {
         }
         return true;
     }
+
 
     @Override
     public FlowDefinitionAO queryFlowDefinitionInfo(Long flowDefinitionId) {

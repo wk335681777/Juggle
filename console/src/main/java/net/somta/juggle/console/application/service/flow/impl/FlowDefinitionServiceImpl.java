@@ -238,4 +238,9 @@ public class FlowDefinitionServiceImpl implements IFlowDefinitionService {
         flow.setVariables(flowDefinitionAo.getFlowRuntimeVariables());
         return flowRuntimeService.triggerFlow(flow, flowDefinitionAo.getFlowType(),triggerData);
     }
-}
+
+    @Override
+    public Boolean copyFlowDefinition(FlowDefinitionCopyParam flowDefinitionCopyParam) {
+        return flowDefinitionRepository.copyFlowDefinition(flowDefinitionCopyParam);
+        }
+    }

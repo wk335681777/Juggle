@@ -11,7 +11,7 @@ defineProps({
   dataTotal: Number,
   loading: Boolean,
 });
-const emit = defineEmits(['pageChange', 'deploy', 'edit', 'delete']);
+const emit = defineEmits(['pageChange', 'deploy', 'edit', 'delete','copy']);
 
 function deployFlow(row: any) {
   emit('deploy', row);
@@ -22,6 +22,10 @@ function deleteRow(row: any, index: number) {
 
 function editRow(row: any) {
   emit('edit', row);
+}
+
+function copyRow(row: any) {
+  emit('copy', row);
 }
 
 function goDebugPage(flowDefinitionId: number, flowKey: string, debugUri: string) {
@@ -59,6 +63,7 @@ function goDesignPage(flowDefinitionId: number, flowKey: string) {
         <el-button link type="primary" size="small" v-if="scope.row.enableDebug === true" @click="goDebugPage(scope.row.id, scope.row.flowKey, scope.row.debugUri)"> 调试 </el-button>
         <el-button link type="primary" size="small" @click.prevent="deployFlow(scope.row)"> 部署 </el-button>
         <el-button link type="primary" size="small" @click.prevent="editRow(scope.row)"> 编辑 </el-button>
+        <el-button link type="primary" size="small" @click.prevent="copyRow(scope.row)"> 复制 </el-button>
         <el-button link type="primary" size="small" @click.prevent="deleteRow(scope.row, scope.$index)"> 删除 </el-button>
         <el-button link type="primary" size="small" > 放弃草稿 </el-button>
       </template>

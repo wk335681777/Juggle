@@ -26,7 +26,12 @@ function getDefaultData() {
     incomings: [],
     elementType: ElementType.FEIGN,
     log: '',
-    parameters: [{ key: '', value: '' }] // 初始化为一个对象数组
+    parameters: [{ key: '', value: '' }], // 初始化为一个对象数组
+    serviceName: '',
+    path: '',
+    contextType: '',
+    method: '',
+    body: ''
   };
 }
 
@@ -49,19 +54,50 @@ watch(
     { immediate: true }
 );
 
+// 表单验证规则
+const rules = {
+  name: [{ required: true, message: '节点名称不能为空', trigger: 'blur' }],
+  serviceName: [{ required: true, message: '服务名不能为空', trigger: 'blur' }],
+  path: [{ required: true, message: '路径不能为空', trigger: 'blur' }],
+  contextType: [{ required: true, message: '报文格式不能为空', trigger: 'blur' }],
+  method: [{ required: true, message: '请求方式不能为空', trigger: 'blur' }],
+  parameters: [
+    { validator: (rule: any, value: any, callback: Function) => {
+        for (const param of value) {
+          if (!param.key || !param.value) {
+            callback(new Error('参数的key和value不能为空'));
+            return;
+          }
+        }
+        callback();
+      }, trigger: 'blur' }
+  ]
+};
+
+// 获取表单引用
+const formRef = ref(null);
+
+// 表单验证函数
 function validate() {
-  if (!nodeData.value.name) {
-    ElMessage.error('节点名称不能为空');
-    return false;
-  }
-  return true;
+  return new Promise((resolve, reject) => {
+    formRef.value?.validate((valid: boolean) => {
+      if (valid) {
+        resolve(true);
+      } else {
+        ElMessage.error('请填写所有必填项');
+        reject(false);
+      }
+    });
+  });
 }
 
+// 提交函数
 function onSubmit() {
-  if (!validate()) {
-    return;
-  }
-  emit('update', cloneDeep(nodeData.value));
+  validate().then(() => {
+    emit('update', cloneDeep(nodeData.value));
+  }).catch(() => {
+    // 触发错误提示或其他逻辑（已经通过 ElMessage 提示了）
+  });
 }
 
 function onCancel() {
@@ -81,25 +117,28 @@ function removeParameter(index: number) {
 
 <template>
   <div class="node-method-form">
-    <el-form ref="form" label-position="top" :model="nodeData">
+    <el-form ref="formRef" label-position="top" :model="nodeData" :rules="rules">
       <el-form-item label="节点编码">
         <span>{{ nodeData.key }}</span>
       </el-form-item>
-      <el-form-item label="节点名称">
+
+      <el-form-item label="节点名称" prop="name">
         <el-input v-model="nodeData.name" placeholder="请输入"></el-input>
       </el-form-item>
-      <el-form-item label="节点描述">
+
+      <el-form-item label="节点描述" prop="desc">
         <el-input v-model="nodeData.desc" placeholder="请输入" :rows="2" type="textarea"></el-input>
       </el-form-item>
 
-      <el-form-item label="服务名" required>
+      <el-form-item label="服务名" prop="serviceName">
         <el-input v-model="nodeData.serviceName" placeholder="请输入服务名"></el-input>
       </el-form-item>
 
-      <el-form-item label="路径" required>
+      <el-form-item label="路径" prop="path">
         <el-input v-model="nodeData.path" placeholder="请输入路径"></el-input>
       </el-form-item>
-      <el-form-item label="入参" required>
+
+      <el-form-item label="入参" prop="parameters">
         <div v-for="(param, index) in nodeData.parameters" :key="index" class="parameter-item">
           <el-row :gutter="10" align="middle">
             <!-- Key 输入框 -->
@@ -141,20 +180,19 @@ function removeParameter(index: number) {
         </div>
       </el-form-item>
 
-
-      <el-form-item label="body">
+      <el-form-item label="body" prop="body">
         <el-input v-model="nodeData.body" placeholder="请输入" :rows="2" type="textarea"></el-input>
       </el-form-item>
 
-      <el-form-item label="报文格式" required>
-        <el-select v-model="nodeData.contextType" placeholder="请选接收报文数据格式">
+      <el-form-item label="报文格式" prop="contextType">
+        <el-select v-model="nodeData.contextType" placeholder="请选择报文格式">
           <el-option key="json" label="json" value="json" />
           <el-option key="xml" label="xml" value="xml" />
           <el-option key="text" label="text" value="text" />
         </el-select>
       </el-form-item>
 
-      <el-form-item label="请求方式" required>
+      <el-form-item label="请求方式" prop="method">
         <el-select v-model="nodeData.method" placeholder="请选择请求方式">
           <el-option key="get" label="get" value="get" />
           <el-option key="post" label="post" value="post" />
