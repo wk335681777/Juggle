@@ -10,6 +10,7 @@ import ObjectList from '@/views/object/ObjectList.vue';
 import App from '@/views/app/App.vue';
 import { SystemRoutes } from '@/views/system';
 import { SuiteRoutes } from '@/views/suite';
+import { ToolRoutes } from '@/views/tools';
 import FlowDesign from "@/views/flow/FlowDesign.vue";
 import FlowDesignView from "@/views/flow/FlowDesignView.vue";
 
@@ -67,6 +68,7 @@ const router = createRouter({
         ...CommonRoutes,
         ...FlowRoutes,
         ...SuiteRoutes,
+        ...ToolRoutes,
         // {
         //   path: 'app',
         //   name: 'app',
@@ -93,6 +95,7 @@ const router = createRouter({
           component: NotFound,
           meta: { name: '页面不存在' },
           beforeEnter: (to, from, next) => {
+            debugger
             next({ path: '/' });
           },
         },

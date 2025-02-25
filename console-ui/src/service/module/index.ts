@@ -12,6 +12,7 @@ import * as tokenService from './token';
 import * as dataSourceService from './dataSource.ts';
 import * as commonService from './common';
 import * as appService from './app.ts'
+import * as toolService from './tool.ts'
 
 export {
   userService,
@@ -28,4 +29,5 @@ export {
   dataSourceService,
   commonService,
   appService,
+  toolService,
 };

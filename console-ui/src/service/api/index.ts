@@ -12,6 +12,7 @@ import * as tokenAPI from './token.ts';
 import * as datasourceAPI from './dataSource.ts';
 import * as commonAPI from './common.ts';
 import * as appApi from './app.ts';
+import * as toolApi from './tool.ts'
 
 export {
     userAPI,
@@ -27,5 +28,6 @@ export {
     tokenAPI,
     datasourceAPI,
     commonAPI,
-    appApi
+    appApi,
+    toolApi,
 };

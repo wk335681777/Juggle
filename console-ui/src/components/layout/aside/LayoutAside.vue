@@ -55,6 +55,13 @@ import IconInterface from '@/components/icons/IconInterface.vue';
         </template>
         <el-menu-item :index="`/main/${$route.params.appCode}/system/flowMonitor`">流程监控</el-menu-item>
       </el-sub-menu>
+      <el-sub-menu index="7">
+        <template #title>
+          <el-icon><Monitor /></el-icon>
+          <span>工具</span>
+        </template>
+        <el-menu-item :index="`/main/${$route.params.appCode}/tool/freemarker`">freemarker验证</el-menu-item>
+      </el-sub-menu>
     </el-menu>
   </div>
 </template>
