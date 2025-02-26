@@ -23,6 +23,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import net.somta.core.helper.JsonSerializeHelper;
+import net.somta.juggle.common.utils.IpUtils;
 import net.somta.juggle.console.application.assembler.flow.IFlowDefinitionAssembler;
 import net.somta.juggle.console.application.service.flow.IDeployMaster;
 import net.somta.juggle.console.application.service.flow.IFlowDefinitionService;
@@ -47,10 +48,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 /**
  * @author husong
@@ -158,7 +156,14 @@ public class FlowDefinitionServiceImpl implements IFlowDefinitionService {
         if (serverInfoList.isEmpty()) {
             serverUri = "http://localhost:" + camelWorkerRestDevPort;
         } else {
-            ServerInfo serverInfo = serverInfoList.get(new Random().nextInt(serverInfoList.size()));
+//            ServerInfo serverInfo = serverInfoList.get(new Random().nextInt(serverInfoList.size()));
+//            serverUri = serverInfo.getProtocol() + "://" + serverInfo.getIp() + ":" + camelWorkerRestDevPort;
+
+            ServerInfo serverInfo;
+            String localIp = IpUtils.getLocalIp();
+            Optional<ServerInfo> optional = serverInfoList.stream().filter(r->r.getIp().equalsIgnoreCase(localIp)).findFirst();
+            serverInfo = optional.orElseGet(() -> serverInfoList.get(new Random().nextInt(serverInfoList.size())));
+
             serverUri = serverInfo.getProtocol() + "://" + serverInfo.getIp() + ":" + camelWorkerRestDevPort;
         }
 

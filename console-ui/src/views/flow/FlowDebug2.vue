@@ -165,7 +165,7 @@ watch(flowResponseJson, (newJson) => {
 
 // 用来保存 HTTP headers 的数组
 const headers = ref([
-  { key: '', value: '' }, // 默认一行
+  { key: '_mock_', value: 'false' }, // 默认一行
 ]);
 
 // 添加新的 HTTP header 行

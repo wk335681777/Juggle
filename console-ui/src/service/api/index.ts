@@ -13,6 +13,7 @@ import * as datasourceAPI from './dataSource.ts';
 import * as commonAPI from './common.ts';
 import * as appApi from './app.ts';
 import * as toolApi from './tool.ts'
+import * as mockApi from './mock.ts'
 
 export {
     userAPI,
@@ -30,4 +31,5 @@ export {
     commonAPI,
     appApi,
     toolApi,
+    mockApi,
 };

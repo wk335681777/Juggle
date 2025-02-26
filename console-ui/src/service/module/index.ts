@@ -13,6 +13,7 @@ import * as dataSourceService from './dataSource.ts';
 import * as commonService from './common';
 import * as appService from './app.ts'
 import * as toolService from './tool.ts'
+import * as mockService from './mock.ts'
 
 export {
   userService,
@@ -30,4 +31,5 @@ export {
   commonService,
   appService,
   toolService,
+  mockService,
 };

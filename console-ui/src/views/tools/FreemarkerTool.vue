@@ -1,10 +1,8 @@
 <script lang="ts" setup>
 import { useRouter } from 'vue-router';
-import {ref} from 'vue';
-import {Search} from "@element-plus/icons-vue";
-import { reactive } from 'vue';
+import { ref } from 'vue';
 import { toolService } from '@/service';
-import {ElMessage} from "element-plus";
+import { ElMessage } from "element-plus";
 import CodeEditor from "@/components/common/CodeEditor.vue";
 const router = useRouter();
 const freemarker = ref({
@@ -88,7 +86,7 @@ async function onSubmit() {
       </el-form-item>
 
       <el-form-item>
-        <el-button type="primary" @click="onSubmit">确定</el-button>
+        <el-button type="primary" @click="onSubmit">转换</el-button>
       </el-form-item>
       <el-form-item label="转换结果">
 <!--        <el-input v-model="result" placeholder="转换结果" :rows="10" type="textarea"></el-input>-->
