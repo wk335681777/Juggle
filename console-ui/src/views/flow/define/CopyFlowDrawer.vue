@@ -52,10 +52,7 @@ function open(item?: Record<string, any>) {
       if (res.success) {
         flowDefineFormValue.id = res.result.id;
         flowDefineFormValue.flowName = res.result.flowName;
-        flowDefineFormValue.flowType = res.result.flowType;
         flowDefineFormValue.remark = res.result.remark;
-        flowDefineFormValue.flowInputParams = res.result.flowInputParams;
-        flowDefineFormValue.flowOutputParams = res.result.flowOutputParams;
       }
     } else {
       Object.assign(flowDefineFormValue, getDefaultFlowDefine());

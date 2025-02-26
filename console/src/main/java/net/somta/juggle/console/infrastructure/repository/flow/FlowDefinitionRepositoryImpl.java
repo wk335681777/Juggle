@@ -153,7 +153,6 @@ public class FlowDefinitionRepositoryImpl implements IFlowDefinitionRepository {
         newFlowDefinition.setFlowKey(original.getFlowKey());
         newFlowDefinition.setFlowType(original.getFlowType());
         newFlowDefinition.setAppCode(original.getAppCode());
-        newFlowDefinition.setDeleted(original.getDeleted());
 
 
         return newFlowDefinition;
