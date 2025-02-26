@@ -7,6 +7,7 @@ import { Plus } from '@element-plus/icons-vue';
 import { useRouter } from 'vue-router';
 import {useGlobalStore} from "@/store/globaleStore.ts";
 import { storeToRefs } from 'pinia'
+import CopyFlowDrawer from "@/views/flow/define/CopyFlowDrawer.vue";
 
 const router = useRouter();
 const globalStore = useGlobalStore();
@@ -25,6 +26,8 @@ const dataTotal = ref(0);
 const dataRows = ref<Record<string, any>[]>([]);
 const loading = ref(false);
 const drawerRef = ref();
+const copyDrawerRef = ref();
+
 const filter = ref<{
   flowName?: string;
   flowType?: string;
@@ -90,6 +93,16 @@ async function updateFlowDefineItem(row: any) {
   }
 }
 
+async function copyFlowDefineItem(row: any) {
+  const res = await flowDefineService.copyDefineInfo(row);
+  if (res.result) {
+    ElMessage({ type: 'success', message: '复制成功' });
+    await queryFlowDefinePage();
+  } else {
+    ElMessage({ type: 'error', message: res.errorMsg });
+  }
+}
+
 function openDeployDialog(row: any) {
   deployForm.flowDefinitionId = row.id;
   deployForm.flowName = row.flowName;
@@ -141,8 +154,16 @@ async function deleteFlowDefineItem(row: any) {
 }
 
 function openEdit(row: any) {
+
   drawerRef.value.open(row);
 }
+
+function openCopy(row: any) {
+
+  copyDrawerRef.value.open(row);
+}
+
+
 </script>
 
 <template>
@@ -163,10 +184,13 @@ function openEdit(row: any) {
           @deploy="openDeployDialog"
           @edit="openEdit"
           @delete="openDelete"
+          @copy="openCopy"
         />
       </el-main>
     </el-container>
-    <FlowDefineDrawer ref="drawerRef" @add="addFlowDefineItem" @edit="updateFlowDefineItem" />
+    <FlowDefineDrawer ref="drawerRef" @add="addFlowDefineItem" @edit="updateFlowDefineItem"/>
+
+    <CopyFlowDrawer ref="copyDrawerRef" @copy="copyFlowDefineItem"/>
 
     <el-dialog v-model="deployFormVisible" :show-close="false" title="部署流程" width="400">
       <el-form :model="deployForm">

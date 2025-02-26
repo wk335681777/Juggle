@@ -240,4 +240,19 @@ public class FlowDefinitionController {
         Boolean result = flowDefinitionService.deployFlowDefinition(flowDefinitionDeployParam,flowDefinitionAo);
         return ResponseDataResult.setResponseResult(result);
     }
+
+    /**
+     * 复制流程
+     * @param flowDefinitionCopyParam 变量实体参数
+     * @return Boolean
+     */
+    @Operation(summary = "复制流程定义")
+    @PutMapping("/copy")
+    public ResponseDataResult<Boolean> copyFlowDefinition(@RequestBody FlowDefinitionCopyParam flowDefinitionCopyParam){
+        if(flowDefinitionCopyParam == null){
+            return ResponseDataResult.setErrorResponseResult(FLOW_PARAM_ERROR);
+        }
+        Boolean result = flowDefinitionService.copyFlowDefinition(flowDefinitionCopyParam);
+        return ResponseDataResult.setResponseResult(result);
+    }
 }

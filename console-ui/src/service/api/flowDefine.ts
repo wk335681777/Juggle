@@ -39,6 +39,14 @@ export async function updateDefineInfo(params: {
   return request.put(`/v1/flow/definition/update`, params);
 }
 
+export async function copyDefineInfo(flowDefinitionCopyParam: {
+  id: number;
+  flowName: string;
+  remark: string;
+}): ResponseResult<boolean> {
+  return request.put(`/v1/flow/definition/copy`, flowDefinitionCopyParam);
+}
+
 export async function saveFlowContent(params: { id: number; flowContent: string; flowVariables?: FlowVariable[] }): ResponseResult<boolean> {
   return request.put('/v1/flow/definition/save', params);
 }

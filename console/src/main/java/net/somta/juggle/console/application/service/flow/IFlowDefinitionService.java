@@ -91,6 +91,10 @@ public interface IFlowDefinitionService {
      */
     FlowResult debugFlow(FlowDefinitionAO flowDefinitionAo, TriggerDataParam triggerData);
 
+    /**
+     * 复制流程定义
+     */
+    Boolean copyFlowDefinition(FlowDefinitionCopyParam flowDefinitionCopyParam);
 
 
 }

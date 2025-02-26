@@ -24,6 +24,10 @@ export async function updateDefineInfo(params: Parameters<typeof flowDefineAPI.u
   return flowDefineAPI.updateDefineInfo(params);
 }
 
+export async function copyDefineInfo(flowDefinitionCopyParam: Parameters<typeof flowDefineAPI.copyDefineInfo>[0]) {
+  return flowDefineAPI.copyDefineInfo(flowDefinitionCopyParam);
+}
+
 export async function saveFlowContent(params: Parameters<typeof flowDefineAPI.saveFlowContent>[0]) {
   return flowDefineAPI.saveFlowContent(params);
 }

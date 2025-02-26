@@ -2,6 +2,7 @@ package net.somta.juggle.console.infrastructure.mapper.flow;
 
 
 import net.somta.core.base.IBaseMapper;
+import net.somta.juggle.console.domain.flow.definition.FlowDefinitionAO;
 import net.somta.juggle.console.domain.flow.definition.vo.FlowDefinitionInfoQueryVO;
 import net.somta.juggle.console.domain.flow.definition.vo.FlowDefinitionInfoVO;
 import net.somta.juggle.console.infrastructure.po.flow.FlowDefinitionInfoPO;
@@ -33,4 +34,5 @@ public interface FlowDefinitionMapper extends IBaseMapper {
      * @return Flow Definition List
      */
     List<FlowDefinitionInfoVO> queryFlowDefinitionList(FlowDefinitionInfoQueryVO flowDefinitionInfoQueryVO);
+
 }
