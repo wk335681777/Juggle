@@ -20,6 +20,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import net.somta.core.helper.JsonSerializeHelper;
 import net.somta.juggle.common.identity.IdentityContext;
 import net.somta.juggle.console.domain.flow.definition.FlowDefinitionAO;
+import net.somta.juggle.console.domain.flow.definition.enums.VariableTypeEnum;
 import net.somta.juggle.console.domain.flow.definition.repository.IFlowDefinitionRepository;
 import net.somta.juggle.console.domain.flow.definition.vo.FlowDefinitionInfoQueryVO;
 import net.somta.juggle.console.domain.flow.definition.vo.FlowDefinitionInfoVO;
@@ -30,18 +31,19 @@ import net.somta.juggle.console.domain.parameter.enums.ParameterSourceTypeEnum;
 import net.somta.juggle.console.domain.parameter.enums.ParameterTypeEnum;
 import net.somta.juggle.console.domain.parameter.repository.IParameterRepository;
 import net.somta.juggle.console.domain.parameter.vo.ParameterVO;
-import net.somta.juggle.console.domain.flow.definition.enums.VariableTypeEnum;
 import net.somta.juggle.console.infrastructure.converter.IVariableInfoConverter;
 import net.somta.juggle.console.infrastructure.converter.flow.IFlowDefinitionConverter;
-import net.somta.juggle.console.infrastructure.mapper.flow.FlowDefinitionMapper;
 import net.somta.juggle.console.infrastructure.mapper.ParameterMapper;
 import net.somta.juggle.console.infrastructure.mapper.VariableInfoMapper;
-import net.somta.juggle.console.infrastructure.po.flow.FlowDefinitionInfoPO;
+import net.somta.juggle.console.infrastructure.mapper.flow.FlowDefinitionMapper;
 import net.somta.juggle.console.infrastructure.po.ParameterPO;
 import net.somta.juggle.console.infrastructure.po.VariableInfoPO;
+import net.somta.juggle.console.infrastructure.po.flow.FlowDefinitionInfoPO;
 import net.somta.juggle.console.interfaces.param.flow.definition.FlowDefinitionCopyParam;
 import net.somta.juggle.core.enums.VariablePrefixEnum;
 import org.apache.commons.collections4.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,14 +52,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static jdk.nashorn.internal.runtime.regexp.joni.Config.log;
-
 /**
  * @author husong
  * @since 1.0.0
  */
 @Repository
 public class FlowDefinitionRepositoryImpl implements IFlowDefinitionRepository {
+    private final static Logger logger = LoggerFactory.getLogger(FlowDefinitionRepositoryImpl.class);
 
     private final FlowDefinitionMapper flowDefinitionMapper;
     private final ParameterMapper parameterMapper;
@@ -114,7 +115,7 @@ public class FlowDefinitionRepositoryImpl implements IFlowDefinitionRepository {
     public Boolean copyFlowDefinition(FlowDefinitionCopyParam flowDefinitionCopyParam) {
         // 校验输入参数
         if (flowDefinitionCopyParam == null || flowDefinitionCopyParam.getId() == null) {
-            log.print("FlowDefinitionAO or ID is null");
+            logger.error("FlowDefinitionAO or ID is null");
             return false;
         }
 
