@@ -61,6 +61,7 @@ import IconInterface from '@/components/icons/IconInterface.vue';
           <span>工具</span>
         </template>
         <el-menu-item :index="`/main/${$route.params.appCode}/tool/freemarker`">freemarker验证</el-menu-item>
+        <el-menu-item :index="`/main/${$route.params.appCode}/tool/mock`">高级mock</el-menu-item>
       </el-sub-menu>
     </el-menu>
   </div>

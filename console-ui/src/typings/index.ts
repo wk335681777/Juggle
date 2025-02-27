@@ -7,3 +7,4 @@ export * from './flowDesign';
 export * from './parameter';
 export * from './suite';
 export * from './template.ts';
+export * from './mock.ts';

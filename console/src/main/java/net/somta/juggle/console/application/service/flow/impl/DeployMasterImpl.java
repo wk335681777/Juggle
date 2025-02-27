@@ -6,6 +6,7 @@ import net.somta.juggle.console.application.service.flow.IDeployMaster;
 import net.somta.juggle.core.model.ServerInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -29,8 +30,9 @@ public class DeployMasterImpl implements IDeployMaster {
     private static final String DEPLOY_ROUTE_DEV = "/router/buildNode";
     private static final String DEPLOY_ROUTE_POD = "/router/deployFlowForPod";
     private static final String STOP_ROUTE_POD = "/router/stopFlowForPod";
-
-    private static final String REDIS_WORKER_KEY = "lowcode-integration-camel-worker";
+    @Value("${camel.cluster.id}")
+    private String clusterId;
+    private static String REDIS_WORKER_KEY;
     @Resource
     private RedisTemplate<String, String> redisTemplate;
     @Resource
@@ -41,6 +43,7 @@ public class DeployMasterImpl implements IDeployMaster {
 
     @PostConstruct
     public void init() {
+        REDIS_WORKER_KEY = "lowcode-integration-camel-worker:" + clusterId;
         receiveHeartbeat();
         scheduledExecutor.scheduleAtFixedRate(this::receiveHeartbeat, 1, 1, TimeUnit.SECONDS);
     }
@@ -119,5 +122,4 @@ public class DeployMasterImpl implements IDeployMaster {
     public List<ServerInfo> getServers() {
         return new ArrayList<>(workerServers.values());
     }
-
 }

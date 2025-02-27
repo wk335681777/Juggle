@@ -1,5 +1,7 @@
 import RouterNest from '@/views/RouterNest.vue';
 import FreemarkerTool from "@/views/tools/FreemarkerTool.vue";
+import Mock from "@/views/tools/Mock.vue";
+
 
 export const ToolRoutes = [
     {
@@ -13,6 +15,13 @@ export const ToolRoutes = [
                 name: 'freemarker',
                 component: FreemarkerTool,
                 meta: { name: 'freemarker工具' },
+            },
+            {
+                path: 'mock',
+                name: 'mock',
+                component: Mock,
+                meta: { name: '高级Mock' },
+                props: (route) => ({ appCode: route.params.appCode }),
             },
         ],
     },
