@@ -20,6 +20,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import net.somta.core.helper.JsonSerializeHelper;
 import net.somta.juggle.common.identity.IdentityContext;
 import net.somta.juggle.console.domain.flow.definition.FlowDefinitionAO;
+import net.somta.juggle.console.domain.flow.definition.enums.FlowDefinitionErrorEnum;
 import net.somta.juggle.console.domain.flow.definition.repository.IFlowDefinitionRepository;
 import net.somta.juggle.console.domain.flow.definition.vo.FlowDefinitionInfoQueryVO;
 import net.somta.juggle.console.domain.flow.definition.vo.FlowDefinitionInfoVO;
@@ -31,6 +32,7 @@ import net.somta.juggle.console.domain.parameter.enums.ParameterTypeEnum;
 import net.somta.juggle.console.domain.parameter.repository.IParameterRepository;
 import net.somta.juggle.console.domain.parameter.vo.ParameterVO;
 import net.somta.juggle.console.domain.flow.definition.enums.VariableTypeEnum;
+import net.somta.juggle.console.exception.BusinessException;
 import net.somta.juggle.console.infrastructure.converter.IVariableInfoConverter;
 import net.somta.juggle.console.infrastructure.converter.flow.IFlowDefinitionConverter;
 import net.somta.juggle.console.infrastructure.mapper.flow.FlowDefinitionMapper;
@@ -71,17 +73,34 @@ public class FlowDefinitionRepositoryImpl implements IFlowDefinitionRepository {
         this.parameterRepository = parameterRepository;
     }
 
-
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Long addFlowDefinition(FlowDefinitionAO flowDefinitionAo) {
+        validateFlowKey(flowDefinitionAo.getFlowKey());
         FlowDefinitionInfoPO flowDefinitionInfoPo = IFlowDefinitionConverter.IMPL.aoToPo(flowDefinitionAo);
         flowDefinitionInfoPo.setCreatedAt(new Date());
         flowDefinitionInfoPo.setCreatedBy(IdentityContext.getIdentity().getUserId());
         Long flowDefinitionId = flowDefinitionMapper.addFlowDefinitionInfo(flowDefinitionInfoPo);
 
-        saveParametersAndVariables(flowDefinitionInfoPo.getId(),flowDefinitionAo);
+        saveParametersAndVariables(flowDefinitionInfoPo.getId(), flowDefinitionAo);
+
         return flowDefinitionId;
+    }
+
+    /**
+     * 校验流程编码的格式和唯一性
+     */
+    private void validateFlowKey(String flowKey) {
+        if (flowKey != null && !flowKey.matches("^[a-zA-Z0-9_]+$")) {
+            throw new BusinessException(FlowDefinitionErrorEnum.FLOW_KEY_FORMAT_VALIDATOR_ERROR);
+        }
+
+        // 校验流程编码唯一性
+        FlowDefinitionInfoPO existingFlowDefinition = flowDefinitionMapper.queryFlowDefinitionByKey(flowKey);
+        if (existingFlowDefinition != null) {
+            throw new BusinessException(FlowDefinitionErrorEnum.FLOW_KEY_EXIST_ERROR);
+        }
+
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -150,7 +169,7 @@ public class FlowDefinitionRepositoryImpl implements IFlowDefinitionRepository {
 
         // 复制其他字段
         newFlowDefinition.setFlowContent(original.getFlowContent());
-        newFlowDefinition.setFlowKey(original.getFlowKey());
+        newFlowDefinition.setFlowKey(original.autoFlowKey());
         newFlowDefinition.setFlowType(original.getFlowType());
         newFlowDefinition.setAppCode(original.getAppCode());
 

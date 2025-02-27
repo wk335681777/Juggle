@@ -2,10 +2,17 @@ package net.somta.juggle.console.interfaces.handler;
 
 import net.somta.core.exception.BizException;
 import net.somta.core.protocol.ResponseDataResult;
+import net.somta.juggle.console.domain.flow.definition.enums.FlowDefinitionErrorEnum;
+import net.somta.juggle.console.exception.BusinessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 全局异常处理
@@ -116,4 +123,15 @@ public class GlobalExceptionHandler {
         return ResponseDataResult.setErrorResponseResult(errorCode,"系统异常");
     }
 
-}
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<Map<String, Object>> handleBusinessException(BusinessException ex) {
+        // 通过异常的错误码和错误信息，获取相应的错误枚举
+        FlowDefinitionErrorEnum errorEnum = FlowDefinitionErrorEnum.valueOf(ex.getMessage());  // 获取对应的枚举
+        Map<String, Object> response = new HashMap<>();
+        response.put("code", errorEnum.getErrorCode());  // 返回业务错误码
+        response.put("message", errorEnum.getErrorMsg());  // 返回业务错误信息
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);  // 返回 HTTP 400 错误
+    }
+
+
+    }

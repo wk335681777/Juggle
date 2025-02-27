@@ -10,6 +10,8 @@ import java.util.List;
  */
 public class FlowDefinitionAddParam {
 
+    private String flowKey;
+
     private String appCode;
 
     private String flowName;
@@ -68,5 +70,13 @@ public class FlowDefinitionAddParam {
 
     public void setAppCode(String appCode) {
         this.appCode = appCode;
+    }
+
+    public String getFlowKey() {
+        return flowKey;
+    }
+
+    public void setFlowKey(String flowKey) {
+        this.flowKey = flowKey;
     }
 }

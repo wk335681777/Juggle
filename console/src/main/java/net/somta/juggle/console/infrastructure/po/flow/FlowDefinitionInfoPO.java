@@ -2,6 +2,7 @@ package net.somta.juggle.console.infrastructure.po.flow;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import net.somta.core.base.BaseModel;
+import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.Date;
 
@@ -37,6 +38,11 @@ public class FlowDefinitionInfoPO extends BaseModel {
     private String remark;
 
     private Integer deleted;
+
+    public String autoFlowKey(){
+        String flowKey = this.flowType + "_" + RandomStringUtils.random(10, true, true);
+        return flowKey;
+    }
 
 
     public Long getId() {

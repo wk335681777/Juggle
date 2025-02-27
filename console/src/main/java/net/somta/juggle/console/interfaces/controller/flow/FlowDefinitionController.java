@@ -29,6 +29,8 @@ import net.somta.juggle.console.application.assembler.flow.IFlowDefinitionAssemb
 import net.somta.juggle.console.application.service.flow.IDeployMaster;
 import net.somta.juggle.console.application.service.flow.IFlowDefinitionService;
 import net.somta.juggle.console.domain.flow.definition.FlowDefinitionAO;
+import net.somta.juggle.console.domain.flow.definition.enums.FlowDefinitionErrorEnum;
+import net.somta.juggle.console.exception.BusinessException;
 import net.somta.juggle.console.interfaces.dto.flow.FlowDefinitionInfoDTO;
 import net.somta.juggle.console.interfaces.param.flow.definition.*;
 import net.somta.juggle.core.model.FlowElement;
@@ -83,14 +85,17 @@ public class FlowDefinitionController {
      */
     @Operation(summary = "创建流程定义")
     @PostMapping("/{appCode}/add")
-    public ResponseDataResult<Boolean> addFlowDefinition(@PathVariable String appCode, @RequestBody FlowDefinitionAddParam flowDefinitionAddParam){
-        if(flowDefinitionAddParam == null) {
-            return ResponseDataResult.setErrorResponseResult(FLOW_PARAM_ERROR);
+    public ResponseDataResult<Boolean> addFlowDefinition(@PathVariable String appCode, @RequestBody FlowDefinitionAddParam flowDefinitionAddParam) {
+        if (flowDefinitionAddParam == null) {
+            return ResponseDataResult.setErrorResponseResult(FlowDefinitionErrorEnum.FLOW_PARAM_ERROR);
         }
-
         flowDefinitionAddParam.setAppCode(appCode);
-        Boolean result = flowDefinitionService.addFlowDefinition(flowDefinitionAddParam);
-        return ResponseDataResult.setResponseResult(result);
+        try {
+            Boolean result = flowDefinitionService.addFlowDefinition(flowDefinitionAddParam);
+            return ResponseDataResult.setResponseResult(result);  // 成功返回
+        } catch (BusinessException ex) {
+            return ResponseDataResult.setErrorResponseResult(ex.getCode(), ex.getMessage());
+        }
     }
 
     /**

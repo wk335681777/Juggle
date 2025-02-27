@@ -78,13 +78,17 @@ public class FlowDefinitionServiceImpl implements IFlowDefinitionService {
     @Override
     public Boolean addFlowDefinition(FlowDefinitionAddParam flowDefinitionAddParam) {
         FlowDefinitionAO flowDefinitionAo =IFlowDefinitionAssembler.IMPL.paramToAo(flowDefinitionAddParam);
-        flowDefinitionAo.setFlowKey(flowDefinitionAo.generateFlowKey());
+
+        String flowKey = flowDefinitionAddParam.getFlowKey();
+        flowDefinitionAo.setFlowKey(flowKey != null && !flowKey.isEmpty() ? flowKey : flowDefinitionAo.autoFlowKey(flowKey));
+
         flowDefinitionAo.initDefaultFlowContent(flowDefinitionAddParam.getFlowName());
         flowDefinitionAo.initParameterList(flowDefinitionAddParam.getFlowInputParams(),flowDefinitionAddParam.getFlowOutputParams());
 
         flowDefinitionRepository.addFlowDefinition(flowDefinitionAo);
         return true;
     }
+
 
     @Override
     public Boolean deleteFlowDefinition(Long flowDefinitionId) {

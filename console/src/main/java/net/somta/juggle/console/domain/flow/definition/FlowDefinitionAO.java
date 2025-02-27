@@ -53,6 +53,13 @@ public class FlowDefinitionAO {
 
     private List<VariableInfoVO> variableInfoList;
 
+    public String autoFlowKey(String flowKey){
+        if (flowKey == null || flowKey.isEmpty()){
+            flowKey = this.flowType + "_" + RandomStringUtils.random(10, true, true);
+        }
+        return flowKey;
+    }
+
     public void initDefaultFlowContent(String flowName) {
         List<FlowElement> elementList = new ArrayList<>();
 
@@ -131,6 +138,7 @@ public class FlowDefinitionAO {
         String flowKey = this.flowType + "_" + RandomStringUtils.random(10, true, true);
         return flowKey;
     }
+
 
     public Long getId() {
         return id;

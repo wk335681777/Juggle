@@ -3,6 +3,7 @@ import { FlowDefineInfo, InputParams, OutputParams } from '@/typings';
 import { FlowVariable } from '@/views/flow/design';
 
 export async function addDefineInfo(appCode: string, params: {
+  flowKey: string;
   flowName: string;
   flowType: string;
   remark?: string;
