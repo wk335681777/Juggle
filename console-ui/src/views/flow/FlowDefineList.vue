@@ -171,12 +171,15 @@ function openCopy(row: any) {
 }
 
 function handleSelectionChange(rows) {
-  console.debug(rows);
   selectedRows.value = rows;
 }
 
 async function exportFlowDefine() {
   const ids = selectedRows.value.map(item => item.id);
+  if (ids.length === 0) {
+    ElMessage.error('请先选择要导出的流程！');
+    return;
+  }
   await flowDefineService.exportFlowDefine(props.appCode, ids);
 }
 
