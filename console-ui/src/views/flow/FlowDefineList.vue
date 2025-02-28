@@ -28,6 +28,8 @@ const loading = ref(false);
 const drawerRef = ref();
 const copyDrawerRef = ref();
 const selectedRows = ref([]);
+const isLoading = ref(false);
+const fileList = ref([]);
 
 const filter = ref<{
   flowName?: string;
@@ -115,6 +117,7 @@ function openDeployDialog(row: any) {
 }
 
 function openImportDialog() {
+  fileList.value = [];
   importFormVisible.value = true;
 }
 
@@ -177,22 +180,37 @@ async function exportFlowDefine() {
   await flowDefineService.exportFlowDefine(props.appCode, ids);
 }
 
-const fileToUpload = ref();
-function handleFileChange(file, fileList) {
-  fileToUpload.value = file;
+
+function handleFileChange(file) {
+  fileList.value[0] = file;
+}
+
+function beforeUpload() {
+  debugger
+  fileList.value = [];
+}
+
+function handleSuccess() {
+  debugger
+}
+
+function handleRemove(a,b,c,d) {
+  fileList.value = [];
 }
 
 async function onImportFlowDefine() {
-  if (!fileToUpload.value) {
+  if (fileList.value.length === 0) {
     ElMessage.error('请先选择文件！');
     return;
   }
-
+  isLoading.value = true;
   // 创建 FormData 对象并添加文件
   const formData = new FormData();
-  formData.append('file', fileToUpload.value.raw);  // 'file' 是后端接收的字段
+  formData.append('file', fileList.value[0].raw);  // 'file' 是后端接收的字段
   const success = await flowDefineService.importFlowDefine(props.appCode, formData);
+  isLoading.value = false;
   if (success) {
+    importFormVisible.value = false;
     await queryFlowDefinePage();
   }
 }
@@ -256,6 +274,7 @@ async function onImportFlowDefine() {
           :show-file-list="true"
           :auto-upload="false"
           :on-change="handleFileChange"
+          :on-remove="handleRemove"
           :limit="1"
       >
         <el-button size="small" type="primary">选择文件</el-button>
@@ -263,7 +282,7 @@ async function onImportFlowDefine() {
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="importFormVisible = false">取消</el-button>
-          <el-button type="primary" @click="onImportFlowDefine">上传</el-button>
+          <el-button type="primary" @click="onImportFlowDefine" :loading="isLoading">上传</el-button>
         </span>
       </template>
     </el-dialog>

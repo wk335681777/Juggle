@@ -320,7 +320,13 @@ public class FlowDefinitionServiceImpl implements IFlowDefinitionService {
         }
 
         if (!updateList.isEmpty()) {
-            flowDefinitionRepository.batchUpdate(appCode, updateList);
+            for (FlowDefinitionInfoPO flowDefinitionInfoPO : updateList) {
+                // 不支持多条记录一起更新?
+                flowDefinitionRepository.batchUpdate(appCode, Arrays.asList(flowDefinitionInfoPO));
+            }
         }
+    }
+
+    public static void main(String[] args) {
     }
 }

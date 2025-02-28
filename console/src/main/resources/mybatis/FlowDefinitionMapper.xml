@@ -57,13 +57,13 @@
     </insert>
 
     <update id="batchUpdate" parameterType="net.somta.juggle.console.infrastructure.po.flow.FlowDefinitionInfoPO" >
-        <foreach collection="list" item="item" separator=";">
+                <foreach collection="list" item="item" separator=";">
             update t_flow_definition set
-            updated_at = now(),
             <trim  suffixOverrides="," >
 <!--                <if test="appCode != null and appCode != ''">-->
 <!--                    app_code=#{item.appCode},-->
 <!--                </if>-->
+<!--                updated_at = now(),-->
                 <if test="item.flowKey != null and item.flowKey != ''">
                     flow_key=#{item.flowKey},
                 </if>
@@ -91,7 +91,8 @@
                 <if test="item.updatedBy != null">
                     updated_by=#{item.updatedBy},
                 </if>
-            </trim> where id=#{item.id} and app_code = #{appCode}
+            </trim>
+            where id=#{item.id} and app_code = #{appCode}
         </foreach>
     </update>
 </mapper>
