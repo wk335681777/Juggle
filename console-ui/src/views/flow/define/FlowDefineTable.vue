@@ -11,7 +11,7 @@ defineProps({
   dataTotal: Number,
   loading: Boolean,
 });
-const emit = defineEmits(['pageChange', 'deploy', 'edit', 'delete','copy']);
+const emit = defineEmits(['pageChange', 'deploy', 'edit', 'delete','copy', 'handleSelectionChange']);
 
 function deployFlow(row: any) {
   emit('deploy', row);
@@ -42,10 +42,16 @@ function goDesignPage(flowDefinitionId: number, flowKey: string) {
   const { href } = router.resolve({ path })
   window.open(href, '_blank')
 }
+
+function handleSelectionChange(rows) {
+  emit('handleSelectionChange', rows)
+}
 </script>
 
 <template>
-  <el-table v-loading="loading" :data="dataRows" size="large" header-cell-class-name="table-header">
+  <el-table row-key="id" :reserve-selection="true" v-loading="loading" :data="dataRows" size="large" @selection-change="handleSelectionChange" header-cell-class-name="table-header">
+    <!-- 多选框列 -->
+    <el-table-column type="selection" width="55"/>
     <el-table-column prop="flowKey" label="流程编码" width="180" />
     <el-table-column prop="flowName" label="流程名称" width="220" />
     <el-table-column prop="flowType" label="流程类型" width="100">

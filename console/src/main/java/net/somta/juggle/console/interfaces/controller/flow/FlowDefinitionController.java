@@ -16,6 +16,8 @@ along with this program; if not, visit <https://www.gnu.org/licenses/gpl-3.0.htm
 */
 package net.somta.juggle.console.interfaces.controller.flow;
 
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,6 +33,7 @@ import net.somta.juggle.console.application.service.flow.IFlowDefinitionService;
 import net.somta.juggle.console.domain.flow.definition.FlowDefinitionAO;
 import net.somta.juggle.console.domain.flow.definition.enums.FlowDefinitionErrorEnum;
 import net.somta.juggle.console.exception.BusinessException;
+import net.somta.juggle.console.interfaces.dto.flow.FlowDefinitionExportDTO;
 import net.somta.juggle.console.interfaces.dto.flow.FlowDefinitionInfoDTO;
 import net.somta.juggle.console.interfaces.param.flow.definition.*;
 import net.somta.juggle.core.model.FlowElement;
@@ -41,14 +44,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
@@ -259,5 +263,50 @@ public class FlowDefinitionController {
         }
         Boolean result = flowDefinitionService.copyFlowDefinition(flowDefinitionCopyParam);
         return ResponseDataResult.setResponseResult(result);
+    }
+
+    /**
+     * 导出流程
+     * @param param 变量实体参数
+     * @return Boolean
+     */
+    @Operation(summary = "导出流程定义")
+    @PostMapping("/export")
+    public ResponseEntity<?> exportFlowDefinition(@RequestBody FlowDefinitionExportParam param, HttpServletResponse response) throws Exception {
+        if(CollectionUtils.isEmpty(param.getIdList())) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(FLOW_EXPORT_ID_IS_NULL_ERROR.getErrorMsg());
+        }
+
+        String fileName = "flowDefine_" + System.currentTimeMillis() + ".json";
+        // 设置响应头
+        response.setContentType("application/octet-stream");
+        response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+
+        List<FlowDefinitionExportDTO> dtoList = flowDefinitionService.export(param);
+        JSONArray jsonArray = new JSONArray(dtoList);
+
+        // 获取文件输入流
+        try (OutputStream os = response.getOutputStream()) {
+            os.write(jsonArray.toStringPretty().getBytes());
+        }
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{appCode}/import")
+    public ResponseDataResult<Void> uploadFile(@PathVariable String appCode, @RequestParam("file") MultipartFile file) {
+        try {
+            // 获取文件名
+            String fileName = file.getOriginalFilename();
+            String content = new String(file.getBytes(), StandardCharsets.UTF_8);
+            System.out.println(content);
+            List<FlowDefinitionExportDTO> flowDefinitionExportDTOS = JSONUtil.toList(content, FlowDefinitionExportDTO.class);
+            flowDefinitionService.importFlowDefinition(appCode, flowDefinitionExportDTOS);
+            return ResponseDataResult.setResponseResult();
+        } catch (Exception e) {
+            logger.error("uploadFile error", e);
+            return ResponseDataResult.setErrorResponseResult(999, e.getMessage());
+        }
     }
 }

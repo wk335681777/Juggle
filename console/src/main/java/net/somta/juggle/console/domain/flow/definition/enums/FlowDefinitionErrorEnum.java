@@ -13,7 +13,8 @@ public enum FlowDefinitionErrorEnum implements IBaseError {
     FLOW_DEFINITION_CONTENT_IS_NULL_ERROR(1003,  "流程定义内容不能为空"),
     FLOW_DEFINITION_CONTENT_VALIDATOR_ERROR(1004,  "流程定义内容校验失败"),
     FLOW_KEY_EXIST_ERROR(1005,"流程编码已存在"),
-    FLOW_KEY_FORMAT_VALIDATOR_ERROR(1006,"流程编码格式校验失败");
+    FLOW_KEY_FORMAT_VALIDATOR_ERROR(1006,"流程编码格式校验失败"),
+    FLOW_EXPORT_ID_IS_NULL_ERROR(1007,"流程导出ID不能为空");
 
     private int errorCode;
     private String errorMsg;

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { FlowDefineTable, FlowDefineDrawer, FlowDefineFilter } from './define';
-import { flowDefineService, flowVersionService } from '@/service';
+import { flowDefineService, flowVersionService, commonService } from '@/service';
 import { reactive, ref } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
-import { Plus } from '@element-plus/icons-vue';
+import { Plus, Download, Upload } from '@element-plus/icons-vue';
 import { useRouter } from 'vue-router';
 import {useGlobalStore} from "@/store/globaleStore.ts";
 import { storeToRefs } from 'pinia'
@@ -27,6 +27,7 @@ const dataRows = ref<Record<string, any>[]>([]);
 const loading = ref(false);
 const drawerRef = ref();
 const copyDrawerRef = ref();
+const selectedRows = ref([]);
 
 const filter = ref<{
   flowName?: string;
@@ -34,6 +35,7 @@ const filter = ref<{
 }>({});
 
 const deployFormVisible = ref(false);
+const importFormVisible = ref(false);
 let deployForm = reactive({
   flowDefinitionId: '',
   flowName: '',
@@ -112,6 +114,10 @@ function openDeployDialog(row: any) {
   });
 }
 
+function openImportDialog() {
+  importFormVisible.value = true;
+}
+
 async function onSubmitDeploy() {
   await deployFlowDefine(deployForm.flowDefinitionId, deployForm.flowDeployVersion, deployForm.flowVersionRemark);
 }
@@ -154,16 +160,42 @@ async function deleteFlowDefineItem(row: any) {
 }
 
 function openEdit(row: any) {
-
   drawerRef.value.open(row);
 }
 
 function openCopy(row: any) {
-
   copyDrawerRef.value.open(row);
 }
 
+function handleSelectionChange(rows) {
+  console.debug(rows);
+  selectedRows.value = rows;
+}
 
+async function exportFlowDefine() {
+  const ids = selectedRows.value.map(item => item.id);
+  await flowDefineService.exportFlowDefine(props.appCode, ids);
+}
+
+const fileToUpload = ref();
+function handleFileChange(file, fileList) {
+  fileToUpload.value = file;
+}
+
+async function onImportFlowDefine() {
+  if (!fileToUpload.value) {
+    ElMessage.error('请先选择文件！');
+    return;
+  }
+
+  // 创建 FormData 对象并添加文件
+  const formData = new FormData();
+  formData.append('file', fileToUpload.value.raw);  // 'file' 是后端接收的字段
+  const success = await flowDefineService.importFlowDefine(props.appCode, formData);
+  if (success) {
+    await queryFlowDefinePage();
+  }
+}
 </script>
 
 <template>
@@ -172,6 +204,8 @@ function openCopy(row: any) {
       <el-header class="page-header">
         <FlowDefineFilter @search="onSearch" />
         <el-button :icon="Plus" type="primary" @click="openflowDefineAdd">新建</el-button>
+        <el-button :icon="Download" @click="exportFlowDefine">导出</el-button>
+        <el-button :icon="Upload" @click="openImportDialog">导入</el-button>
       </el-header>
       <el-main class="page-body">
         <FlowDefineTable
@@ -185,6 +219,7 @@ function openCopy(row: any) {
           @edit="openEdit"
           @delete="openDelete"
           @copy="openCopy"
+          @handleSelectionChange="handleSelectionChange"
         />
       </el-main>
     </el-container>
@@ -208,6 +243,27 @@ function openCopy(row: any) {
         <span class="dialog-footer">
           <el-button @click="deployFormVisible = false">取消</el-button>
           <el-button type="primary" @click="onSubmitDeploy">部署</el-button>
+        </span>
+      </template>
+    </el-dialog>
+    <el-dialog v-model="importFormVisible" :show-close="false" title="导入流程" width="400">
+      <el-upload
+          action="/upload-endpoint"
+          :on-success="handleSuccess"
+          :on-error="handleError"
+          :before-upload="beforeUpload"
+          :file-list="fileList"
+          :show-file-list="true"
+          :auto-upload="false"
+          :on-change="handleFileChange"
+          :limit="1"
+      >
+        <el-button size="small" type="primary">选择文件</el-button>
+      </el-upload>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="importFormVisible = false">取消</el-button>
+          <el-button type="primary" @click="onImportFlowDefine">上传</el-button>
         </span>
       </template>
     </el-dialog>

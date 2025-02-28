@@ -3,9 +3,12 @@ package net.somta.juggle.console.application.service.flow;
 import com.github.pagehelper.PageInfo;
 import net.somta.juggle.console.domain.flow.definition.FlowDefinitionAO;
 import net.somta.juggle.common.param.TriggerDataParam;
+import net.somta.juggle.console.interfaces.dto.flow.FlowDefinitionExportDTO;
 import net.somta.juggle.console.interfaces.dto.flow.FlowDefinitionInfoDTO;
 import net.somta.juggle.console.interfaces.param.flow.definition.*;
 import net.somta.juggle.core.model.FlowResult;
+
+import java.util.List;
 
 /**
  * @author husong
@@ -96,5 +99,19 @@ public interface IFlowDefinitionService {
      */
     Boolean copyFlowDefinition(FlowDefinitionCopyParam flowDefinitionCopyParam);
 
+    /**
+     * 导出流程定义
+     * @param param
+     * @return
+     */
+    List<FlowDefinitionExportDTO> export(FlowDefinitionExportParam param);
+
+    /**
+     * 导出流程定义
+     * @param appCode
+     * @param param
+     * @return
+     */
+    void importFlowDefinition(String appCode, List<FlowDefinitionExportDTO> param);
 
 }
