@@ -27,10 +27,12 @@ import net.somta.juggle.console.domain.flow.version.repository.IFlowVersionRepos
 import net.somta.juggle.console.domain.flow.version.view.FlowVersionInfoView;
 import net.somta.juggle.console.domain.flow.version.view.FlowVersionView;
 import net.somta.juggle.console.domain.flow.version.vo.FlowVersionQueryVO;
+import net.somta.juggle.console.domain.flow.version.vo.FlowVersionVO;
 import net.somta.juggle.console.interfaces.dto.flow.FlowInfoDTO;
 import net.somta.juggle.console.interfaces.dto.flow.FlowVersionDTO;
 import net.somta.juggle.console.interfaces.param.flow.FlowVersionPageParam;
 import net.somta.juggle.common.param.TriggerDataParam;
+import net.somta.juggle.console.interfaces.param.flow.FlowVersionParam;
 import net.somta.juggle.core.model.Flow;
 import net.somta.juggle.core.model.FlowResult;
 import org.springframework.stereotype.Service;
@@ -101,4 +103,10 @@ public class FlowVersionServiceImpl implements IFlowVersionService {
         flow.setVariables(flowVersionAo.getFlowRuntimeVariables());
         return flowRuntimeService.triggerFlow(flow, flowVersionAo.getFlowType(),triggerData);
     }
+
+    @Override
+    public Boolean getRestoreFlowVersion(FlowVersionParam flowVersionParam) {
+        return flowVersionRepository. restoreFlowVersion(flowVersionParam);
+    }
+
 }

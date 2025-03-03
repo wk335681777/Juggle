@@ -24,3 +24,6 @@ export async function getFlowDefinition(id: number): ResponseResult<boolean> {
   return request.get(`/v1/flow/version/info/${id}`);
 }
 
+export function versionFlowRestore(appCode: string,flowKey: string,flowVersionId:number): ResponsePageResult {
+  return request.post('/v1/flow/version/restore', {appCode:appCode,flowKey:flowKey,flowVersionId:flowVersionId});
+}

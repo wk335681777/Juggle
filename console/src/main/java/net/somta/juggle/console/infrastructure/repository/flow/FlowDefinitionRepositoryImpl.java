@@ -32,7 +32,6 @@ import net.somta.juggle.console.domain.parameter.enums.ParameterSourceTypeEnum;
 import net.somta.juggle.console.domain.parameter.enums.ParameterTypeEnum;
 import net.somta.juggle.console.domain.parameter.repository.IParameterRepository;
 import net.somta.juggle.console.domain.parameter.vo.ParameterVO;
-import net.somta.juggle.console.domain.flow.definition.enums.VariableTypeEnum;
 import net.somta.juggle.console.exception.BusinessException;
 import net.somta.juggle.console.infrastructure.converter.IVariableInfoConverter;
 import net.somta.juggle.console.infrastructure.converter.flow.IFlowDefinitionConverter;
@@ -78,7 +77,7 @@ public class FlowDefinitionRepositoryImpl implements IFlowDefinitionRepository {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Long addFlowDefinition(FlowDefinitionAO flowDefinitionAo) {
-        validateFlowKey(flowDefinitionAo.getFlowKey());
+        validateFlowKey(flowDefinitionAo.getFlowKey(),flowDefinitionAo.getAppCode());
         FlowDefinitionInfoPO flowDefinitionInfoPo = IFlowDefinitionConverter.IMPL.aoToPo(flowDefinitionAo);
         flowDefinitionInfoPo.setCreatedAt(new Date());
         flowDefinitionInfoPo.setCreatedBy(IdentityContext.getIdentity().getUserId());
@@ -92,13 +91,13 @@ public class FlowDefinitionRepositoryImpl implements IFlowDefinitionRepository {
     /**
      * 校验流程编码的格式和唯一性
      */
-    private void validateFlowKey(String flowKey) {
+    private void validateFlowKey(String flowKey,String appCode) {
         if (flowKey != null && !flowKey.matches("^[a-zA-Z0-9_]+$")) {
             throw new BusinessException(FlowDefinitionErrorEnum.FLOW_KEY_FORMAT_VALIDATOR_ERROR);
         }
 
         // 校验流程编码唯一性
-        FlowDefinitionInfoPO existingFlowDefinition = flowDefinitionMapper.queryFlowDefinitionByKey(flowKey);
+        FlowDefinitionInfoPO existingFlowDefinition = flowDefinitionMapper.queryFlowDefinitionByKey(flowKey,appCode);
         if (existingFlowDefinition != null) {
             throw new BusinessException(FlowDefinitionErrorEnum.FLOW_KEY_EXIST_ERROR);
         }
@@ -201,9 +200,10 @@ public class FlowDefinitionRepositoryImpl implements IFlowDefinitionRepository {
         return flowDefinitionAo;
     }
 
+
     @Override
-    public FlowDefinitionAO queryFlowDefinitionByKey(String flowKey) {
-        FlowDefinitionInfoPO flowDefinitionInfoPo = flowDefinitionMapper.queryFlowDefinitionByKey(flowKey);
+    public FlowDefinitionAO queryFlowDefinitionByKey(String flowKey, String appCode) {
+        FlowDefinitionInfoPO flowDefinitionInfoPo = flowDefinitionMapper.queryFlowDefinitionByKey(flowKey,appCode);
         FlowDefinitionAO flowDefinitionAo = IFlowDefinitionConverter.IMPL.poToAo(flowDefinitionInfoPo);
         ParameterEntity parameterEntity = parameterRepository.getParameter(new ParameterVO(ParameterSourceTypeEnum.FLOW.getCode(), flowDefinitionInfoPo.getId()));
         flowDefinitionAo.setParameterEntity(parameterEntity);

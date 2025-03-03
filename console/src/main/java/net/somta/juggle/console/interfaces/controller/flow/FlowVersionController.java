@@ -33,6 +33,7 @@ import net.somta.juggle.console.domain.flow.version.enums.FlowVersionStatusEnum;
 import net.somta.juggle.console.interfaces.dto.flow.FlowDefinitionInfoDTO;
 import net.somta.juggle.console.interfaces.dto.flow.FlowVersionDTO;
 import net.somta.juggle.console.interfaces.param.flow.FlowVersionPageParam;
+import net.somta.juggle.console.interfaces.param.flow.FlowVersionParam;
 import net.somta.juggle.console.interfaces.param.flow.FlowVersionStatusParam;
 import net.somta.juggle.core.model.FlowResult;
 import org.apache.commons.lang3.StringUtils;
@@ -46,8 +47,7 @@ import java.util.Map;
 
 import static net.somta.juggle.common.constants.ApplicationConstants.JUGGLE_SERVER_VERSION;
 import static net.somta.juggle.console.domain.flow.definition.enums.FlowDefinitionErrorEnum.FLOW_PARAM_ERROR;
-import static net.somta.juggle.console.domain.flow.flowinfo.enums.FlowErrorEnum.FLOW_KEY_IS_EMPTY;
-import static net.somta.juggle.console.domain.flow.flowinfo.enums.FlowErrorEnum.FLOW_NOT_EXIST;
+import static net.somta.juggle.console.domain.flow.flowinfo.enums.FlowErrorEnum.*;
 import static net.somta.juggle.console.domain.flow.version.enums.FlowVersionErrorEnum.ENABLE_FLOW_NOT_DELETE;
 import static net.somta.juggle.console.domain.flow.version.enums.FlowVersionErrorEnum.FLOW_NOT_ENABLE;
 
@@ -115,6 +115,16 @@ public class FlowVersionController {
         }
         flowVersionService.deleteFlowVersion(flowVersionId);
         return ResponseDataResult.setResponseResult();
+    }
+
+    @Operation(summary = "还原流程版本")
+    @PostMapping("/restore")
+    public ResponseDataResult<Boolean> restoreFlowVersion(@RequestBody FlowVersionParam flowVersionParam){
+        if(flowVersionParam == null){
+            return ResponseDataResult.setErrorResponseResult(VERSION_NOT_EXIST);
+        }
+        Boolean result = flowVersionService.getRestoreFlowVersion(flowVersionParam);
+        return ResponseDataResult.setResponseResult(result);
     }
 
     @Operation(summary = "查询流程版本分页列表")

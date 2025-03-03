@@ -5,7 +5,9 @@ package net.somta.juggle.console.domain.flow.version.vo;
  */
 public class FlowVersionQueryVO {
 
+
     private Long flowId;
+    private String appCode;
 
     private String flowKey;
 
@@ -46,5 +48,13 @@ public class FlowVersionQueryVO {
 
     public void setFlowVersionStatus(Integer flowVersionStatus) {
         this.flowVersionStatus = flowVersionStatus;
+    }
+
+    public String getAppCode() {
+        return appCode;
+    }
+
+    public void setAppCode(String appCode) {
+        this.appCode = appCode;
     }
 }

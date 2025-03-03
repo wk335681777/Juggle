@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { FlowVersionTable, FlowVersionFilter } from './version';
-import { flowVersionService } from '@/service';
+import {flowDefineService, flowVersionService} from '@/service';
 import { reactive, ref } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { useRoute } from 'vue-router';
@@ -47,6 +47,31 @@ function onPageChange(page: number) {
   pageNum.value = page;
   queryFlowVersionPage();
 }
+
+
+function openRestore(row: any) {
+  ElMessageBox.confirm(`确定还原'${row.flowName}'的'${row.flowVersion}版本吗?`, '操作确认', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  })
+      .then(() => {
+        versionFlowRestoreItem(row);
+      })
+      .catch(() => {});
+}
+
+async function versionFlowRestoreItem(row: any) {
+  debugger
+  const res = await flowVersionService.versionFlowRestore(row.appCode,row.flowKey,row.id);
+  if (res.success) {
+    ElMessage({ type: 'success', message: '还原成功' });
+    await queryFlowVersionPage();
+  } else {
+    ElMessage({ type: 'error', message: res.errorMsg });
+  }
+}
+
 
 function openUpdateFlowVersionStatus(row: any) {
   ElMessageBox.confirm(`确定${row.flowVersionStatus == 0 ? '启用' : '禁用'} ${row.flowName} 流程的 ${row.flowVersion} 版本吗?`, '操作确认', {
@@ -109,6 +134,7 @@ async function deleteFlowVersionItem(row: any) {
           @pageChange="onPageChange"
           @flowVersionStatusChange="openUpdateFlowVersionStatus"
           @delete="openDelete"
+          @restore="openRestore"
         />
       </el-main>
     </el-container>

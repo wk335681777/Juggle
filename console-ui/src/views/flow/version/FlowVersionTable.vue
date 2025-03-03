@@ -12,7 +12,7 @@ defineProps({
   dataTotal: Number,
   loading: Boolean,
 });
-const emit = defineEmits(['pageChange', 'flowVersionStatusChange', 'delete']);
+const emit = defineEmits(['pageChange', 'flowVersionStatusChange', 'delete','restore']);
 
 function deleteRow(row: any, index: number) {
   emit('delete', row, index);
@@ -41,6 +41,10 @@ function goDesignViewPage(flowVersionId: number, flowKey: string) {
   window.open(href, '_blank')
 }
 
+function versionRestoreRow(row: any) {
+  emit('restore', row);
+}
+
 </script>
 
 <template>
@@ -66,7 +70,7 @@ function goDesignViewPage(flowVersionId: number, flowKey: string) {
         </el-button>
         <el-button link type="primary" size="small" @click.prevent="deleteRow(scope.row, scope.$index)"> 删除 </el-button>
         <el-button link type="primary" size="small" @click.prevent="goDesignViewPage(scope.row.id, scope.row.flowKey)"> 查看 </el-button>
-        <el-button link type="primary" size="small" > 从此版本还原 </el-button>
+        <el-button link type="primary" size="small" @click.prevent="versionRestoreRow(scope.row)"> 从此版本还原 </el-button>
       </template>
     </el-table-column>
   </el-table>

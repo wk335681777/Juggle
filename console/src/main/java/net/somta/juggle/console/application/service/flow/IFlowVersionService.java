@@ -2,8 +2,10 @@ package net.somta.juggle.console.application.service.flow;
 
 import com.github.pagehelper.PageInfo;
 import net.somta.juggle.console.domain.flow.version.FlowVersionAO;
+import net.somta.juggle.console.domain.flow.version.vo.FlowVersionVO;
 import net.somta.juggle.console.interfaces.param.flow.FlowVersionPageParam;
 import net.somta.juggle.common.param.TriggerDataParam;
+import net.somta.juggle.console.interfaces.param.flow.FlowVersionParam;
 import net.somta.juggle.core.model.FlowResult;
 
 /**
@@ -60,5 +62,8 @@ public interface IFlowVersionService {
      * @return Flow execution results
      */
     FlowResult triggerFlow(FlowVersionAO flowVersionAo, TriggerDataParam triggerData);
+
+    Boolean getRestoreFlowVersion(FlowVersionParam flowVersionParam);
+
 
 }

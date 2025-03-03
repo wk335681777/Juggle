@@ -1,5 +1,5 @@
-import { flowVersionAPI } from '@/service/api';
-import {getFlowDefinition} from "@/service/api/flowVersion.ts";
+import {flowVersionAPI} from '@/service/api';
+
 
 export async function getLatestDeployVersion(flowId: number) {
   return flowVersionAPI.getLatestDeployVersion(flowId);
@@ -24,4 +24,8 @@ export async function getFlowDefinition(flowVersionId: number) {
 
 export async function getAsyncFlowResult(flowInstanceId: string) {
   return flowVersionAPI.getAsyncFlowResult(flowInstanceId);
+}
+
+export async function versionFlowRestore(appCode: string,flowKey: string,flowVersionId:number) {
+  return flowVersionAPI.versionFlowRestore(appCode,flowKey,flowVersionId);
 }

@@ -10,8 +10,8 @@
     </insert>
 
     <select id="queryFlowDefinitionByKey" resultType="net.somta.juggle.console.infrastructure.po.flow.FlowDefinitionInfoPO" parameterType="java.lang.String">
-        select id, app_code, flow_key as flowKey, flow_name as flowName,flow_type as flowType,flow_content as flowContent, remark
-        from t_flow_definition where flow_key = #{flowKey}
+        select id, app_code, flow_key as flowKey, flow_name as flowName,flow_type as flowType,flow_content as flowContent, remark,deleted
+        from t_flow_definition where flow_key = #{flowKey} and app_Code=#{appCode} and deleted=0
     </select>
 
     <select id="queryFlowDefinitionList" resultType="net.somta.juggle.console.domain.flow.definition.vo.FlowDefinitionInfoVO" parameterType="net.somta.juggle.console.domain.flow.definition.vo.FlowDefinitionInfoQueryVO">

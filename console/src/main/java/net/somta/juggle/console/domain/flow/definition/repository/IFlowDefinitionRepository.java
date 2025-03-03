@@ -24,7 +24,7 @@ public interface IFlowDefinitionRepository {
 
     FlowDefinitionAO queryFlowDefinitionInfo(Long flowDefinitionId);
 
-    FlowDefinitionAO queryFlowDefinitionByKey(String flowKey);
+    FlowDefinitionAO queryFlowDefinitionByKey(String flowKey, String appCode);
 
     List<FlowDefinitionInfoVO> queryFlowDefinitionList(FlowDefinitionInfoQueryVO flowDefinitionInfoQueryVo);
 

@@ -129,8 +129,8 @@ public class FlowDefinitionServiceImpl implements IFlowDefinitionService {
     }
 
     @Override
-    public FlowDefinitionAO getFlowDefinitionByKey(String flowKey) {
-        FlowDefinitionAO flowDefinitionAo = flowDefinitionRepository.queryFlowDefinitionByKey(flowKey);
+    public FlowDefinitionAO getFlowDefinitionByKey(String flowKey, String appCode) {
+        FlowDefinitionAO flowDefinitionAo = flowDefinitionRepository.queryFlowDefinitionByKey(flowKey, appCode);
         List<VariableInfoVO> variableInfoVoList = variableInfoRepository.queryVariableInfoList(flowDefinitionAo.getId());
         flowDefinitionAo.setVariableInfoList(variableInfoVoList);
         return flowDefinitionAo;

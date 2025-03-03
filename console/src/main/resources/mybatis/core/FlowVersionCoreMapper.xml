@@ -36,7 +36,7 @@
 </sql>
        
 <sql id="Base_Column_List" >
-	id, app_code, flow_id, flow_name, flow_version,flow_version_status, flow_version_remark, flow_content, flow_type, inputs, outputs, variables, created_at, created_by, updated_at, updated_by
+	id, app_code, flow_id,flow_key, flow_name, flow_version,flow_version_status, flow_version_remark, flow_content, flow_type, inputs, outputs, variables, created_at, created_by, updated_at, updated_by
 </sql>
    
 <insert id="add" parameterType="net.somta.juggle.console.infrastructure.po.flow.FlowDefinitionInfoPO" >
@@ -101,7 +101,7 @@
 </update>
 
 <select id="queryById" resultMap="BaseResultMap" parameterType="java.lang.Long">
-	select <include refid="Base_Column_List" /> 
+	select <include refid="Base_Column_List" />
 	from t_flow_version where id = #{id}
 </select>
 

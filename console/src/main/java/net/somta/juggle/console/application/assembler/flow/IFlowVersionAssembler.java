@@ -56,6 +56,7 @@ public interface IFlowVersionAssembler {
         for (FlowVersionView flowVersionView : flowVersionViewList ) {
             FlowVersionDTO flowVersionDTO = new FlowVersionDTO();
             flowVersionDTO.setId(flowVersionView.getId());
+            flowVersionDTO.setAppCode(flowVersionView.getAppCode());
             flowVersionDTO.setFlowName(flowVersionView.getFlowName());
             flowVersionDTO.setFlowVersion(flowVersionView.getFlowVersion());
             flowVersionDTO.setFlowVersionStatus(flowVersionView.getFlowVersionStatus());

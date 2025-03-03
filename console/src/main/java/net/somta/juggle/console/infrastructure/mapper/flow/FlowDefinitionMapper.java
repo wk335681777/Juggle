@@ -6,6 +6,7 @@ import net.somta.juggle.console.domain.flow.definition.FlowDefinitionAO;
 import net.somta.juggle.console.domain.flow.definition.vo.FlowDefinitionInfoQueryVO;
 import net.somta.juggle.console.domain.flow.definition.vo.FlowDefinitionInfoVO;
 import net.somta.juggle.console.infrastructure.po.flow.FlowDefinitionInfoPO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -26,7 +27,7 @@ public interface FlowDefinitionMapper extends IBaseMapper {
      * @param flowKey Flow key
      * @return Flow PO object
      */
-    FlowDefinitionInfoPO queryFlowDefinitionByKey(String flowKey);
+    FlowDefinitionInfoPO queryFlowDefinitionByKey(@Param("flowKey") String flowKey, @Param("appCode") String appCode);
 
     /**
      * Query flow definition information list

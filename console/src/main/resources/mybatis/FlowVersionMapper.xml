@@ -39,7 +39,8 @@
 	       i.flow_name as flowName,
 	       v.flow_version as flowVersion,
 	       v.flow_version_status as flowVersionStatus,
-	       v.flow_version_remark as flowVersionRemark
+	       v.flow_version_remark as flowVersionRemark,
+		   v.app_code as appCode
 	from t_flow_info i left join t_flow_version v on i.id=v.flow_id
 	where 1=1 and v.deleted = 0
 	<if test="flowId != null">

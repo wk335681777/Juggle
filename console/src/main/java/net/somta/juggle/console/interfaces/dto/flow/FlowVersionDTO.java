@@ -7,6 +7,8 @@ public class FlowVersionDTO {
 
     private Long id;
 
+    private String appCode;
+
     private String flowName;
 
     private String flowVersion;
@@ -25,6 +27,14 @@ public class FlowVersionDTO {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getAppCode() {
+        return appCode;
+    }
+
+    public void setAppCode(String appCode) {
+        this.appCode = appCode;
     }
 
     public String getFlowName() {

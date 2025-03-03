@@ -17,6 +17,8 @@ public class FlowVersionAO {
 
     private Long flowId;
 
+    private String appCode;
+
     private String flowKey;
 
     private String flowName;
@@ -161,6 +163,11 @@ public class FlowVersionAO {
         this.variables = variables;
     }
 
+    public String getAppCode() {
+        return appCode;
+    }
 
-
+    public void setAppCode(String appCode) {
+        this.appCode = appCode;
+    }
 }

@@ -4,6 +4,7 @@ import net.somta.juggle.console.domain.flow.version.FlowVersionAO;
 import net.somta.juggle.console.domain.flow.version.view.FlowVersionInfoView;
 import net.somta.juggle.console.domain.flow.version.view.FlowVersionView;
 import net.somta.juggle.console.domain.flow.version.vo.FlowVersionQueryVO;
+import net.somta.juggle.console.interfaces.param.flow.FlowVersionParam;
 
 import java.util.List;
 
@@ -23,6 +24,6 @@ public interface IFlowVersionRepository {
 
     List<FlowVersionView> queryFlowVersionList(FlowVersionQueryVO flowVersionQueryVo);
 
-
+    Boolean restoreFlowVersion(FlowVersionParam flowVersionParam);
 
 }

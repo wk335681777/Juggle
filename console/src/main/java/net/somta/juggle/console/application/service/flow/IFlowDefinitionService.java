@@ -59,7 +59,7 @@ public interface IFlowDefinitionService {
      * @param flowKey
      * @return
      */
-    FlowDefinitionAO getFlowDefinitionByKey(String flowKey);
+    FlowDefinitionAO getFlowDefinitionByKey(String flowKey, String appCode);
 
     /**
      * Get a paginated list of flow definitions

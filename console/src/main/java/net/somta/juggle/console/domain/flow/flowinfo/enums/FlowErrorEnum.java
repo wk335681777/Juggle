@@ -9,6 +9,7 @@ import net.somta.juggle.common.constants.ApplicationConstants;
 public enum FlowErrorEnum implements IBaseError {
     FLOW_KEY_IS_EMPTY(1000,  "流程KEY不能为空"),
     FLOW_NOT_EXIST(1001,  "流程不存在"),
+    VERSION_NOT_EXIST(1002,"版本不存在")
     ;
 
     private int errorCode;
