@@ -5,7 +5,7 @@ package net.somta.juggle.console.domain.flow.version.view;
  */
 public class FlowVersionInfoView {
     private Long id;
-
+    private String appCode;
     private String flowName;
 
     private String flowKey;
@@ -93,5 +93,13 @@ public class FlowVersionInfoView {
 
     public void setVariables(String variables) {
         this.variables = variables;
+    }
+
+    public String getAppCode() {
+        return appCode;
+    }
+
+    public void setAppCode(String appCode) {
+        this.appCode = appCode;
     }
 }

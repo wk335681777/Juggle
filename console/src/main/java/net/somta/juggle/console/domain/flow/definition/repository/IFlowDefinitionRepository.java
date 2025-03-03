@@ -3,9 +3,11 @@ package net.somta.juggle.console.domain.flow.definition.repository;
 import net.somta.juggle.console.domain.flow.definition.FlowDefinitionAO;
 import net.somta.juggle.console.domain.flow.definition.vo.FlowDefinitionInfoQueryVO;
 import net.somta.juggle.console.domain.flow.definition.vo.FlowDefinitionInfoVO;
+import net.somta.juggle.console.domain.flow.version.vo.FlowVersionQueryVO;
 import net.somta.juggle.console.infrastructure.po.flow.FlowDefinitionInfoPO;
 import net.somta.juggle.console.interfaces.dto.flow.FlowDefinitionExportDTO;
 import net.somta.juggle.console.interfaces.param.flow.definition.FlowDefinitionCopyParam;
+import net.somta.juggle.console.interfaces.param.flow.definition.FlowDefinitionDraftParam;
 
 import java.util.List;
 
@@ -36,4 +38,7 @@ public interface IFlowDefinitionRepository {
     void batchAdd(List<FlowDefinitionInfoPO> flowDefinitionInfoPoLit);
 
     void batchUpdate(String appCode, List<FlowDefinitionInfoPO> flowDefinitionInfoPoLit);
+
+    Boolean draftFlowDefinition(FlowVersionQueryVO flowVersionQueryVO);
+
 }

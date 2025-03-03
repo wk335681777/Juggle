@@ -5,7 +5,7 @@ package net.somta.juggle.console.domain.flow.version.vo;
  */
 public class FlowVersionQueryVO {
 
-
+    private int id;
     private Long flowId;
     private String appCode;
 
@@ -17,6 +17,14 @@ public class FlowVersionQueryVO {
      * 流程状态   0:禁用  1:启用
      */
     private Integer flowVersionStatus;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public Long getFlowId() {
         return flowId;

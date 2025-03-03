@@ -13,7 +13,26 @@
 	from t_flow_info i inner join t_flow_version v on i.id = v.flow_id  where v.deleted = 0 and i.flow_key = #{flowKey}
 </select>
 
-<select id="queryFlowVersionInfoByKey" resultType="net.somta.juggle.console.domain.flow.version.view.FlowVersionInfoView" parameterType="net.somta.juggle.console.domain.flow.version.vo.FlowVersionQueryVO">
+	<select id="queryLatestVersionData" resultType="net.somta.juggle.console.domain.flow.version.view.FlowVersionInfoView" parameterType="net.somta.juggle.console.domain.flow.version.vo.FlowVersionQueryVO">
+		SELECT flow_id as flowId,
+			   flow_key as flowKey,
+			   app_code as appCode,
+			   flow_version_status as flowVersionStatus,
+			   id, flow_content as flowContent, flow_name as flowName, flow_type as flowType
+		FROM t_flow_version
+		WHERE deleted = 0
+		  AND flow_version_status = 1
+		  AND app_code = #{appCode}
+		  AND flow_key = #{flowKey}
+		ORDER BY id DESC
+			LIMIT 1;
+	</select>
+
+
+
+
+
+	<select id="queryFlowVersionInfoByKey" resultType="net.somta.juggle.console.domain.flow.version.view.FlowVersionInfoView" parameterType="net.somta.juggle.console.domain.flow.version.vo.FlowVersionQueryVO">
 	select v.id,
 	i.flow_key as flowKey,
 	i.flow_type as flowType,

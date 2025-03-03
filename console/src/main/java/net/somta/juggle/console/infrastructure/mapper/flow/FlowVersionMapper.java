@@ -20,4 +20,6 @@ public interface FlowVersionMapper extends IBaseMapper {
 
     String queryLatestVersion(String flowKey);
 
+    FlowVersionInfoView queryLatestVersionData(FlowVersionQueryVO flowVersionQueryVO);
+
 }

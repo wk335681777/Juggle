@@ -27,6 +27,9 @@ import net.somta.juggle.console.domain.flow.definition.vo.FlowDefinitionInfoQuer
 import net.somta.juggle.console.domain.flow.definition.vo.FlowDefinitionInfoVO;
 import net.somta.juggle.console.domain.flow.definition.vo.VariableDeleteVO;
 import net.somta.juggle.console.domain.flow.definition.vo.VariableInfoVO;
+import net.somta.juggle.console.domain.flow.version.view.FlowVersionInfoView;
+import net.somta.juggle.console.domain.flow.version.view.FlowVersionView;
+import net.somta.juggle.console.domain.flow.version.vo.FlowVersionQueryVO;
 import net.somta.juggle.console.domain.parameter.ParameterEntity;
 import net.somta.juggle.console.domain.parameter.enums.ParameterSourceTypeEnum;
 import net.somta.juggle.console.domain.parameter.enums.ParameterTypeEnum;
@@ -38,11 +41,14 @@ import net.somta.juggle.console.infrastructure.converter.flow.IFlowDefinitionCon
 import net.somta.juggle.console.infrastructure.mapper.ParameterMapper;
 import net.somta.juggle.console.infrastructure.mapper.VariableInfoMapper;
 import net.somta.juggle.console.infrastructure.mapper.flow.FlowDefinitionMapper;
+import net.somta.juggle.console.infrastructure.mapper.flow.FlowVersionMapper;
 import net.somta.juggle.console.infrastructure.po.ParameterPO;
 import net.somta.juggle.console.infrastructure.po.VariableInfoPO;
 import net.somta.juggle.console.infrastructure.po.flow.FlowDefinitionInfoPO;
+import net.somta.juggle.console.infrastructure.po.flow.FlowVersionPO;
 import net.somta.juggle.console.interfaces.dto.flow.FlowDefinitionExportDTO;
 import net.somta.juggle.console.interfaces.param.flow.definition.FlowDefinitionCopyParam;
+import net.somta.juggle.console.interfaces.param.flow.definition.FlowDefinitionDraftParam;
 import net.somta.juggle.core.enums.VariablePrefixEnum;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
@@ -68,12 +74,14 @@ public class FlowDefinitionRepositoryImpl implements IFlowDefinitionRepository {
     private final ParameterMapper parameterMapper;
     private final VariableInfoMapper variableInfoMapper;
     private final IParameterRepository parameterRepository;
+    private final FlowVersionMapper flowVersionMapper;
 
-    public FlowDefinitionRepositoryImpl(FlowDefinitionMapper flowDefinitionMapper, ParameterMapper parameterMapper, VariableInfoMapper variableInfoMapper, IParameterRepository parameterRepository) {
+    public FlowDefinitionRepositoryImpl(FlowDefinitionMapper flowDefinitionMapper, ParameterMapper parameterMapper, VariableInfoMapper variableInfoMapper, IParameterRepository parameterRepository, FlowVersionMapper flowVersionMapper) {
         this.flowDefinitionMapper = flowDefinitionMapper;
         this.parameterMapper = parameterMapper;
         this.variableInfoMapper = variableInfoMapper;
         this.parameterRepository = parameterRepository;
+        this.flowVersionMapper = flowVersionMapper;
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -242,6 +250,43 @@ public class FlowDefinitionRepositoryImpl implements IFlowDefinitionRepository {
     public void batchUpdate(String appCode, List<FlowDefinitionInfoPO> flowDefinitionInfoPoLit) {
         flowDefinitionMapper.batchUpdate(appCode, flowDefinitionInfoPoLit);
     }
+
+    @Override
+    public Boolean draftFlowDefinition(FlowVersionQueryVO flowVersionQueryVO) {
+
+        //查询deleted=0,status=1，升序排列后返回 ID 最大的一条记录
+        FlowVersionInfoView flowVersionInfoView=flowVersionMapper.queryLatestVersionData(flowVersionQueryVO);
+
+
+        FlowDefinitionInfoPO newDraftFlowDefinition = draftVersion(flowVersionQueryVO,flowVersionInfoView);
+
+        flowDefinitionMapper.update( newDraftFlowDefinition);
+
+
+        return true;
+    }
+
+    private FlowDefinitionInfoPO draftVersion(FlowVersionQueryVO flowVersionQueryVO,FlowVersionInfoView flowVersionInfoView) {
+
+        FlowDefinitionInfoPO newDraftFlowDefinition = new FlowDefinitionInfoPO();
+
+        newDraftFlowDefinition.setId(flowVersionQueryVO.getFlowId());
+        newDraftFlowDefinition.setFlowType(flowVersionInfoView.getFlowType());
+        newDraftFlowDefinition.setFlowName(flowVersionInfoView.getFlowName());
+        newDraftFlowDefinition.setFlowKey(flowVersionInfoView.getFlowKey());
+        newDraftFlowDefinition.setAppCode(flowVersionInfoView.getAppCode());
+        newDraftFlowDefinition.setFlowContent(flowVersionInfoView.getFlowContent());
+
+        newDraftFlowDefinition.setCreatedAt(new Date());  // 设置当前时间为创建时间
+        newDraftFlowDefinition.setUpdatedAt(newDraftFlowDefinition.getCreatedAt());  // 设置更新时间为创建时间
+        newDraftFlowDefinition.setCreatedBy(IdentityContext.getIdentity().getUserId());  // 设置当前用户为创建者
+        newDraftFlowDefinition.setUpdatedBy(newDraftFlowDefinition.getCreatedBy());  // 设置当前用户为更新者
+
+        newDraftFlowDefinition.setDeleted(0);
+
+        return newDraftFlowDefinition;
+    }
+
 
     private void saveParametersAndVariables(Long flowDefinitionId,FlowDefinitionAO flowDefinitionAo){
         List<ParameterPO> parameterPoList = flowDefinitionAo.getParameterEntity().getParameterPoList(flowDefinitionId,ParameterSourceTypeEnum.FLOW.getCode());

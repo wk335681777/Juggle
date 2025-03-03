@@ -1,4 +1,4 @@
-import { flowDefineAPI } from '@/service/api';
+import {flowDefineAPI} from '@/service/api';
 import { commonService } from '@/service';
 
 export async function addDefineInfo(appCode: string, params: Parameters<typeof flowDefineAPI.addDefineInfo>[1]) {
@@ -27,6 +27,10 @@ export async function updateDefineInfo(params: Parameters<typeof flowDefineAPI.u
 
 export async function copyDefineInfo(flowDefinitionCopyParam: Parameters<typeof flowDefineAPI.copyDefineInfo>[0]) {
   return flowDefineAPI.copyDefineInfo(flowDefinitionCopyParam);
+}
+
+export async function draftDefineInfo(appCode: string,id: number,flowKey: string ) {
+  return flowDefineAPI.draftDefineInfo(appCode,id,flowKey);
 }
 
 export async function saveFlowContent(params: Parameters<typeof flowDefineAPI.saveFlowContent>[0]) {

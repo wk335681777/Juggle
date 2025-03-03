@@ -11,7 +11,7 @@ defineProps({
   dataTotal: Number,
   loading: Boolean,
 });
-const emit = defineEmits(['pageChange', 'deploy', 'edit', 'delete','copy', 'handleSelectionChange']);
+const emit = defineEmits(['pageChange', 'deploy', 'edit', 'delete','copy', 'handleSelectionChange','draft']);
 
 function deployFlow(row: any) {
   emit('deploy', row);
@@ -26,6 +26,10 @@ function editRow(row: any) {
 
 function copyRow(row: any) {
   emit('copy', row);
+}
+
+function draftRow(row: any){
+  emit('draft',row)
 }
 
 function goDebugPage(flowDefinitionId: number, flowKey: string, debugUri: string) {
@@ -71,7 +75,7 @@ function handleSelectionChange(rows) {
         <el-button link type="primary" size="small" @click.prevent="editRow(scope.row)"> 编辑 </el-button>
         <el-button link type="primary" size="small" @click.prevent="copyRow(scope.row)"> 复制 </el-button>
         <el-button link type="primary" size="small" @click.prevent="deleteRow(scope.row, scope.$index)"> 删除 </el-button>
-        <el-button link type="primary" size="small" > 放弃草稿 </el-button>
+        <el-button link type="primary" size="small" @click.prevent="draftRow(scope.row)"> 放弃草稿 </el-button>
       </template>
     </el-table-column>
   </el-table>

@@ -28,7 +28,6 @@ public interface IFlowDefinitionService {
      * @return
      */
     Boolean deleteFlowDefinition(Long flowDefinitionId);
-
     /**
      * 修改流程定义
      * @param flowDefinitionUpdateParam
@@ -114,4 +113,8 @@ public interface IFlowDefinitionService {
      */
     void importFlowDefinition(String appCode, List<FlowDefinitionExportDTO> param);
 
+    /**
+     * 放弃草稿
+     */
+    Boolean draftFlowDefinition(FlowDefinitionDraftParam flowDefinitionDraftParam);
 }

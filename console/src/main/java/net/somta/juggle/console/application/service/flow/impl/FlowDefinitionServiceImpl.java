@@ -35,6 +35,7 @@ import net.somta.juggle.console.domain.flow.definition.vo.FlowDefinitionInfoQuer
 import net.somta.juggle.console.domain.flow.definition.vo.FlowDefinitionInfoVO;
 import net.somta.juggle.console.domain.flow.flowinfo.FlowInfoAO;
 import net.somta.juggle.console.domain.flow.flowinfo.repository.IFlowInfoRepository;
+import net.somta.juggle.console.domain.flow.version.vo.FlowVersionQueryVO;
 import net.somta.juggle.console.domain.parameter.ParameterEntity;
 import net.somta.juggle.console.domain.flow.definition.repository.IVariableInfoRepository;
 import net.somta.juggle.console.domain.flow.definition.vo.VariableInfoVO;
@@ -325,6 +326,15 @@ public class FlowDefinitionServiceImpl implements IFlowDefinitionService {
                 flowDefinitionRepository.batchUpdate(appCode, Arrays.asList(flowDefinitionInfoPO));
             }
         }
+    }
+
+    @Override
+    public Boolean draftFlowDefinition(FlowDefinitionDraftParam flowDefinitionDraftParam) {
+        FlowVersionQueryVO flowVersionQueryVO = new FlowVersionQueryVO();
+        flowVersionQueryVO.setAppCode(flowDefinitionDraftParam.getAppCode());
+        flowVersionQueryVO.setFlowKey(flowDefinitionDraftParam.getFlowKey());
+        flowVersionQueryVO.setFlowId(flowDefinitionDraftParam.getId());
+        return flowDefinitionRepository.draftFlowDefinition(flowVersionQueryVO);
     }
 
     public static void main(String[] args) {

@@ -251,6 +251,20 @@ public class FlowDefinitionController {
     }
 
     /**
+     * 放弃草稿
+     * @return Boolean
+     */
+    @Operation(summary = "放弃草稿")
+    @PutMapping("/draft")
+    public ResponseDataResult<Boolean> draftFlowDefinition(@RequestBody FlowDefinitionDraftParam flowDefinitionDraftParam){
+        if(flowDefinitionDraftParam == null){
+            return ResponseDataResult.setErrorResponseResult(FLOW_DEFINITION_ID_IS_NULL_ERROR);
+        }
+        Boolean result = flowDefinitionService.draftFlowDefinition(flowDefinitionDraftParam);
+        return ResponseDataResult.setResponseResult(result);
+    }
+
+    /**
      * 复制流程
      * @param flowDefinitionCopyParam 变量实体参数
      * @return Boolean

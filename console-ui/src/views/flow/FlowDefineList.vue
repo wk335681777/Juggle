@@ -8,6 +8,7 @@ import { useRouter } from 'vue-router';
 import {useGlobalStore} from "@/store/globaleStore.ts";
 import { storeToRefs } from 'pinia'
 import CopyFlowDrawer from "@/views/flow/define/CopyFlowDrawer.vue";
+import {draftDefineInfo} from "@/service/module/flowDefine.ts";
 
 const router = useRouter();
 const globalStore = useGlobalStore();
@@ -101,6 +102,29 @@ async function copyFlowDefineItem(row: any) {
   const res = await flowDefineService.copyDefineInfo(row);
   if (res.result) {
     ElMessage({ type: 'success', message: '复制成功' });
+    await queryFlowDefinePage();
+  } else {
+    ElMessage({ type: 'error', message: res.errorMsg });
+  }
+}
+
+function openDraft(row: any) {
+  ElMessageBox.confirm(`确定放弃本次'${row.flowName}'的草稿吗?`, '操作确认', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  })
+      .then(() => {
+        draftFlowDefineItem(row);
+      })
+      .catch(() => {});
+}
+
+async function draftFlowDefineItem(row: any) {
+  const res = await flowDefineService.draftDefineInfo(row.appCode,row.id,row.flowKey);
+  debugger
+  if (res.success) {
+    ElMessage({ type: 'success', message: '操作成功' });
     await queryFlowDefinePage();
   } else {
     ElMessage({ type: 'error', message: res.errorMsg });
@@ -241,6 +265,7 @@ async function onImportFlowDefine() {
           @delete="openDelete"
           @copy="openCopy"
           @handleSelectionChange="handleSelectionChange"
+          @draft="openDraft"
         />
       </el-main>
     </el-container>

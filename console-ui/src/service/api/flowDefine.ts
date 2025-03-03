@@ -48,6 +48,10 @@ export async function copyDefineInfo(flowDefinitionCopyParam: {
   return request.put(`/v1/flow/definition/copy`, flowDefinitionCopyParam);
 }
 
+export function draftDefineInfo(appCode: string, id: number, flowKey: string): ResponsePageResult {
+  return request.put('/v1/flow/definition/draft', { appCode: appCode, id: id, flowKey: flowKey });
+}
+
 export async function saveFlowContent(params: { id: number; flowContent: string; flowVariables?: FlowVariable[] }): ResponseResult<boolean> {
   return request.put('/v1/flow/definition/save', params);
 }
