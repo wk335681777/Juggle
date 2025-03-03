@@ -2,7 +2,6 @@ package net.somta.juggle.console.infrastructure.mapper.flow;
 
 
 import net.somta.core.base.IBaseMapper;
-import net.somta.juggle.console.domain.flow.definition.FlowDefinitionAO;
 import net.somta.juggle.console.domain.flow.definition.vo.FlowDefinitionInfoQueryVO;
 import net.somta.juggle.console.domain.flow.definition.vo.FlowDefinitionInfoVO;
 import net.somta.juggle.console.infrastructure.po.flow.FlowDefinitionInfoPO;
@@ -36,4 +35,11 @@ public interface FlowDefinitionMapper extends IBaseMapper {
      */
     List<FlowDefinitionInfoVO> queryFlowDefinitionList(FlowDefinitionInfoQueryVO flowDefinitionInfoQueryVO);
 
+    List<FlowDefinitionInfoPO> batchGetByIds(@Param("appCode") String appCode, @Param("idList") List<Long> flowIds);
+
+    List<FlowDefinitionInfoPO> batchGetByFlowKeys(@Param("appCode") String appCode, @Param("flowKeyList") List<String> flowKeys);
+
+    void batchAdd(@Param("list") List<FlowDefinitionInfoPO> flowDefinitionInfoPoLit);
+
+    void batchUpdate(@Param("appCode") String appCode, @Param("list") List<FlowDefinitionInfoPO> flowDefinitionInfoPoLit);
 }

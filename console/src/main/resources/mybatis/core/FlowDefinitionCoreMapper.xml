@@ -45,10 +45,10 @@
 <update id="update" parameterType="net.somta.juggle.console.infrastructure.po.flow.FlowDefinitionInfoPO" >
 	update t_flow_definition set
 	updated_at = now(),
+	<trim  suffixOverrides="," >
 	<if test="appCode != null and appCode != ''">
 		app_code=#{appCode},
 	</if>
-	<trim  suffixOverrides="," >
 	<if test="flowKey != null and flowKey != ''">
 		flow_key=#{flowKey},
 	</if>

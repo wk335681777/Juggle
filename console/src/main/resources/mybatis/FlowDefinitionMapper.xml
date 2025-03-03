@@ -28,4 +28,71 @@
         ORDER BY updated_at DESC
     </select>
 
+    <select id="batchGetByIds" resultType="net.somta.juggle.console.infrastructure.po.flow.FlowDefinitionInfoPO">
+        select id, app_code, flow_key as flowKey, flow_name as flowName,flow_type as flowType,flow_content as flowContent, remark
+        from t_flow_definition
+        where app_code = #{appCode} and deleted = 0
+        and id in
+            <foreach collection="idList" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+    </select>
+
+    <select id="batchGetByFlowKeys" resultType="net.somta.juggle.console.infrastructure.po.flow.FlowDefinitionInfoPO">
+        select id, app_code, flow_key as flowKey, flow_name as flowName,flow_type as flowType,flow_content as flowContent, remark
+        from t_flow_definition
+        where app_code = #{appCode} and deleted = 0
+        and flow_key in
+        <foreach collection="flowKeyList" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <insert id="batchAdd" parameterType="net.somta.juggle.console.infrastructure.po.flow.FlowDefinitionInfoPO" >
+        insert into t_flow_definition (id, app_code, flow_key, flow_name,flow_type, flow_content, remark, deleted, created_at, created_by, updated_at, updated_by)
+        values
+            <foreach collection="list" item="item" separator=",">
+                (#{item.id},#{item.appCode},#{item.flowKey},#{item.flowName},#{item.flowType},#{item.flowContent},#{item.remark},0,now(),#{item.createdBy},now(),#{item.updatedBy})
+            </foreach>
+    </insert>
+
+    <update id="batchUpdate" parameterType="net.somta.juggle.console.infrastructure.po.flow.FlowDefinitionInfoPO" >
+                <foreach collection="list" item="item" separator=";">
+            update t_flow_definition set
+            <trim  suffixOverrides="," >
+<!--                <if test="appCode != null and appCode != ''">-->
+<!--                    app_code=#{item.appCode},-->
+<!--                </if>-->
+<!--                updated_at = now(),-->
+                <if test="item.flowKey != null and item.flowKey != ''">
+                    flow_key=#{item.flowKey},
+                </if>
+                <if test="item.flowName != null and item.flowName != ''">
+                    flow_name=#{item.flowName},
+                </if>
+                <if test="item.flowType != null and item.flowType != ''">
+                    flow_type=#{item.flowType},
+                </if>
+                <if test="item.flowContent != null and item.flowContent != ''">
+                    flow_content=#{item.flowContent},
+                </if>
+                <if test="item.remark != null and item.remark != ''">
+                    remark=#{item.remark},
+                </if>
+                <if test="item.deleted != null">
+                    deleted=#{item.deleted},
+                </if>
+                <if test="item.createdAt != null">
+                    created_at=#{item.createdAt},
+                </if>
+                <if test="item.createdBy != null">
+                    created_by=#{item.createdBy},
+                </if>
+                <if test="item.updatedBy != null">
+                    updated_by=#{item.updatedBy},
+                </if>
+            </trim>
+            where id=#{item.id} and app_code = #{appCode}
+        </foreach>
+    </update>
 </mapper>

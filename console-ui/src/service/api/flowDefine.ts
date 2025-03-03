@@ -1,5 +1,5 @@
 import { request, type ResponsePageResult, type ResponseResult } from '../base';
-import { FlowDefineInfo, InputParams, OutputParams } from '@/typings';
+import { FlowDefineInfo, InputParams, OutputParams} from '@/typings';
 import { FlowVariable } from '@/views/flow/design';
 
 export async function addDefineInfo(appCode: string, params: {

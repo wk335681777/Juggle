@@ -25,6 +25,7 @@
         <setting name="defaultStatementTimeout" value="25000"/>
         <!--设置字段和类是否支持驼峰命名的属性。 系统默认值是false -->
         <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <setting name="logImpl" value="org.apache.ibatis.logging.stdout.StdOutImpl"/>
     </settings>
     <plugins>
         <plugin interceptor="com.github.pagehelper.PageInterceptor">

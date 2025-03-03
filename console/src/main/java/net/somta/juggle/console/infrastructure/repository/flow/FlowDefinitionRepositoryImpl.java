@@ -41,11 +41,13 @@ import net.somta.juggle.console.infrastructure.mapper.flow.FlowDefinitionMapper;
 import net.somta.juggle.console.infrastructure.po.ParameterPO;
 import net.somta.juggle.console.infrastructure.po.VariableInfoPO;
 import net.somta.juggle.console.infrastructure.po.flow.FlowDefinitionInfoPO;
+import net.somta.juggle.console.interfaces.dto.flow.FlowDefinitionExportDTO;
 import net.somta.juggle.console.interfaces.param.flow.definition.FlowDefinitionCopyParam;
 import net.somta.juggle.core.enums.VariablePrefixEnum;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -174,7 +176,6 @@ public class FlowDefinitionRepositoryImpl implements IFlowDefinitionRepository {
         newFlowDefinition.setFlowType(original.getFlowType());
         newFlowDefinition.setAppCode(original.getAppCode());
 
-
         return newFlowDefinition;
     }
 
@@ -213,6 +214,33 @@ public class FlowDefinitionRepositoryImpl implements IFlowDefinitionRepository {
     @Override
     public List<FlowDefinitionInfoVO> queryFlowDefinitionList(FlowDefinitionInfoQueryVO flowDefinitionInfoQueryVO) {
         return flowDefinitionMapper.queryFlowDefinitionList(flowDefinitionInfoQueryVO);
+    }
+
+    @Override
+    public List<FlowDefinitionExportDTO> batchGetByIds(String appCode, List<Long> flowIds) {
+        List<FlowDefinitionInfoPO> poList = flowDefinitionMapper.batchGetByIds(appCode, flowIds);
+        List<FlowDefinitionExportDTO> dtoList = new ArrayList<>(poList.size());
+        for (FlowDefinitionInfoPO po : poList) {
+            FlowDefinitionExportDTO dto = new FlowDefinitionExportDTO();
+            BeanUtils.copyProperties(po, dto);
+            dtoList.add(dto);
+        }
+        return dtoList;
+    }
+
+    @Override
+    public List<FlowDefinitionInfoPO> batchGetByFlowKeys(String appCode, List<String> flowKeys) {
+        return flowDefinitionMapper.batchGetByFlowKeys(appCode, flowKeys);
+    }
+
+    @Override
+    public void batchAdd(List<FlowDefinitionInfoPO> flowDefinitionInfoPoLit) {
+        flowDefinitionMapper.batchAdd(flowDefinitionInfoPoLit);
+    }
+
+    @Override
+    public void batchUpdate(String appCode, List<FlowDefinitionInfoPO> flowDefinitionInfoPoLit) {
+        flowDefinitionMapper.batchUpdate(appCode, flowDefinitionInfoPoLit);
     }
 
     private void saveParametersAndVariables(Long flowDefinitionId,FlowDefinitionAO flowDefinitionAo){

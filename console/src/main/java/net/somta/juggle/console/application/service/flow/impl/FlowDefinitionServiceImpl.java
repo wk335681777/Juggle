@@ -23,6 +23,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import net.somta.core.helper.JsonSerializeHelper;
+import net.somta.juggle.common.identity.IdentityContext;
 import net.somta.juggle.common.utils.IpUtils;
 import net.somta.juggle.console.application.assembler.flow.IFlowDefinitionAssembler;
 import net.somta.juggle.console.application.service.flow.IDeployMaster;
@@ -37,18 +38,22 @@ import net.somta.juggle.console.domain.flow.flowinfo.repository.IFlowInfoReposit
 import net.somta.juggle.console.domain.parameter.ParameterEntity;
 import net.somta.juggle.console.domain.flow.definition.repository.IVariableInfoRepository;
 import net.somta.juggle.console.domain.flow.definition.vo.VariableInfoVO;
+import net.somta.juggle.console.infrastructure.po.flow.FlowDefinitionInfoPO;
+import net.somta.juggle.console.interfaces.dto.flow.FlowDefinitionExportDTO;
 import net.somta.juggle.console.interfaces.dto.flow.FlowDefinitionInfoDTO;
 import net.somta.juggle.common.param.TriggerDataParam;
 import net.somta.juggle.console.interfaces.param.flow.definition.*;
 import net.somta.juggle.core.model.Flow;
 import net.somta.juggle.core.model.FlowResult;
 import net.somta.juggle.core.model.ServerInfo;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author husong
@@ -252,4 +257,76 @@ public class FlowDefinitionServiceImpl implements IFlowDefinitionService {
     public Boolean copyFlowDefinition(FlowDefinitionCopyParam flowDefinitionCopyParam) {
         return flowDefinitionRepository.copyFlowDefinition(flowDefinitionCopyParam);
         }
+
+    @Override
+    public List<FlowDefinitionExportDTO> export(FlowDefinitionExportParam param) {
+        return flowDefinitionRepository.batchGetByIds(param.getAppCode(), param.getIdList());
     }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void importFlowDefinition(String appCode, List<FlowDefinitionExportDTO> flowDefinitionExportDTOList) {
+        List<String> flowKeyList = flowDefinitionExportDTOList.stream()
+                .map(FlowDefinitionExportDTO::getFlowKey)
+                .collect(Collectors.toList());
+        if (CollectionUtils.isEmpty(flowKeyList)) {
+            return;
+        }
+
+        Map<String, FlowDefinitionExportDTO> flowDefinitionExportDTOMap = new HashMap<>();
+        for (FlowDefinitionExportDTO flowDefinitionExportDTO : flowDefinitionExportDTOList) {
+            flowDefinitionExportDTOMap.put(flowDefinitionExportDTO.getFlowKey(), flowDefinitionExportDTO);
+        }
+
+        List<FlowDefinitionInfoPO> flowDefinitionInfoPOList = flowDefinitionRepository.batchGetByFlowKeys(appCode, flowKeyList);
+        List<FlowDefinitionInfoPO> updateList = new ArrayList<>();
+        List<FlowDefinitionInfoPO> insertList = new ArrayList<>();
+
+        for (FlowDefinitionInfoPO flowDefinitionInfoPO : flowDefinitionInfoPOList) {
+            String flowKey = flowDefinitionInfoPO.getFlowKey();
+            // update item
+            if (flowKeyList.contains(flowKey)) {
+                FlowDefinitionExportDTO flowDefinitionExportDTO = flowDefinitionExportDTOMap.get(flowKey);
+                flowDefinitionInfoPO.setFlowContent(flowDefinitionExportDTO.getFlowContent());
+                flowDefinitionInfoPO.setFlowType(flowDefinitionExportDTO.getFlowType());
+                flowDefinitionInfoPO.setFlowName(flowDefinitionExportDTO.getFlowName());
+                flowDefinitionInfoPO.setRemark(flowDefinitionExportDTO.getRemark());
+                flowDefinitionInfoPO.setCreatedBy(IdentityContext.getIdentity().getUserId());
+                flowDefinitionInfoPO.setUpdatedBy(IdentityContext.getIdentity().getUserId());
+                updateList.add(flowDefinitionInfoPO);
+            }
+        }
+
+        List<String> origFlowKeyList = flowDefinitionInfoPOList.stream().map(FlowDefinitionInfoPO::getFlowKey).collect(Collectors.toList());
+        for (FlowDefinitionExportDTO flowDefinitionExportDTO : flowDefinitionExportDTOList) {
+            String flowKey = flowDefinitionExportDTO.getFlowKey();
+            if (origFlowKeyList.contains(flowKey)) {
+                continue;
+            }
+
+            FlowDefinitionInfoPO newPo = new FlowDefinitionInfoPO();
+            newPo.setFlowKey(flowKey);
+            newPo.setAppCode(appCode);
+            newPo.setFlowContent(flowDefinitionExportDTO.getFlowContent());
+            newPo.setFlowType(flowDefinitionExportDTO.getFlowType());
+            newPo.setFlowName(flowDefinitionExportDTO.getFlowName());
+            newPo.setRemark(flowDefinitionExportDTO.getRemark());
+            newPo.setUpdatedBy(IdentityContext.getIdentity().getUserId());
+            insertList.add(newPo);
+        }
+
+        if (!insertList.isEmpty()) {
+            flowDefinitionRepository.batchAdd(insertList);
+        }
+
+        if (!updateList.isEmpty()) {
+            for (FlowDefinitionInfoPO flowDefinitionInfoPO : updateList) {
+                // 不支持多条记录一起更新?
+                flowDefinitionRepository.batchUpdate(appCode, Arrays.asList(flowDefinitionInfoPO));
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+    }
+}

@@ -1,4 +1,5 @@
 import { flowDefineAPI } from '@/service/api';
+import { commonService } from '@/service';
 
 export async function addDefineInfo(appCode: string, params: Parameters<typeof flowDefineAPI.addDefineInfo>[1]) {
   return flowDefineAPI.addDefineInfo(appCode, params);
@@ -38,4 +39,12 @@ export async function deployFlowDefine(params: Parameters<typeof flowDefineAPI.d
 
 export async function debugFlow(flowKey: string, params: Parameters<typeof flowDefineAPI.debugFlow>[1]) {
   return flowDefineAPI.debugFlow(flowKey, params);
+}
+
+export async function exportFlowDefine(appCode: string, idList:[]) {
+  return commonService.exportFile("v1/flow/definition/export", { appCode: appCode, idList: idList});
+}
+
+export async function importFlowDefine(appCode: string, formData: FormData) {
+  return commonService.importFile(`v1/flow/definition/${appCode}/import`, formData);
 }
