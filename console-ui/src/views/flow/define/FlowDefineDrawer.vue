@@ -72,14 +72,6 @@ async function onSubmit() {
   }
 }
 
-
-
-
-  function flowType(): string {
-    return flowDefineFormValue.flowType || "sync"; // 默认值为 "sync"，避免 undefined
-  }
-
-
 async function open(item?: Record<string, any>) {
   editItem.value = item;
   flowDefineDrawerVisible.value = true;
