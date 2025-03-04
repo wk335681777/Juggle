@@ -102,6 +102,13 @@ public class FlowDefinitionController {
         }
     }
 
+    @Operation(summary = "生成流程编码")
+    @GetMapping("/generateFlowKeyInfo")
+    public ResponseDataResult<String> generateFlowKeyInfo() {
+        String Key = flowDefinitionService.generateFlowKeyInfo();
+        return ResponseDataResult.setResponseResult(Key);
+    }
+
     /**
      * 删除变量
      * @param flowDefinitionId 变量实体参数
@@ -163,6 +170,7 @@ public class FlowDefinitionController {
         FlowDefinitionInfoDTO flowDefinitionInfoDTO = flowDefinitionService.getDebugInfo(flowDefinitionId);
         return ResponseDataResult.setResponseResult(flowDefinitionInfoDTO);
     }
+
 
     /**
      * 获取流程列表

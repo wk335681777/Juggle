@@ -73,27 +73,38 @@ async function onSubmit() {
 }
 
 
-function open(item?: Record<string, any>) {
+
+
+  function flowType(): string {
+    return flowDefineFormValue.flowType || "sync"; // 默认值为 "sync"，避免 undefined
+  }
+
+
+async function open(item?: Record<string, any>) {
   editItem.value = item;
   flowDefineDrawerVisible.value = true;
+
   nextTick(async () => {
     formRef.value?.resetFields();
     if (item) {
+      // 编辑模式
       const res = await flowDefineService.getDefineInfo(item.id);
       if (res.success) {
-        flowDefineFormValue.id = res.result.id;
-        flowDefineFormValue.flowName = res.result.flowName;
-        flowDefineFormValue.flowKey = res.result.flowKey;
-        flowDefineFormValue.flowType = res.result.flowType;
-        flowDefineFormValue.remark = res.result.remark;
-        flowDefineFormValue.flowInputParams = res.result.flowInputParams;
-        flowDefineFormValue.flowOutputParams = res.result.flowOutputParams;
+        Object.assign(flowDefineFormValue, res.result);
       }
     } else {
+      // 新增模式
       Object.assign(flowDefineFormValue, getDefaultFlowDefine());
+
+      // 向后端请求自动生成 flowKey**
+      const res = await flowDefineService.generateFlowKeyInfo();
+      if (res.success && res.result) {
+        flowDefineFormValue.flowKey = res.result; // 确保 flowKey 被赋值
+      }
     }
   });
 }
+
 
 const title = computed(() => {
   if (editItem.value) {

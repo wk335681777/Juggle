@@ -21,6 +21,8 @@ public interface IFlowDefinitionService {
      * @return
      */
     Boolean addFlowDefinition(FlowDefinitionAddParam flowDefinitionAddParam);
+    String generateFlowKeyInfo();
+
 
     /**
      * 删除流程
@@ -117,4 +119,6 @@ public interface IFlowDefinitionService {
      * 放弃草稿
      */
     Boolean draftFlowDefinition(FlowDefinitionDraftParam flowDefinitionDraftParam);
+
+
 }

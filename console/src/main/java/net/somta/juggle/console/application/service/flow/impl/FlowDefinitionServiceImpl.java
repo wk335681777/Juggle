@@ -48,6 +48,7 @@ import net.somta.juggle.core.model.Flow;
 import net.somta.juggle.core.model.FlowResult;
 import net.somta.juggle.core.model.ServerInfo;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -92,6 +93,15 @@ public class FlowDefinitionServiceImpl implements IFlowDefinitionService {
         flowDefinitionRepository.addFlowDefinition(flowDefinitionAo);
         return true;
     }
+
+
+
+    @Override
+    public String generateFlowKeyInfo() {
+        String flowKey = "single"+ "_" + RandomStringUtils.random(10, true, true);
+        return flowKey;
+    }
+
 
 
     @Override

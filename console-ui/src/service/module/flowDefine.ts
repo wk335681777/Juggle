@@ -5,6 +5,9 @@ export async function addDefineInfo(appCode: string, params: Parameters<typeof f
   return flowDefineAPI.addDefineInfo(appCode, params);
 }
 
+export async function generateFlowKeyInfo(){
+  return flowDefineAPI.generateFlowKeyInfo();
+}
 export async function getDefineInfo(id: number) {
   return flowDefineAPI.getDefineInfo(id);
 }

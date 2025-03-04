@@ -254,9 +254,12 @@ public class FlowDefinitionRepositoryImpl implements IFlowDefinitionRepository {
     @Override
     public Boolean draftFlowDefinition(FlowVersionQueryVO flowVersionQueryVO) {
 
-        //查询deleted=0,status=1，升序排列后返回 ID 最大的一条记录
+        //查询deleted=0,status=1，排列后返回 ID 最大的一条记录
         FlowVersionInfoView flowVersionInfoView=flowVersionMapper.queryLatestVersionData(flowVersionQueryVO);
 
+        if (flowVersionInfoView == null) {
+             return false;
+        }
 
         FlowDefinitionInfoPO newDraftFlowDefinition = draftVersion(flowVersionQueryVO,flowVersionInfoView);
 

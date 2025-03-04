@@ -13,6 +13,10 @@ export async function addDefineInfo(appCode: string, params: {
   return request.post(`/v1/flow/definition/${appCode}/add`, params);
 }
 
+export async function generateFlowKeyInfo() {
+  return await request.get('/v1/flow/definition/generateFlowKeyInfo');
+}
+
 export async function getDefineInfo(id: number): ResponseResult<FlowDefineInfo> {
   return request.get(`/v1/flow/definition/info/${id}`);
 }
