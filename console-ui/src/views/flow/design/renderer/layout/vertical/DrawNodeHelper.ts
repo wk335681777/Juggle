@@ -40,7 +40,7 @@ export class DrawNodeHelper {
             case ElementType.EN_AND_DE://加解密
             case ElementType.YDA_SM4://英大国密
             case ElementType.FEIGN:
-
+            case ElementType.SCRIPT://脚本节点
             case ElementType.MYSQL:
                 this.drawNormal(container, node, type);
                 break;
@@ -75,7 +75,7 @@ export class DrawNodeHelper {
         if ([ElementType.METHOD, ElementType.CODE, ElementType.MYSQL,ElementType.LOG,ElementType.HTTP,ElementType.MARSHAL,
             ElementType.UNMARSHAL,ElementType.DIRECT,ElementType.DYNAMIC_ROUTE,ElementType.SET_HEADER,ElementType.TRANSFORM
             ,ElementType.NETTY_HTTP,ElementType.CONVERT_BODY_TO,ElementType.RECIPIENT_LIST,ElementType.WEBSERVICE,
-            ElementType.EN_AND_DE,ElementType.YDA_SM4,ElementType.FEIGN].includes(data.type)) {
+            ElementType.EN_AND_DE,ElementType.YDA_SM4,ElementType.FEIGN,ElementType.SCRIPT].includes(data.type)) {
             this.drawAddIcon(container, node, type);
         }
     }

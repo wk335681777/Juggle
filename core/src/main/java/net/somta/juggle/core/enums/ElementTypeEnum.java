@@ -66,6 +66,7 @@ public enum ElementTypeEnum {
     EN_AND_DE,//加解密
     YDA_SM4,//英大国密
     FEIGN,
+    SCRIPT,
 
     ASSIGN;
 }

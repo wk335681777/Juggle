@@ -106,6 +106,13 @@ const flowNodes = [
     icon: IconCode,
   },
 
+  //脚本
+  {
+    name:'脚本节点',
+    type: ElementType.SCRIPT,
+    icon: IconCode,
+  },
+
 ];
 
 const flowDataNodes = [

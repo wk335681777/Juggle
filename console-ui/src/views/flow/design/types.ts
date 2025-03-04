@@ -52,6 +52,7 @@ export enum ElementType {
   EN_AND_DE = 'EN_AND_DE',//加解密
   YDA_SM4="YDA_SM4",//英大国密
   FEIGN="FEIGN",
+  SCRIPT="SCRIPT",//脚本
   LOG = 'LOG',
   END = 'END',
 

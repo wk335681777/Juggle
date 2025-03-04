@@ -90,4 +90,9 @@ export const nodeMap = {
     nodeHeaderColor: '#b471e7',
 
   },
+
+  [ElementType.SCRIPT]: {
+    nodeName: '脚本节点',
+    nodeHeaderColor: '#b471e7',
+  },
 }
