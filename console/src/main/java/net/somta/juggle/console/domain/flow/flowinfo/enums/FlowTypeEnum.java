@@ -4,8 +4,8 @@ package net.somta.juggle.console.domain.flow.flowinfo.enums;
  * @author husong
  */
 public enum FlowTypeEnum {
-    SYNC("sync","同步"),
-    ASYNC("async","异步");
+    SINGLE_VERSION("single","单流程"),
+    MULTI_VERSION("multi","多流程");
 
     private String code;
     private String desc;

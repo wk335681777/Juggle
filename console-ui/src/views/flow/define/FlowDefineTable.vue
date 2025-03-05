@@ -60,7 +60,7 @@ function handleSelectionChange(rows) {
     <el-table-column prop="flowName" label="流程名称" width="220" />
     <el-table-column prop="flowType" label="流程类型" width="100">
       <template #default="scope">
-        <el-tag v-if="scope.row.flowType == 'sync'" type="success">单流程</el-tag>
+        <el-tag v-if="scope.row.flowType == 'single'" type="success">单流程</el-tag>
         <el-tag v-else type="warning">多流程</el-tag>
       </template>
     </el-table-column>

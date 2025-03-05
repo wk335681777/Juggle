@@ -122,8 +122,8 @@ defineExpose({ open });
         </el-form-item>
         <el-form-item label="流程类型" prop="flowType">
           <el-select placeholder="请选择流程类型" v-model="flowDefineFormValue.flowType">
-            <el-option label="单流程" value="sync" />
-            <el-option label="多流程" value="async" />
+            <el-option label="单流程" value="single" />
+            <el-option label="多流程" value="multi" />
           </el-select>
         </el-form-item>
         <el-form-item label="流程描述">

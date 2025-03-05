@@ -30,8 +30,8 @@ const onReset = () => {
     <el-form-item label="流程类型" style="width: 250px">
       <el-select v-model="formValue.flowType" placeholder="请选择流程类型">
         <el-option key="all" label="全部" value="" />
-        <el-option key="sync" label="单流程" value="sync" />
-        <el-option key="async" label="多流程" value="async" />
+        <el-option key="single" label="单流程" value="single" />
+        <el-option key="multi" label="多流程" value="multi" />
       </el-select>
     </el-form-item>
     <el-form-item>

@@ -62,7 +62,7 @@ public class FlowRuntimeServiceImpl implements IFlowRuntimeService {
         flow.setFlowInstanceId(flowInstanceId);
 
         FlowResult flowResult;
-        if(FlowTypeEnum.ASYNC.getCode().equals(flowType)){
+        if(FlowTypeEnum.MULTI_VERSION.getCode().equals(flowType)){
             flowResult = dispatcher.doDispatcher(flow,triggerData.getFlowData(),flowResultManager,dataSourceManager);
         }else{
             IDispatcher dispatcher = new SyncDispatcher();

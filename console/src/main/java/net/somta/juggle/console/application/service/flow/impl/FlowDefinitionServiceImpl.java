@@ -34,6 +34,7 @@ import net.somta.juggle.console.domain.flow.definition.repository.IFlowDefinitio
 import net.somta.juggle.console.domain.flow.definition.vo.FlowDefinitionInfoQueryVO;
 import net.somta.juggle.console.domain.flow.definition.vo.FlowDefinitionInfoVO;
 import net.somta.juggle.console.domain.flow.flowinfo.FlowInfoAO;
+import net.somta.juggle.console.domain.flow.flowinfo.enums.FlowTypeEnum;
 import net.somta.juggle.console.domain.flow.flowinfo.repository.IFlowInfoRepository;
 import net.somta.juggle.console.domain.flow.version.vo.FlowVersionQueryVO;
 import net.somta.juggle.console.domain.parameter.ParameterEntity;
@@ -206,7 +207,7 @@ public class FlowDefinitionServiceImpl implements IFlowDefinitionService {
             JSONObject nextNode = map.get(nextNodeId);
             if ("NETTY_HTTP".equals(nextNode.getStr("elementType"))) {
                 String uri = nextNode.getStr("uri");
-                if ("async".equalsIgnoreCase(flowDefinitionInfoDTO.getFlowType())) {
+                if (FlowTypeEnum.MULTI_VERSION.getCode().equalsIgnoreCase(flowDefinitionInfoDTO.getFlowType())) {
                     uri = "/v0" + uri;
                 }
 
