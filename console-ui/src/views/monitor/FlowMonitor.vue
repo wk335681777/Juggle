@@ -15,13 +15,13 @@ const props = defineProps({
 });
 
 const pageNum = ref(1);
-const pageSize = ref(10);
+const pageSize = ref(200);
 const dataTotal = ref(0);
 const dataRows = ref<Record<string, any>[]>([]);
 const loading = ref(false);
 
 const pageNumProd = ref(1);
-const pageSizeProd = ref(10);
+const pageSizeProd = ref(200);
 const dataTotalProd = ref(0);
 const dataRowsProd = ref<Record<string, any>[]>([]);
 const loadingProd = ref(false);

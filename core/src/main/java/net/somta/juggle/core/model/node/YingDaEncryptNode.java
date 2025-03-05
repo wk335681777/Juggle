@@ -6,6 +6,8 @@ public class YingDaEncryptNode  extends FlowNode{
     private String encodingType;//加密数据格式
     private String sm4EncryptType;//sm4加密模式
     private String encryptMode;//加密类型
+    private String ak;
+    private String sk;
 
     public String getSm2PrivateKey() {
         return sm2PrivateKey;
@@ -45,5 +47,21 @@ public class YingDaEncryptNode  extends FlowNode{
 
     public void setEncryptMode(String encryptMode) {
         this.encryptMode = encryptMode;
+    }
+
+    public String getAk() {
+        return ak;
+    }
+
+    public void setAk(String ak) {
+        this.ak = ak;
+    }
+
+    public String getSk() {
+        return sk;
+    }
+
+    public void setSk(String sk) {
+        this.sk = sk;
     }
 }

@@ -14,6 +14,8 @@ type YDa_SM4Data = RawData & {
   encodingType: string;
   sm4EncryptType: string;
   encryptMode: string;
+  ak: string;
+  sk: string;
 };
 
 function getDefaultData() {
@@ -29,7 +31,9 @@ function getDefaultData() {
     sm2PublicKey: '',
     sm2PrivateKey: '',
     encodingType: '',
-    sm4EncryptType: ''
+    sm4EncryptType: '',
+    ak: '',
+    sk: '',
   };
 }
 
@@ -108,6 +112,12 @@ watch(() => nodeData.value.encryptMode, (newVal) => {
         <el-input v-model="nodeData.desc" placeholder="请输入" :rows="2" type="textarea"></el-input>
       </el-form-item>
 
+      <el-form-item label="AK" prop="ak" :rules="[{ required: true, message: '不能为空', trigger: 'blur' }]">
+        <el-input v-model="nodeData.ak" placeholder="请输入"></el-input>
+      </el-form-item>
+      <el-form-item label="SK" prop="sk" :rules="[{ required: true, message: '不能为空', trigger: 'blur' }]">
+        <el-input v-model="nodeData.sk" placeholder="请输入"></el-input>
+      </el-form-item>
       <el-form-item label="加解密" required prop="encryptMode">
         <el-select v-model="nodeData.encryptMode" placeholder="请选择加解密类型">
           <el-option key="encrypt" label="加密" value="加密" />
