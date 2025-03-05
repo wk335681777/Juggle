@@ -13,6 +13,8 @@ public class FlowVersionQueryVO {
 
     private String flowVersion;
 
+    private String flowName;
+
     /**
      * 流程状态   0:禁用  1:启用
      */
@@ -64,5 +66,13 @@ public class FlowVersionQueryVO {
 
     public void setAppCode(String appCode) {
         this.appCode = appCode;
+    }
+
+    public String getFlowName() {
+        return flowName;
+    }
+
+    public void setFlowName(String flowName) {
+        this.flowName = flowName;
     }
 }

@@ -254,9 +254,9 @@ const addMessage = (line) => {
             <el-table-column prop="headerValue" label="值" />
           </el-table>
         </el-tab-pane>
-        <el-tab-pane label="日志" name="log">
-          <el-card v-for="(item, index) in messages" :key="index" :body-style="{ padding: '10px' }">
-            <p>{{ item }}</p>
+        <el-tab-pane label="日志" name="log" class="black-tab">
+          <el-card v-for="(item, index) in messages" :key="index" :body-style="{ padding: '0px' }" class="black-tab">
+            <div style="color: white">{{ item }}</div>
           </el-card>
         </el-tab-pane>
       </el-tabs>
@@ -361,5 +361,15 @@ const addMessage = (line) => {
 
 .card-content {
   font-size: 18px;
+}
+
+.black-tab {
+  background-color: black !important;
+  color: white;
+  padding: 2px; /* 防止内容贴边 */
+  font-size: 12px;
+  border: none !important; /* 移除默认边框 */
+  border-bottom: 0px solid white !important; /* 仅显示底部边框 */
+  border-radius: 0; /* 防止圆角影响 */
 }
 </style>

@@ -22,6 +22,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.Duration;
+
 /**
  * @author husong
  * @since 1.0.0
@@ -32,7 +34,7 @@ public class ApplicationConfiguration {
 
     @Bean
     public RestTemplate restTemplate(RestTemplateBuilder builder){
-        RestTemplate restTemplate = builder.build();
+        RestTemplate restTemplate = builder.setReadTimeout(Duration.ofSeconds(10)).setConnectTimeout(Duration.ofSeconds(5)).build();
         return restTemplate;
     }
 

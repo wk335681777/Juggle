@@ -13,6 +13,8 @@ public class FlowDefinitionPageParam extends PageParam {
 
     private String appCode;
 
+    private String flowKey;
+
     public String getFlowName() {
         return flowName;
     }
@@ -35,5 +37,13 @@ public class FlowDefinitionPageParam extends PageParam {
 
     public void setAppCode(String appCode) {
         this.appCode = appCode;
+    }
+
+    public String getFlowKey() {
+        return flowKey;
+    }
+
+    public void setFlowKey(String flowKey) {
+        this.flowKey = flowKey;
     }
 }

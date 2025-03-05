@@ -10,6 +10,8 @@ public class FlowDefinitionInfoQueryVO {
      */
     private String flowName;
 
+    private String flowKey;
+
     /**
      * 流程类型  sync：同步  async：异步
      */
@@ -39,5 +41,13 @@ public class FlowDefinitionInfoQueryVO {
 
     public void setAppCode(String appCode) {
         this.appCode = appCode;
+    }
+
+    public String getFlowKey() {
+        return flowKey;
+    }
+
+    public void setFlowKey(String flowKey) {
+        this.flowKey = flowKey;
     }
 }

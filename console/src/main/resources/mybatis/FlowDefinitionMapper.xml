@@ -24,6 +24,9 @@
         <if test="flowType != null and flowType != ''">
             and flow_type = #{flowType}
         </if>
+        <if test="flowKey != null and flowKey != ''">
+            and flow_key = #{flowKey}
+        </if>
         and app_code = #{appCode}
         ORDER BY updated_at DESC
     </select>

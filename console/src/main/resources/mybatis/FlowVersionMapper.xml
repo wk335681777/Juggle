@@ -66,7 +66,16 @@
 		and flow_id = #{flowId}
 	</if>
 	<if test="flowVersionStatus != null">
-		and flow_version_status = #{flowVersionStatus}
+		and v.flow_version_status = #{flowVersionStatus}
+	</if>
+	<if test="flowName != null and flowName != ''">
+		and v.flow_name like concat("%", #{flowName}, "%")
+	</if>
+	<if test="flowKey != null and flowKey != ''">
+		and v.flow_key = #{flowKey}
+	</if>
+	<if test="appCode != null and appCode != ''">
+		and v.app_code = #{appCode}
 	</if>
 	order by v.id desc
 </select>

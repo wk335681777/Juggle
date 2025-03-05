@@ -1,6 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 import LayoutView from '../views/LayoutView.vue';
-import HomeView from "@/views/HomeView.vue";
 import HomeLayoutView from '../views/HomeLayoutView.vue';
 import LoginView from '../views/LoginView.vue';
 import NotFound from '../views/NotFound.vue';
@@ -11,6 +10,7 @@ import App from '@/views/app/App.vue';
 import { SystemRoutes } from '@/views/system';
 import { SuiteRoutes } from '@/views/suite';
 import { ToolRoutes } from '@/views/tools';
+import { MonitorRoutes } from '@/views/monitor';
 import FlowDesign from "@/views/flow/FlowDesign.vue";
 import FlowDesignView from "@/views/flow/FlowDesignView.vue";
 
@@ -69,6 +69,7 @@ const router = createRouter({
         ...FlowRoutes,
         ...SuiteRoutes,
         ...ToolRoutes,
+        ...MonitorRoutes,
         // {
         //   path: 'app',
         //   name: 'app',

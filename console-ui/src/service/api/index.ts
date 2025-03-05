@@ -14,6 +14,7 @@ import * as commonAPI from './common.ts';
 import * as appApi from './app.ts';
 import * as toolApi from './tool.ts'
 import * as mockApi from './mock.ts'
+import * as flowMonitorApi from './flowMonitor.ts'
 
 export {
     userAPI,
@@ -32,4 +33,5 @@ export {
     appApi,
     toolApi,
     mockApi,
+    flowMonitorApi,
 };

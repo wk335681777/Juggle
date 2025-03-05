@@ -14,6 +14,7 @@ import * as commonService from './common';
 import * as appService from './app.ts'
 import * as toolService from './tool.ts'
 import * as mockService from './mock.ts'
+import * as flowMonitorService from './flowMonitor.ts'
 
 export {
   userService,
@@ -32,4 +33,5 @@ export {
   appService,
   toolService,
   mockService,
+  flowMonitorService,
 };

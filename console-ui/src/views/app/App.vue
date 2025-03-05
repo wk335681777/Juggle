@@ -36,7 +36,6 @@ async function queryApps() {
     apps.value = res.result;
   } else {
     ElMessage({ type: 'error', message: res.errorMsg });
-    apps.value = [{"id": 1, "appCode": "11111", "appName": "测试应用"}];
   }
 }
 

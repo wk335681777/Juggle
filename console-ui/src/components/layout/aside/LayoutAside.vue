@@ -53,7 +53,7 @@ import IconInterface from '@/components/icons/IconInterface.vue';
           <el-icon><Monitor /></el-icon>
           <span>监控</span>
         </template>
-        <el-menu-item :index="`/main/${$route.params.appCode}/system/flowMonitor`">流程监控</el-menu-item>
+        <el-menu-item :index="`/main/${$route.params.appCode}/monitor/flowMonitor`">流程监控</el-menu-item>
       </el-sub-menu>
       <el-sub-menu index="7">
         <template #title>

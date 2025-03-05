@@ -25,7 +25,7 @@ export async function getDebugInfo(id: number): ResponseResult<FlowDefineInfo> {
   return request.get(`/v1/flow/definition/debugInfo/${id}`);
 }
 
-export async function flowDefinePage(params: { appCode: string; pageNum: number; pageSize: number; flowName?: string; flowType?: string }): ResponsePageResult {
+export async function flowDefinePage(params: { appCode: string; pageNum: number; pageSize: number; flowName?: string; flowType?: string; flowKey?: string }): ResponsePageResult {
   return request.post(`/v1/flow/definition/${params.appCode}/page`, params);
 }
 
