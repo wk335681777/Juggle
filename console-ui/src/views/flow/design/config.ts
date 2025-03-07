@@ -95,4 +95,9 @@ export const nodeMap = {
     nodeName: '脚本节点',
     nodeHeaderColor: '#b471e7',
   },
+
+  [ElementType.SET_HEADERS]: {
+    nodeName: 'Set Headers',
+    nodeHeaderColor: '#b471e7',
+  },
 }

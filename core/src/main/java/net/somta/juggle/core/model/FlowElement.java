@@ -55,6 +55,7 @@ import net.somta.juggle.core.model.node.data.MysqlNode;
         @JsonSubTypes.Type(value = YingDaEncryptNode.class, name = "YDA_SM4"),//英大国密
         @JsonSubTypes.Type(value = ScriptNode.class,name="SCRIPT" ),
         @JsonSubTypes.Type(value = FeignNode.class, name = "FEIGN"),
+        @JsonSubTypes.Type(value=SetHeadersNode.class,name="SET_HEADERS"),
         @JsonSubTypes.Type(value = LogNode.class, name = "LOG"),
 })
 public class FlowElement {

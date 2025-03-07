@@ -53,6 +53,7 @@ export enum ElementType {
   YDA_SM4="YDA_SM4",//英大国密
   FEIGN="FEIGN",
   SCRIPT="SCRIPT",//脚本
+  SET_HEADERS="SET_HEADERS",
   LOG = 'LOG',
   END = 'END',
 

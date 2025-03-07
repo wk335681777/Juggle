@@ -20,6 +20,7 @@ import EnAndDeForm from "@/views/flow/design/components/node-form/EnAndDeForm.vu
 import YingDaEncryptForm from "@/views/flow/design/components/node-form/YingDaEncryptForm.vue";
 import FeignForm from "@/views/flow/design/components/node-form/FeignForm.vue";
 import ScriptForm from "@/views/flow/design/components/node-form/ScriptForm.vue";
+import SetHeadersForm from "@/views/flow/design/components/node-form/SetHeadersForm.vue";
 
 
 const nodeFormMap = {
@@ -44,6 +45,7 @@ const nodeFormMap = {
   [ElementType.YDA_SM4]: YingDaEncryptForm,//英大国密
   [ElementType.FEIGN]: FeignForm,
   [ElementType.SCRIPT]: ScriptForm,
+  [ElementType.SET_HEADERS]:SetHeadersForm,
 
 };
 

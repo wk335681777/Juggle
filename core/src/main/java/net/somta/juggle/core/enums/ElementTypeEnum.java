@@ -67,6 +67,7 @@ public enum ElementTypeEnum {
     YDA_SM4,//英大国密
     FEIGN,
     SCRIPT,
+    SET_HEADERS,
 
     ASSIGN;
 }
