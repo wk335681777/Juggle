@@ -54,6 +54,7 @@ export enum ElementType {
   FEIGN="FEIGN",
   SCRIPT="SCRIPT",//脚本
   SET_HEADERS="SET_HEADERS",
+  SET_BODY="SET_BODY",
   LOG = 'LOG',
   END = 'END',
 

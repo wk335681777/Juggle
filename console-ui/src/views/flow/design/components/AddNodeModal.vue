@@ -113,10 +113,15 @@ const flowNodes = [
     icon: IconCode,
   },
 
-  //脚本
   {
     name:'SetHeaders',
     type: ElementType.SET_HEADERS,
+    icon: IconCode,
+  },
+
+  {
+    name:'SetBody',
+    type: ElementType.SET_BODY,
     icon: IconCode,
   },
 

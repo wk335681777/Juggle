@@ -100,4 +100,9 @@ export const nodeMap = {
     nodeName: 'Set Headers',
     nodeHeaderColor: '#b471e7',
   },
+
+  [ElementType.SET_BODY]: {
+    nodeName: 'Set Body',
+    nodeHeaderColor: '#b471e7',
+  },
 }

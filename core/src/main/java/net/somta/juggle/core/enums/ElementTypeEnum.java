@@ -68,6 +68,7 @@ public enum ElementTypeEnum {
     FEIGN,
     SCRIPT,
     SET_HEADERS,
+    SET_BODY,
 
     ASSIGN;
 }
