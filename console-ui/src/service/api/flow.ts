@@ -11,3 +11,7 @@ export async function flowPage(params: { appCode: string, pageNum: number; pageS
 export async function deleteFlow(id: number): ResponseResult<boolean> {
   return request.delete(`/v1/flow/delete/${id}`);
 }
+
+export async function saveParamsFlow(params: { appCode: string, headers:{ key: string, value: string },body: string}): ResponsePageResult {
+  return request.post('/v1/flow/saveParams', params);
+}

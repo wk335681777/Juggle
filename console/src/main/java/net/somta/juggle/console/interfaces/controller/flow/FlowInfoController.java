@@ -17,6 +17,7 @@ along with this program; if not, visit <https://www.gnu.org/licenses/gpl-3.0.htm
 package net.somta.juggle.console.interfaces.controller.flow;
 
 import com.github.pagehelper.PageInfo;
+import freemarker.template.TemplateHashModelEx2;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.somta.core.protocol.ResponseDataResult;
@@ -24,6 +25,7 @@ import net.somta.core.protocol.ResponsePaginationDataResult;
 import net.somta.juggle.console.interfaces.dto.flow.FlowInfoDTO;
 import net.somta.juggle.console.interfaces.param.flow.FlowInfoPageParam;
 import net.somta.juggle.console.application.service.flow.IFlowInfoService;
+import net.somta.juggle.console.interfaces.param.flow.FlowInfoSaveParam;
 import org.springframework.web.bind.annotation.*;
 
 import static net.somta.juggle.common.constants.ApplicationConstants.JUGGLE_SERVER_VERSION;
@@ -56,5 +58,13 @@ public class FlowInfoController {
         PageInfo pageInfo = flowInfoService.getFlowInfoPageList(flowInfoPageParam);
         return ResponsePaginationDataResult.setPaginationDataResult(pageInfo.getTotal(),pageInfo.getList());
     }
+
+    @Operation(summary = "保存参数")
+    @PostMapping("/saveParams")
+    public ResponseDataResult<Boolean> saveParamsFlowInfo(@RequestBody FlowInfoSaveParam flowInfoSaveParam) {
+        Boolean result = flowInfoService.saveParamsFlowInfo(flowInfoSaveParam);
+        return ResponseDataResult.setResponseResult(result);
+    }
+
 
 }

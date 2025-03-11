@@ -27,6 +27,9 @@
         <setting name="mapUnderscoreToCamelCase" value="true"/>
         <setting name="logImpl" value="org.apache.ibatis.logging.stdout.StdOutImpl"/>
     </settings>
+    <typeHandlers>
+        <typeHandler handler="net.somta.juggle.console.interfaces.param.tool.KeyValuePairListTypeHandler"/>
+    </typeHandlers>
     <plugins>
         <plugin interceptor="com.github.pagehelper.PageInterceptor">
             <!-- 该参数默认为false -->
@@ -48,4 +51,5 @@
             <property name="returnPageInfo" value="none"/>
         </plugin>
     </plugins>
+
 </configuration>

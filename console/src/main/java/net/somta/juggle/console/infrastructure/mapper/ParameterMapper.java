@@ -2,8 +2,10 @@ package net.somta.juggle.console.infrastructure.mapper;
 
 
 import net.somta.core.base.IBaseMapper;
+import net.somta.juggle.console.domain.flow.FlowParametersInfoAO;
 import net.somta.juggle.console.infrastructure.po.ParameterPO;
 import net.somta.juggle.console.domain.parameter.vo.ParameterVO;
+import net.somta.juggle.console.interfaces.param.flow.FlowInfoSaveParam;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -41,4 +43,11 @@ public interface ParameterMapper extends IBaseMapper {
      * @return
      */
     List<ParameterPO> getParameterListByVO(ParameterVO parameterQueryVo);
+
+    int addParameters(FlowParametersInfoAO flowParametersInfoAO);
+
+    FlowParametersInfoAO findByFlowId(Long flowId);
+
+    int updateParamsFlow(FlowParametersInfoAO flowParametersInfoAO);
+
 }

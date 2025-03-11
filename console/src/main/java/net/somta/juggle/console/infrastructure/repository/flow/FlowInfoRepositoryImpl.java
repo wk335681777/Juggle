@@ -17,6 +17,7 @@ along with this program; if not, visit <https://www.gnu.org/licenses/gpl-3.0.htm
 package net.somta.juggle.console.infrastructure.repository.flow;
 
 import net.somta.juggle.common.identity.IdentityContext;
+import net.somta.juggle.console.domain.flow.FlowParametersInfoAO;
 import net.somta.juggle.console.domain.flow.flowinfo.FlowInfoAO;
 import net.somta.juggle.console.domain.flow.flowinfo.repository.IFlowInfoRepository;
 import net.somta.juggle.console.domain.flow.flowinfo.vo.FlowInfoQueryVO;
@@ -24,6 +25,7 @@ import net.somta.juggle.console.domain.flow.flowinfo.vo.FlowInfoVO;
 import net.somta.juggle.console.domain.flow.version.enums.FlowVersionStatusEnum;
 import net.somta.juggle.console.infrastructure.converter.flow.IFlowInfoConverter;
 import net.somta.juggle.console.infrastructure.converter.flow.IFlowVersionConverter;
+import net.somta.juggle.console.infrastructure.mapper.ParameterMapper;
 import net.somta.juggle.console.infrastructure.mapper.flow.FlowInfoMapper;
 import net.somta.juggle.console.infrastructure.mapper.flow.FlowVersionMapper;
 import net.somta.juggle.console.infrastructure.po.flow.FlowInfoPO;
@@ -43,10 +45,12 @@ public class FlowInfoRepositoryImpl implements IFlowInfoRepository {
 
     private final FlowInfoMapper flowInfoMapper;
     private final FlowVersionMapper flowVersionMapper;
+    private final ParameterMapper parameterMapper;
 
-    public FlowInfoRepositoryImpl(FlowInfoMapper flowInfoMapper, FlowVersionMapper flowVersionMapper) {
+    public FlowInfoRepositoryImpl(FlowInfoMapper flowInfoMapper, FlowVersionMapper flowVersionMapper, ParameterMapper parameterMapper) {
         this.flowInfoMapper = flowInfoMapper;
         this.flowVersionMapper = flowVersionMapper;
+        this.parameterMapper = parameterMapper;
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -97,4 +101,25 @@ public class FlowInfoRepositoryImpl implements IFlowInfoRepository {
         flowVersionMapper.add(flowVersionPo);
         return true;
     }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Boolean saveParamesFlow(FlowParametersInfoAO flowParametersInfoAO) {;
+    parameterMapper.addParameters(flowParametersInfoAO);
+        return true;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public FlowParametersInfoAO findByFlowId(Long flowId) {
+        return parameterMapper.findByFlowId(flowId);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Boolean updateParamsFlow(FlowParametersInfoAO flowParametersInfoAO) {;
+        parameterMapper.updateParamsFlow(flowParametersInfoAO);
+        return true;
+    }
+
 }

@@ -20,7 +20,9 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import net.somta.core.exception.BizException;
+import net.somta.juggle.common.identity.IdentityContext;
 import net.somta.juggle.console.application.assembler.flow.IFlowInfoAssembler;
+import net.somta.juggle.console.domain.flow.FlowParametersInfoAO;
 import net.somta.juggle.console.domain.flow.flowinfo.FlowInfoAO;
 import net.somta.juggle.console.domain.flow.flowinfo.repository.IFlowInfoRepository;
 import net.somta.juggle.console.application.service.flow.IFlowInfoService;
@@ -32,10 +34,13 @@ import net.somta.juggle.console.domain.flow.version.view.FlowVersionView;
 import net.somta.juggle.console.domain.flow.version.vo.FlowVersionQueryVO;
 import net.somta.juggle.console.interfaces.dto.flow.FlowInfoDTO;
 import net.somta.juggle.console.interfaces.param.flow.FlowInfoPageParam;
+import net.somta.juggle.console.interfaces.param.flow.FlowInfoSaveParam;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static net.somta.juggle.console.domain.flow.version.enums.FlowVersionErrorEnum.ENABLE_FLOW_NOT_DELETE;
 
@@ -76,6 +81,33 @@ public class FlowInfoInfoServiceImpl implements IFlowInfoService {
         PageInfo pageInfo = new PageInfo(flowInfoDTOList);
         pageInfo.setTotal(page.getTotal());
         return pageInfo;
+    }
+
+    @Override
+    public Boolean saveParamsFlowInfo(FlowInfoSaveParam flowInfoSaveParam) {
+        // 创建 FlowParametersInfoAO 对象
+        FlowParametersInfoAO flowParametersInfoAO = new FlowParametersInfoAO();
+
+        // 将 FlowInfoSaveParam 中的 headers 转换为 KeyValuePair 列表
+        List<FlowParametersInfoAO.KeyValuePair> keyValuePairs = flowInfoSaveParam.getHeaders().stream()
+                .map(entry -> new FlowParametersInfoAO.KeyValuePair(entry.getKey(), entry.getValue()))
+                .collect(Collectors.toList());
+
+        // 设置转换后的 headers 和 body
+        flowParametersInfoAO.setFlowId(flowInfoSaveParam.getId());
+        flowParametersInfoAO.setHeaders(keyValuePairs);
+        flowParametersInfoAO.setBody(flowInfoSaveParam.getBody());
+        flowParametersInfoAO.setAppCode(flowInfoSaveParam.getAppCode());
+        flowParametersInfoAO.setDeleted(flowParametersInfoAO.getDeleted());
+
+        // 设置时间戳和创建/更新用户信息
+        flowParametersInfoAO.setCreatedAt(new Date());  // 设置当前时间为创建时间
+        flowParametersInfoAO.setUpdatedAt( flowParametersInfoAO.getCreatedAt());  // 设置更新时间为创建时间
+        flowParametersInfoAO.setCreatedBy(IdentityContext.getIdentity().getUserId());  // 设置当前用户为创建者
+        flowParametersInfoAO.setUpdatedBy(flowParametersInfoAO.getCreatedBy());   // 设置当前用户为更新者
+
+        // 保存参数到数据库
+        return flowInfoRepository.saveParamesFlow(flowParametersInfoAO);
     }
 
 }

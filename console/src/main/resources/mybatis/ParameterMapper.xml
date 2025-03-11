@@ -9,7 +9,52 @@
 	values (#{id},#{paramType},#{paramKey},#{paramName},#{paramPosition},#{paramDesc},#{dataType},#{required},#{sourceType},#{sourceId},0,#{createdAt},#{createdBy},#{updatedAt},#{updatedBy});
 </insert>
 
-<insert id="batchAddParameter" parameterType="java.util.List">
+	<insert id="addParameters" parameterType="net.somta.juggle.console.domain.flow.FlowParametersInfoAO">
+		INSERT INTO t_flow_parameter (id, flow_id, headers, body, app_code, deleted,created_at, created_by, updated_at, updated_by)
+		VALUES (
+				   #{id},
+				   #{flowId},
+				   #{headers, typeHandler=net.somta.juggle.console.interfaces.param.tool.KeyValuePairListTypeHandler},
+				   #{body},
+				   #{appCode},
+				   (SELECT deleted FROM t_flow_definition WHERE id = #{flowId}),
+				   #{createdAt},#{createdBy},#{updatedAt},#{updatedBy}
+			   );
+	</insert>
+
+	<select id="findByFlowId" parameterType="Long" resultType="net.somta.juggle.console.domain.flow.FlowParametersInfoAO">
+		SELECT
+			id,
+			flow_id,
+			headers,
+			body,
+			app_code,
+			deleted,
+			created_at,
+			created_by,
+			updated_at,
+			updated_by
+		FROM
+			t_flow_parameter
+		WHERE
+			flow_id = #{flowId}
+			LIMIT 1
+	</select>
+
+	<update id="updateParamsFlow" parameterType="net.somta.juggle.console.domain.flow.FlowParametersInfoAO">
+		UPDATE t_flow_parameter
+		SET
+			headers = #{headers},
+			body = #{body},
+			app_code = #{appCode},
+			updated_at = #{updatedAt},
+			updated_by = #{updatedBy}
+		WHERE
+			flow_id = #{flowId}
+	</update>
+
+
+	<insert id="batchAddParameter" parameterType="java.util.List">
 	insert into t_parameter (id, param_type, param_key, param_name, param_position, param_desc, data_type, required, source_type, source_id, deleted, created_at)
 	values
 	<foreach collection ="parameterList" item="param" separator =",">

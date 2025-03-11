@@ -2,6 +2,7 @@ package net.somta.juggle.console.application.service.flow;
 
 import com.github.pagehelper.PageInfo;
 import net.somta.juggle.console.interfaces.param.flow.FlowInfoPageParam;
+import net.somta.juggle.console.interfaces.param.flow.FlowInfoSaveParam;
 
 /**
  * @author husong
@@ -21,4 +22,7 @@ public interface IFlowInfoService {
      * @return Flow Information Paging Object
      */
     PageInfo getFlowInfoPageList(FlowInfoPageParam flowInfoPageParam);
+
+    Boolean saveParamsFlowInfo(FlowInfoSaveParam flowInfoSaveParam);
+
 }

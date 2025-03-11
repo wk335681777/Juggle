@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import { reactive, ref, watch } from 'vue';
-import { useRoute, onBeforeRouteLeave  } from 'vue-router';
+import { useRoute, onBeforeRouteLeave } from 'vue-router';
 import { flowDefineService, flowVersionService } from '@/service';
 import { ElMessage } from 'element-plus';
 import CodeEditor from '@/components/common/CodeEditor.vue';
-import {DataType, FlowDefineInfo} from '@/typings';
-import FilterValue from '@/components/filter/FilterValue.vue';
-import {InfoFilled} from "@element-plus/icons-vue";
-import DataTypeDisplay from "@/components/common/DataTypeDisplay.vue";
+import { DataType, FlowDefineInfo } from '@/typings';
+import {flowAPI} from "@/service/api";
+import {saveParamsFlow} from "@/service/api/flow.ts";
 
 const route = useRoute();
 let paramsData = reactive({
@@ -43,6 +42,11 @@ async function queryFlowDefineInfo() {
   if (res.success) {
     debugUrl.value = res.result.debugUri + "?debugConnId=" + debugId;
     flowDefine.value = res.result;
+
+    savedParams.value.id = res.result.id || 0;
+    savedParams.value.appCode = res.result.appCode || '';
+
+    console.log("初始化 savedParams:", savedParams.value); // Debugging
   } else {
     ElMessage({ type: 'error', message: res.errorMsg });
   }
@@ -193,10 +197,66 @@ const addMessage = (line) => {
     messages.value.push(line);
 };
 
+// 保存和查看参数功能
+const savedParams = ref({
+  id:0,
+  appCode:'',
+  headers: [],
+  body: ''
+});
+const saveParams = async () => {
+  const currentTab = activeTab.value;
+
+  let paramsToSave = {
+    id: savedParams.value.id,
+    appCode: savedParams.value.appCode,
+    headers: headers.value.map(header => ({
+      key: header.key,
+      value: header.value
+    })),
+    body: requestBody.value
+  };
+
+  // 如果当前激活的是 Headers 标签页，保存最新的 headers
+  if (currentTab === 'requestHeader') {
+    paramsToSave.headers = headers.value.map(header => ({
+      key: header.key,
+      value: header.value
+    }));
+  }
+  // 如果当前激活的是 Body 标签页，保存最新的 body
+  else if (currentTab === 'body') {
+    paramsToSave.body = requestBody.value;
+  }
+
+  console.log("最终提交参数:", JSON.stringify(paramsToSave, null, 2));
+
+  try {
+    const res = await flowAPI.saveParamsFlow(paramsToSave);
+    if (res.success) {
+      ElMessage({ type: 'success', message: '参数已保存' });
+    } else {
+      ElMessage({ type: 'error', message: res.errorMsg });
+    }
+  } catch (error) {
+    ElMessage({ type: 'error', message: '保存参数时出错' });
+    console.error(error);
+  }
+};
+// 查看参数
+const viewParams = () => {
+  const currentTab = activeTab.value;
+  if (currentTab === 'requestHeader') {
+    ElMessage({ type: 'info', message: `保存的 Headers: ${JSON.stringify(savedParams.value.headers, null, 2)}` });
+  } else if (currentTab === 'body') {
+    ElMessage({ type: 'info', message: `保存的 Body: ${savedParams.value.body}` });
+  }
+};
+
+const activeTab = ref('requestHeader');  // 用来记录当前激活的 Tab
 </script>
 
 <template>
-
   <div class="flow-debug">
     <div class="flow-header">
       <el-breadcrumb separator="/">
@@ -211,21 +271,24 @@ const addMessage = (line) => {
           <el-option key="POST" label="POST" value="POST" />
         </el-select>
       </el-col>
-      <el-col :span="18">
+      <el-col :span="15">
         <el-input v-model="debugUrl" />
       </el-col>
-      <el-col :span="4">
+      <el-col :span="7">
         <el-button type="primary" @click="sendFlowDebug">发送</el-button>
         <el-button @click="resetParams">重置</el-button>
+        <el-button @click="saveParams">保存参数</el-button>
+        <el-button @click="viewParams">查看参数</el-button>
       </el-col>
     </el-row>
-    <el-tabs model-value="body">
+
+    <el-tabs v-model="activeTab">
       <el-tab-pane label="Headers" name="requestHeader">
         <div id="app">
           <div class="header-container">
             <div v-for="(header, index) in headers" :key="index" class="header-row">
-              <input v-model="header.key" class="header-input" placeholder="Header 键">
-              <input v-model="header.value" class="header-input" placeholder="Header 值">
+              <input v-model="header.key" class="header-input" placeholder="Header 键" />
+              <input v-model="header.value" class="header-input" placeholder="Header 值" />
               <button @click="removeHeader(index)" class="btn btn-remove">删除</button>
             </div>
             <button @click="addHeader" class="btn btn-add">添加参数</button>
