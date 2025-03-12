@@ -2,6 +2,7 @@ package net.somta.juggle.console.application.service.monitor.impl;
 
 import cn.hutool.json.JSONUtil;
 import com.github.pagehelper.PageInfo;
+import jakarta.annotation.PostConstruct;
 import net.somta.core.exception.BizException;
 import net.somta.core.protocol.ResponsePaginationDataResult;
 import net.somta.juggle.console.application.service.flow.IDeployMaster;
@@ -26,8 +27,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

@@ -15,6 +15,7 @@ import * as appApi from './app.ts';
 import * as toolApi from './tool.ts'
 import * as mockApi from './mock.ts'
 import * as flowMonitorApi from './flowMonitor.ts'
+import * as flowTagApi from './flowTag.ts'
 
 export {
     userAPI,
@@ -34,4 +35,5 @@ export {
     toolApi,
     mockApi,
     flowMonitorApi,
+    flowTagApi
 };

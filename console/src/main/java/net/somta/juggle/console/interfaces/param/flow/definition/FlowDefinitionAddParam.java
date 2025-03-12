@@ -24,6 +24,8 @@ public class FlowDefinitionAddParam {
 
     private List<OutputParameterVO> flowOutputParams;
 
+    private List<Long> flowTagIdList;
+
     public String getFlowName() {
         return flowName;
     }
@@ -78,5 +80,13 @@ public class FlowDefinitionAddParam {
 
     public void setFlowKey(String flowKey) {
         this.flowKey = flowKey;
+    }
+
+    public List<Long> getFlowTagIdList() {
+        return flowTagIdList;
+    }
+
+    public void setFlowTagIdList(List<Long> flowTagIdList) {
+        this.flowTagIdList = flowTagIdList;
     }
 }

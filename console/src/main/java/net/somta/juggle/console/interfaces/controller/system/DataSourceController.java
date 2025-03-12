@@ -35,7 +35,7 @@ public class DataSourceController {
 
     @Operation(summary = "根据ID删除数据源")
     @DeleteMapping("/delete/{dataSourceId}")
-    public ResponseDataResult<Boolean> deleteDataSource(@PathVariable Long dataSourceId){
+    public ResponseDataResult<Boolean> deleteDataSource(@PathVariable("dataSourceId") Long dataSourceId){
         dataSourceService.deleteDataSource(dataSourceId);
         return ResponseDataResult.setResponseResult(true);
     }
@@ -48,7 +48,7 @@ public class DataSourceController {
 
     @Operation(summary = "查询数据源详情")
     @GetMapping("/info/{dataSourceId}")
-    public ResponseDataResult<DataSourceDTO> getDataSource(@PathVariable Long dataSourceId){
+    public ResponseDataResult<DataSourceDTO> getDataSource(@PathVariable("dataSourceId") Long dataSourceId){
         return ResponseDataResult.setResponseResult(dataSourceService.getDataSource(dataSourceId));
     }
 
@@ -67,7 +67,7 @@ public class DataSourceController {
 
     @Operation(summary = "连接数据源")
     @GetMapping("/connect/{dataSourceId}")
-    public ResponseDataResult<Boolean> connectDataSource(@PathVariable Long dataSourceId){
+    public ResponseDataResult<Boolean> connectDataSource(@PathVariable("dataSourceId") Long dataSourceId){
         return ResponseDataResult.setResponseResult(dataSourceService.connectDataSource(dataSourceId));
     }
 }

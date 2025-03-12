@@ -56,7 +56,7 @@ public class TokenController {
 
     @Operation(summary = "根据ID删除令牌")
     @DeleteMapping("/delete/{tokenId}")
-    public ResponseDataResult<Boolean> deleteToken(@PathVariable Long tokenId){
+    public ResponseDataResult<Boolean> deleteToken(@PathVariable("tokenId") Long tokenId){
         tokenService.deleteToken(tokenId);
         return ResponseDataResult.setResponseResult(true);
     }

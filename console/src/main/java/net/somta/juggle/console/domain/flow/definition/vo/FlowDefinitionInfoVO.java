@@ -3,6 +3,7 @@ package net.somta.juggle.console.domain.flow.definition.vo;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author husong
@@ -38,6 +39,9 @@ public class FlowDefinitionInfoVO {
     private Date updatedAt;
 
     private String flowContent;
+
+    private List<Long> flowTagIdList;
+    private List<String> flowTagNameList;
 
     public Long getId() {
         return id;
@@ -109,5 +113,21 @@ public class FlowDefinitionInfoVO {
 
     public void setFlowContent(String flowContent) {
         this.flowContent = flowContent;
+    }
+
+    public List<Long> getFlowTagIdList() {
+        return flowTagIdList;
+    }
+
+    public void setFlowTagIdList(List<Long> flowTagIdList) {
+        this.flowTagIdList = flowTagIdList;
+    }
+
+    public List<String> getFlowTagNameList() {
+        return flowTagNameList;
+    }
+
+    public void setFlowTagNameList(List<String> flowTagNameList) {
+        this.flowTagNameList = flowTagNameList;
     }
 }

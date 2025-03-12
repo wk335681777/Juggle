@@ -3,6 +3,7 @@ package net.somta.juggle.console.application.service.impl;
 import cn.hutool.json.JSONArray;
 import net.somta.core.exception.BizException;
 import net.somta.core.protocol.ResponsePaginationDataResult;
+import net.somta.juggle.common.identity.IdentityContext;
 import net.somta.juggle.console.application.service.IMockService;
 import net.somta.juggle.console.domain.app.vo.AppVO;
 import net.somta.juggle.console.domain.mock.enums.MockErrorEnum;
@@ -17,7 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -36,6 +37,8 @@ public class MockServiceImpl implements IMockService {
             throw new BizException(MockErrorEnum.PATH_KEY_EXIST);
         }
 
+        po.setCreatedBy(IdentityContext.getIdentity().getUserId());
+        po.setUpdatedBy(IdentityContext.getIdentity().getUserId());
         mockRepository.add(po);
         return true;
     }
@@ -60,6 +63,7 @@ public class MockServiceImpl implements IMockService {
             throw new BizException(MockErrorEnum.PATH_KEY_EXIST);
         }
 
+        mockPO.setUpdatedBy(IdentityContext.getIdentity().getUserId());
         return mockRepository.update(mockPO);
     }
 

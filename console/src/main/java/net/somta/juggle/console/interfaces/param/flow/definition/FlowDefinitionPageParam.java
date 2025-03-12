@@ -15,6 +15,8 @@ public class FlowDefinitionPageParam extends PageParam {
 
     private String flowKey;
 
+    private String tagPath;
+
     public String getFlowName() {
         return flowName;
     }
@@ -45,5 +47,13 @@ public class FlowDefinitionPageParam extends PageParam {
 
     public void setFlowKey(String flowKey) {
         this.flowKey = flowKey;
+    }
+
+    public String getTagPath() {
+        return tagPath;
+    }
+
+    public void setTagPath(String tagPath) {
+        this.tagPath = tagPath;
     }
 }

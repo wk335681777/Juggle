@@ -12,7 +12,6 @@ import {draftDefineInfo} from "@/service/module/flowDefine.ts";
 
 const router = useRouter();
 const globalStore = useGlobalStore();
-const { appCode } = storeToRefs(globalStore);
 
 const props = defineProps({
   appCode: {
@@ -269,7 +268,7 @@ async function onImportFlowDefine() {
         />
       </el-main>
     </el-container>
-    <FlowDefineDrawer ref="drawerRef" @add="addFlowDefineItem" @edit="updateFlowDefineItem"/>
+    <FlowDefineDrawer ref="drawerRef" :appCode="appCode" @add="addFlowDefineItem" @edit="updateFlowDefineItem"/>
 
     <CopyFlowDrawer ref="copyDrawerRef" @copy="copyFlowDefineItem"/>
 

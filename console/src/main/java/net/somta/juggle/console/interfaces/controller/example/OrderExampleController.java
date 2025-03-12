@@ -55,7 +55,7 @@ public class OrderExampleController {
 
     @Operation(summary = "根据用户ID查询用户订单列表")
     @GetMapping("/getOrderListByUserId/{userId}")
-    public UserOrderDTO getOrderListByUserId(@PathVariable Integer userId){
+    public UserOrderDTO getOrderListByUserId(@PathVariable("userId") Integer userId){
         UserOrderDTO userOrderDto = new UserOrderDTO();
         List<OrderDTO> orderDtoList = new ArrayList<>();
         OrderDTO order = new OrderDTO();

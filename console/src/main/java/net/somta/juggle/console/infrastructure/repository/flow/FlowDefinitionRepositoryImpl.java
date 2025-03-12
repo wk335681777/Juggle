@@ -41,12 +41,16 @@ import net.somta.juggle.console.infrastructure.converter.flow.IFlowDefinitionCon
 import net.somta.juggle.console.infrastructure.mapper.ParameterMapper;
 import net.somta.juggle.console.infrastructure.mapper.VariableInfoMapper;
 import net.somta.juggle.console.infrastructure.mapper.flow.FlowDefinitionMapper;
+import net.somta.juggle.console.infrastructure.mapper.flow.FlowTagMapper;
+import net.somta.juggle.console.infrastructure.mapper.flow.FlowTagRelationMapper;
 import net.somta.juggle.console.infrastructure.mapper.flow.FlowVersionMapper;
 import net.somta.juggle.console.infrastructure.po.ParameterPO;
 import net.somta.juggle.console.infrastructure.po.VariableInfoPO;
 import net.somta.juggle.console.infrastructure.po.flow.FlowDefinitionInfoPO;
+import net.somta.juggle.console.infrastructure.po.flow.FlowTagRelationPO;
 import net.somta.juggle.console.infrastructure.po.flow.FlowVersionPO;
 import net.somta.juggle.console.interfaces.dto.flow.FlowDefinitionExportDTO;
+import net.somta.juggle.console.interfaces.param.flow.FlowTagRelationQueryParam;
 import net.somta.juggle.console.interfaces.param.flow.definition.FlowDefinitionCopyParam;
 import net.somta.juggle.console.interfaces.param.flow.definition.FlowDefinitionDraftParam;
 import net.somta.juggle.core.enums.VariablePrefixEnum;
@@ -54,12 +58,11 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -75,6 +78,8 @@ public class FlowDefinitionRepositoryImpl implements IFlowDefinitionRepository {
     private final VariableInfoMapper variableInfoMapper;
     private final IParameterRepository parameterRepository;
     private final FlowVersionMapper flowVersionMapper;
+    @Autowired
+    private FlowTagRelationMapper flowTagRelationMapper;
 
     public FlowDefinitionRepositoryImpl(FlowDefinitionMapper flowDefinitionMapper, ParameterMapper parameterMapper, VariableInfoMapper variableInfoMapper, IParameterRepository parameterRepository, FlowVersionMapper flowVersionMapper) {
         this.flowDefinitionMapper = flowDefinitionMapper;
@@ -94,6 +99,9 @@ public class FlowDefinitionRepositoryImpl implements IFlowDefinitionRepository {
         Long flowDefinitionId = flowDefinitionMapper.addFlowDefinitionInfo(flowDefinitionInfoPo);
 
         saveParametersAndVariables(flowDefinitionInfoPo.getId(), flowDefinitionAo);
+
+        flowDefinitionAo.setId(flowDefinitionInfoPo.getId());
+        saveFlowTags(flowDefinitionAo);
 
         return flowDefinitionId;
     }
@@ -117,11 +125,26 @@ public class FlowDefinitionRepositoryImpl implements IFlowDefinitionRepository {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Boolean deleteFlowDefinitionById(Long flowDefinitionId) {
+        FlowDefinitionInfoPO oldPO = flowDefinitionMapper.queryById(flowDefinitionId);
+        if (oldPO == null) {
+            return false;
+        }
+
         FlowDefinitionInfoPO flowDefinitionInfoPo = new FlowDefinitionInfoPO();
         flowDefinitionInfoPo.setId(flowDefinitionId);
         flowDefinitionInfoPo.setDeleted(1);
         flowDefinitionMapper.update(flowDefinitionInfoPo);
         parameterMapper.deleteParameter(new ParameterVO(ParameterSourceTypeEnum.FLOW.getCode(),flowDefinitionId));
+
+        FlowTagRelationQueryParam flowTagRelationQueryParam = new FlowTagRelationQueryParam();
+        flowTagRelationQueryParam.setFlowDefinitionId(flowDefinitionId);
+        flowTagRelationQueryParam.setAppCode(oldPO.getAppCode());
+
+        List<FlowTagRelationPO> flowTagRelationPOList = flowTagRelationMapper.queryByList(flowTagRelationQueryParam);
+        for (FlowTagRelationPO flowTagRelationPO : flowTagRelationPOList) {
+            flowTagRelationMapper.deleteById(flowTagRelationPO.getId());
+        }
+
         return true;
     }
 
@@ -135,6 +158,7 @@ public class FlowDefinitionRepositoryImpl implements IFlowDefinitionRepository {
         parameterMapper.deleteParameter(new ParameterVO(ParameterSourceTypeEnum.FLOW.getCode(), flowDefinitionAo.getId()));
         variableInfoMapper.deleteVariableByFlowDefinitionId(new VariableDeleteVO(flowDefinitionAo.getId(),3));
         saveParametersAndVariables(flowDefinitionInfoPo.getId(),flowDefinitionAo);
+        saveFlowTags(flowDefinitionAo);
         return true;
     }
 
@@ -188,6 +212,7 @@ public class FlowDefinitionRepositoryImpl implements IFlowDefinitionRepository {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Boolean saveFlowDefinitionContent(FlowDefinitionAO flowDefinitionAo) {
         FlowDefinitionInfoPO flowDefinitionInfoPo = IFlowDefinitionConverter.IMPL.aoToPo(flowDefinitionAo);
         flowDefinitionMapper.update(flowDefinitionInfoPo);
@@ -197,6 +222,28 @@ public class FlowDefinitionRepositoryImpl implements IFlowDefinitionRepository {
             variableInfoMapper.batchAddVariable(variableInfoPoList);
         }
         return true;
+    }
+
+    private void saveFlowTags(FlowDefinitionAO flowDefinitionAo) {
+        List<Long> flowTagIdList = flowDefinitionAo.getFlowTagIdList();
+        if (CollectionUtils.isEmpty(flowTagIdList)) {
+            flowTagRelationMapper.deleteFlowTagByFlowDefinitionId(flowDefinitionAo.getId(), flowDefinitionAo.getAppCode());
+            return;
+        }
+
+        List<FlowTagRelationPO> poList = new ArrayList<>();
+        for (Long flowTagId : flowTagIdList) {
+            FlowTagRelationPO po = new FlowTagRelationPO();
+            po.setAppCode(flowDefinitionAo.getAppCode());
+            po.setTagId(flowTagId);
+            po.setFlowDefinitionId(flowDefinitionAo.getId());
+            po.setCreatedBy(IdentityContext.getIdentity().getUserId());
+            po.setUpdatedBy(IdentityContext.getIdentity().getUserId());
+            poList.add(po);
+        }
+
+        flowTagRelationMapper.deleteFlowTagByFlowDefinitionId(flowDefinitionAo.getId(), flowDefinitionAo.getAppCode());
+        flowTagRelationMapper.batchAdd(poList);
     }
 
 
@@ -221,7 +268,30 @@ public class FlowDefinitionRepositoryImpl implements IFlowDefinitionRepository {
 
     @Override
     public List<FlowDefinitionInfoVO> queryFlowDefinitionList(FlowDefinitionInfoQueryVO flowDefinitionInfoQueryVO) {
-        return flowDefinitionMapper.queryFlowDefinitionList(flowDefinitionInfoQueryVO);
+        List<FlowDefinitionInfoVO> flowDefinitionInfoVOList = flowDefinitionMapper.queryFlowDefinitionList(flowDefinitionInfoQueryVO);
+        List<Long> flowDefinitionIdList = new ArrayList<>();
+        Map<Long, FlowDefinitionInfoVO> flowDefinitionInfoVOMap = new HashMap<>();
+        for (FlowDefinitionInfoVO flowDefinitionInfoVO : flowDefinitionInfoVOList) {
+            flowDefinitionIdList.add(flowDefinitionInfoVO.getId());
+            flowDefinitionInfoVOMap.put(flowDefinitionInfoVO.getId(), flowDefinitionInfoVO);
+        }
+
+        if (flowDefinitionIdList.isEmpty()) {
+            return flowDefinitionInfoVOList;
+        }
+
+        List<FlowTagRelationPO> flowTagRelationPOList = flowTagRelationMapper.queryByFlowInstanceIds(flowDefinitionIdList);
+        for (FlowTagRelationPO flowTagRelationPO : flowTagRelationPOList) {
+            FlowDefinitionInfoVO flowDefinitionInfoVO = flowDefinitionInfoVOMap.get(flowTagRelationPO.getFlowDefinitionId());
+            List<Long> flowTagList = flowDefinitionInfoVO.getFlowTagIdList();
+            if (flowTagList == null) {
+                flowTagList = new ArrayList<>();
+            }
+
+            flowTagList.add(flowTagRelationPO.getTagId());
+        }
+
+        return flowDefinitionInfoVOList;
     }
 
     @Override

@@ -11,6 +11,8 @@ import java.util.List;
 public class FlowDefinitionUpdateParam {
     private Long id;
 
+    private String appCode;
+
     private String flowName;
 
     private String flowType;
@@ -20,6 +22,8 @@ public class FlowDefinitionUpdateParam {
     private List<InputParameterVO> flowInputParams;
 
     private List<OutputParameterVO> flowOutputParams;
+
+    private List<Long> flowTagIdList;
 
     public Long getId() {
         return id;
@@ -67,5 +71,21 @@ public class FlowDefinitionUpdateParam {
 
     public void setFlowOutputParams(List<OutputParameterVO> flowOutputParams) {
         this.flowOutputParams = flowOutputParams;
+    }
+
+    public List<Long> getFlowTagIdList() {
+        return flowTagIdList;
+    }
+
+    public void setFlowTagIdList(List<Long> flowTagIdList) {
+        this.flowTagIdList = flowTagIdList;
+    }
+
+    public String getAppCode() {
+        return appCode;
+    }
+
+    public void setAppCode(String appCode) {
+        this.appCode = appCode;
     }
 }

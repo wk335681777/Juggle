@@ -20,7 +20,7 @@
         <kernel-dependencies.varsion>1.0.1</kernel-dependencies.varsion>
         <kernel-core.version>1.0.0</kernel-core.version>
         <kernel-common.version>1.0.1</kernel-common.version>
-        <mybatis-starter.version>2.1.4</mybatis-starter.version>
+        <mybatis-starter.version>3.0.3</mybatis-starter.version>
         <pagehelper.version>5.3.1</pagehelper.version>
         <h2.version>2.2.220</h2.version>
         <aviator.version>5.3.3</aviator.version>
@@ -43,10 +43,17 @@
 
     <dependencyManagement>
         <dependencies>
+<!--            <dependency>-->
+<!--                <groupId>net.somta</groupId>-->
+<!--                <artifactId>kernel-dependencies</artifactId>-->
+<!--                <version>${kernel-dependencies.varsion}</version>-->
+<!--                <type>pom</type>-->
+<!--                <scope>import</scope>-->
+<!--            </dependency>-->
             <dependency>
-                <groupId>net.somta</groupId>
-                <artifactId>kernel-dependencies</artifactId>
-                <version>${kernel-dependencies.varsion}</version>
+                <groupId>com.pk.juggle</groupId>
+                <artifactId>dependencies</artifactId>
+                <version>1.0-SNAPSHOT</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

@@ -2,18 +2,21 @@ package net.somta.juggle.console.application.service.flow.impl;
 
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONObject;
+import jakarta.annotation.PostConstruct;
 import net.somta.juggle.console.application.service.flow.IDeployMaster;
+import net.somta.juggle.console.interfaces.dto.flow.DeployDTO;
+import net.somta.juggle.core.model.CamelResult;
 import net.somta.juggle.core.model.ServerInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -49,40 +52,48 @@ public class DeployMasterImpl implements IDeployMaster {
     }
 
     @Override
-    public void deployRouteDev(Long flowId) {
-        callWorker(DEPLOY_ROUTE_DEV + "?id=" + flowId);
+    public DeployDTO deployRouteDev(Long flowId) {
+        return callWorker(DEPLOY_ROUTE_DEV + "?id=" + flowId);
     }
 
     @Override
-    public void deployRouteProd(Long flowVersionId) {
-        callWorker(DEPLOY_ROUTE_POD + "?flowVersionId=" + flowVersionId);
+    public DeployDTO deployRouteProd(Long flowVersionId) {
+        return callWorker(DEPLOY_ROUTE_POD + "?flowVersionId=" + flowVersionId);
     }
 
-    private void callWorker(String url) {
+    private DeployDTO callWorker(String url) {
         Map<String, ServerInfo> servers = new ConcurrentHashMap<>(workerServers);
         if (CollectionUtils.isEmpty(servers)) {
             throw new RuntimeException("no deploy server worker available");
         }
-
+        DeployDTO deployDTO = new DeployDTO();
         for (ServerInfo serverInfo : servers.values()) {
+            DeployDTO.DeployDetail deployDetail = new DeployDTO.DeployDetail();
+            deployDetail.setServerIp(serverInfo.getIp());
+            deployDetail.setSuccess(true);
             String fullUrl = serverInfo.getProtocol() + "://" + serverInfo.getIp() + ":" + serverInfo.getPort() + url;
-            try {
             log.info("start deploy worker for {}", fullUrl);
-            String result = restTemplate.getForObject(fullUrl, String.class);
 
-            log.info("deploy server:{}, path: {}, deploy result:{}", serverInfo.getIp() + ":" + serverInfo.getPort(), url, result);
-            processResult(result);
+            try {
+                CamelResult result = restTemplate.getForObject(fullUrl, CamelResult.class);
+                if (!result.getSuccess()) {
+                    deployDetail.setSuccess(false);
+                    deployDTO.setSuccess(false);
+                    deployDetail.setErrorMsg("部署调试环境失败: " + result.getMessage());
+                }
+
+                deployDTO.setSuccess(true);
+                deployDTO.addDeployDetail(deployDetail);
+                log.info("deploy server:{}, path: {}, deploy result:{}", serverInfo.getIp() + ":" + serverInfo.getPort(), url, result);
             } catch (Exception e) {
+                deployDetail.setSuccess(false);
+                deployDTO.setSuccess(false);
+                deployDetail.setErrorMsg("部署调试环境失败: " + e.getMessage());
                 log.error("deploy server:{}, path: {}, error: {}", serverInfo.getIp() + ":" + serverInfo.getPort(), url, e.getMessage(), e);
             }
         }
-    }
 
-    private void processResult(String result) {
-        JSONObject jsonObject = new JSONObject(result);
-        if (!jsonObject.getBool("success")) {
-            throw new RuntimeException(jsonObject.getStr("message"));
-        }
+        return deployDTO;
     }
 
     @Override

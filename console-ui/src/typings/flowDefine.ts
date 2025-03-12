@@ -13,4 +13,5 @@ export interface FlowDefineInfo {
   debugUri: string;
   flowInputParams: InputParams[];
   flowOutputParams: OutputParams[];
+  flowTagIdList: number[];
 }

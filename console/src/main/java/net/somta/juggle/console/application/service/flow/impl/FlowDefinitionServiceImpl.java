@@ -40,7 +40,9 @@ import net.somta.juggle.console.domain.flow.version.vo.FlowVersionQueryVO;
 import net.somta.juggle.console.domain.parameter.ParameterEntity;
 import net.somta.juggle.console.domain.flow.definition.repository.IVariableInfoRepository;
 import net.somta.juggle.console.domain.flow.definition.vo.VariableInfoVO;
+import net.somta.juggle.console.infrastructure.mapper.flow.FlowTagRelationMapper;
 import net.somta.juggle.console.infrastructure.po.flow.FlowDefinitionInfoPO;
+import net.somta.juggle.console.infrastructure.po.flow.FlowTagRelationPO;
 import net.somta.juggle.console.interfaces.dto.flow.FlowDefinitionExportDTO;
 import net.somta.juggle.console.interfaces.dto.flow.FlowDefinitionInfoDTO;
 import net.somta.juggle.common.param.TriggerDataParam;
@@ -50,11 +52,12 @@ import net.somta.juggle.core.model.FlowResult;
 import net.somta.juggle.core.model.ServerInfo;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -73,6 +76,8 @@ public class FlowDefinitionServiceImpl implements IFlowDefinitionService {
     private IDeployMaster deployMaster;
     @Value("${camel.worker.rest.dev.port}")
     private String camelWorkerRestDevPort;
+    @Autowired
+    private FlowTagRelationMapper flowTagRelationMapper;
 
     public FlowDefinitionServiceImpl(IFlowRuntimeService flowRuntimeService, IVariableInfoRepository variableInfoRepository, IFlowInfoRepository flowRepository, IFlowDefinitionRepository flowDefinitionRepository) {
         this.flowRuntimeService = flowRuntimeService;
@@ -133,7 +138,9 @@ public class FlowDefinitionServiceImpl implements IFlowDefinitionService {
     public FlowDefinitionAO getFlowDefinitionInfo(Long flowDefinitionId) {
         FlowDefinitionAO flowDefinitionAo = flowDefinitionRepository.queryFlowDefinitionInfo(flowDefinitionId);
         List<VariableInfoVO> variableInfoVoList = variableInfoRepository.queryVariableInfoList(flowDefinitionAo.getId());
+        List<FlowTagRelationPO> flowTagRelationPOList = flowTagRelationMapper.queryByFlowInstanceIds(Arrays.asList(flowDefinitionId));
         flowDefinitionAo.setVariableInfoList(variableInfoVoList);
+        flowDefinitionAo.setFlowTagIdList(flowTagRelationPOList.stream().map(FlowTagRelationPO::getTagId).collect(Collectors.toList()));
         return flowDefinitionAo;
     }
 

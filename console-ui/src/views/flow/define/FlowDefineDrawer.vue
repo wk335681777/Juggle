@@ -2,13 +2,17 @@
 import { computed, nextTick, reactive, ref } from 'vue';
 import { FormInstance, FormRules } from 'element-plus';
 import { FlowDefineInfo } from '@/typings';
-import { flowDefineService } from '@/service';
+import { flowDefineService, flowTagService } from '@/service';
 import ResizableDrawer from "@/components/common/ResizableDrawer.vue";
 
 const flowDefineDrawerVisible = ref(false);
 const formRef = ref<FormInstance>();
 const editItem = ref<Record<string, any>>();
 const flowDefineFormValue = reactive<FlowDefineInfo>(getDefaultFlowDefine());
+
+const props = defineProps({
+  appCode: String,
+});
 
 function getDefaultFlowDefine() {
   return {
@@ -19,8 +23,18 @@ function getDefaultFlowDefine() {
     remark: '',
     flowInputParams: [],
     flowOutputParams: [],
+    flowTagIdList: [],
   };
 }
+
+const treeData = ref([]);
+
+const disabledIds = [-1, -2];
+const defaultProps = {
+  value: "id",
+  label: "name",
+  disabled: (data) => disabledIds.includes(data.id) // 禁用指定 ID
+};
 
 const rules = reactive<FormRules>({
   flowKey: [
@@ -94,6 +108,9 @@ async function open(item?: Record<string, any>) {
         flowDefineFormValue.flowKey = res.result; // 确保 flowKey 被赋值
       }
     }
+    debugger;
+    const res = await flowTagService.queryTree({appCode: props.appCode})
+    treeData.value = res.result;
   });
 }
 
@@ -129,10 +146,25 @@ defineExpose({ open });
         <el-form-item label="流程描述">
           <el-input type="textarea" v-model="flowDefineFormValue.remark" maxlength="120" />
         </el-form-item>
+        <el-form-item label="流程标签" prop="tags">
+          <el-tree-select
+              v-model="flowDefineFormValue.flowTagIdList"
+              :data="treeData"
+              node-key="id"
+              multiple
+              clearable
+              placeholder="请选择"
+              check-strictly
+              default-expand-all
+              :props="defaultProps"
+              @change="handleSelectChange"
+          />
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit">确定</el-button>
           <el-button @click="onCancel">取消</el-button>
         </el-form-item>
+
       </el-form>
     </div>
   </ResizableDrawer>

@@ -65,7 +65,7 @@ public class SuiteController {
 
     @Operation(summary = "根据ID删除套件")
     @DeleteMapping("/delete/{suiteId}")
-    public ResponseDataResult<Boolean> deleteSuite(@PathVariable Long suiteId){
+    public ResponseDataResult<Boolean> deleteSuite(@PathVariable("suiteId") Long suiteId){
         List<ApiDTO> apis = apiService.getApiListBySuiteId(suiteId);
         if(CollectionUtils.isNotEmpty(apis)){
             return ResponseDataResult.setErrorResponseResult(SuiteErrorEnum.SUITE_EXIST_API_ERROR);
@@ -103,7 +103,7 @@ public class SuiteController {
 
     @Operation(summary = "查询市场套件详情")
     @GetMapping("/market/info/{suiteId}")
-    public ResponseDataResult<SuiteMarketInfoDTO> getSuiteMarketInfo(@PathVariable Long suiteId){
+    public ResponseDataResult<SuiteMarketInfoDTO> getSuiteMarketInfo(@PathVariable("suiteId") Long suiteId){
         SuiteMarketInfoDTO suiteMarketDto = suiteService.getSuiteMarketInfo(suiteId);
         return ResponseDataResult.setResponseResult(suiteMarketDto);
     }

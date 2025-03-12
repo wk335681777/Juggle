@@ -12,6 +12,7 @@ public class FlowDefinitionContentParam {
     private String flowContent;
     private List<VariableInfoVO> flowVariables;
 
+
     public Long getId() {
         return id;
     }

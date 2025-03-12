@@ -15,6 +15,7 @@ import * as appService from './app.ts'
 import * as toolService from './tool.ts'
 import * as mockService from './mock.ts'
 import * as flowMonitorService from './flowMonitor.ts'
+import * as flowTagService from './flowTag.ts'
 
 export {
   userService,
@@ -34,4 +35,5 @@ export {
   toolService,
   mockService,
   flowMonitorService,
+  flowTagService,
 };

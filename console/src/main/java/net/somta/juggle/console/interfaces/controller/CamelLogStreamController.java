@@ -1,5 +1,7 @@
 package net.somta.juggle.console.interfaces.controller;
 
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 import net.somta.juggle.console.application.sse.SseManager;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -10,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 

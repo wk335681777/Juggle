@@ -28,11 +28,11 @@ function viewRow(row: any) {
 
 <template>
   <el-table v-loading="loading" :data="dataRows" size="large" header-cell-class-name="table-header">
-    <el-table-column prop="name" label="名称" width="180" />
+    <el-table-column prop="name" label="名称" width="220" />
     <el-table-column prop="url" label="url" width="400" />
-    <el-table-column prop="remark" label="描述" width="320" show-overflow-tooltip />
-    <el-table-column prop="updatedAt" label="修改时间" width="200" />
-    <el-table-column label="操作" width="200">
+    <el-table-column prop="remark" label="描述" width="300" show-overflow-tooltip />
+    <el-table-column prop="updatedAt" label="修改时间" width="180" />
+    <el-table-column label="操作" width="150">
       <template #default="scope">
         <el-button link type="primary" size="small" @click.prevent="viewRow(scope.row)">查看</el-button>
         <el-button link type="primary" size="small" @click.prevent="editRow(scope.row)"> 编辑 </el-button>

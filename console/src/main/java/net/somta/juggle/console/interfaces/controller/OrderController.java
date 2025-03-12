@@ -53,7 +53,7 @@ public class OrderController {
 
     @Operation(summary = "查询订单支付状态")
     @GetMapping("/getOrderPayStatus/{orderNo}")
-    public ResponseDataResult<String> getOrderPayStatus(@PathVariable String orderNo){
+    public ResponseDataResult<String> getOrderPayStatus(@PathVariable("orderNo") String orderNo){
         String bill = orderService.getOrderPayStatus(orderNo);
         return ResponseDataResult.setResponseResult(bill);
     }

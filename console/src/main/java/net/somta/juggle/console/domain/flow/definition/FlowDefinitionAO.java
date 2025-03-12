@@ -53,6 +53,8 @@ public class FlowDefinitionAO {
 
     private List<VariableInfoVO> variableInfoList;
 
+    private List<Long> flowTagIdList;
+
     public String autoFlowKey(String flowKey){
         if (flowKey == null || flowKey.isEmpty()){
             flowKey = this.flowType + "_" + RandomStringUtils.random(10, true, true);
@@ -210,5 +212,13 @@ public class FlowDefinitionAO {
 
     public void setAppCode(String appCode) {
         this.appCode = appCode;
+    }
+
+    public List<Long> getFlowTagIdList() {
+        return flowTagIdList;
+    }
+
+    public void setFlowTagIdList(List<Long> flowTagIdList) {
+        this.flowTagIdList = flowTagIdList;
     }
 }
