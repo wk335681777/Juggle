@@ -138,6 +138,8 @@ public class FlowTagServiceImpl implements IFlowTagService {
         return root;
     }
 
-    private void check
+    private void check() {
+
+    }
 
 }
