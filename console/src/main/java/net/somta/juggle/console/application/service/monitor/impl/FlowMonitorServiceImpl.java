@@ -74,6 +74,7 @@ public class FlowMonitorServiceImpl implements IFlowMonitorService {
             flowDefinitionPageParam.setPageSize(param.getPageSize());
             flowDefinitionPageParam.setPageNum(param.getPageNum());
             flowDefinitionPageParam.setFlowKey(param.getFlowKey());
+            flowDefinitionPageParam.setFlowName(param.getFlowName());
 
             PageInfo<FlowDefinitionInfoDTO> pageInfo = flowDefinitionService.getFlowDefinitionPageList(flowDefinitionPageParam);
             List<FlowDefinitionInfoDTO> flowDefinitionInfoDTOList = pageInfo.getList();

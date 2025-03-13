@@ -4,18 +4,18 @@ import net.somta.core.base.page.PageParam;
 
 public class FlowMonitorQueryParam extends PageParam {
 
-    private String name;
+    private String flowName;
     private String flowKey;
     private String appCode;
     private String contextType;
     private String ip;
 
-    public String getName() {
-        return name;
+    public String getFlowName() {
+        return flowName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFlowName(String flowName) {
+        this.flowName = flowName;
     }
 
     public String getFlowKey() {
