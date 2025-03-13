@@ -46,7 +46,7 @@ export const FlowRoutes = [
         path: 'tag',
         name: 'flow-tag',
         component: FlowTag,
-        meta: { name: '流程标签' },
+        meta: { name: '流程分组' },
         props: (route) => ({ appCode: route.params.appCode }),
       },
     ],

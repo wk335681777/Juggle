@@ -265,6 +265,7 @@ public class FlowDefinitionRepositoryImpl implements IFlowDefinitionRepository {
 
     @Override
     public List<FlowDefinitionInfoVO> queryFlowDefinitionList(FlowDefinitionInfoQueryVO flowDefinitionInfoQueryVO) {
+        flowDefinitionInfoQueryVO.setUserId(IdentityContext.getIdentity().getUserId());
         List<FlowDefinitionInfoVO> flowDefinitionInfoVOList = flowDefinitionMapper.queryFlowDefinitionList(flowDefinitionInfoQueryVO);
         List<Long> flowDefinitionIdList = new ArrayList<>();
         Map<Long, FlowDefinitionInfoVO> flowDefinitionInfoVOMap = new HashMap<>();

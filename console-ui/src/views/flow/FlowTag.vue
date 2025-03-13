@@ -27,6 +27,7 @@ const dataRows = ref<Record<string, any>[]>([]);
 const loading = ref(false);
 const drawerRef = ref();
 const copyDrawerRef = ref();
+const filterRef = ref();
 const selectedRows = ref([]);
 const isLoading = ref(false);
 const fileList = ref([]);
@@ -72,6 +73,7 @@ function initPage() {
 // queryFlowDefinePage();
 
 function onSearch(param: typeof filter.value) {
+  debugger
   filter.value = param;
   onPageChange(1);
 }
@@ -82,7 +84,6 @@ async function queryFlowDefinePage() {
     pageSize: pageSize.value,
     pageNum: pageNum.value,
     appCode: props.appCode,
-    tagPath: selectedNode.value.path,
     ...filter.value,
   });
   if (res.success) {
@@ -295,6 +296,7 @@ const dropdown = ref();
 function handleNodeClick(node) {
   console.log("选择的分类:", node);
   selectedNode.value = node;
+  filterRef.value.changeTag(node.path);
   queryFlowDefinePage();
 }
 
@@ -423,7 +425,7 @@ async function refreshTag() {
       <div class="page-flow-define" >
         <el-container style="height: 80vh;">
           <el-header class="page-header">
-            <FlowDefineFilter @search="onSearch" />
+            <FlowDefineFilter ref="filterRef" :treeData="treeData" @search="onSearch" />
             <el-button :icon="Plus" type="primary" @click="openflowDefineAdd">新建</el-button>
             <el-button :icon="Download" @click="exportFlowDefine">导出</el-button>
             <el-button :icon="Upload" @click="openImportDialog">导入</el-button>

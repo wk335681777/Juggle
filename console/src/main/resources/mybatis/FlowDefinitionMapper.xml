@@ -28,7 +28,11 @@
             and flow_key = #{flowKey}
         </if>
         <if test="tagPath != null and tagPath != ''">
-          and  exists (select 1 from t_flow_tag_relation r inner join t_flow_tag t on r.tag_id = t.id where r.flow_definition_id=d.id and t.path like concat(#{tagPath},"%"))
+          and  exists (
+            select 1 from t_flow_tag_relation r
+            inner join t_flow_tag t on r.tag_id = t.id and (t.access_type = 'public' or (t.access_type = 'private' and t.created_by = #{userId}))
+            where r.flow_definition_id=d.id and t.path like concat(#{tagPath},"%")
+          )
         </if>
         and app_code = #{appCode}
         ORDER BY updated_at DESC

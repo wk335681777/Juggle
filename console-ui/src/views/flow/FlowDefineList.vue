@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { FlowDefineTable, FlowDefineDrawer, FlowDefineFilter } from './define';
-import { flowDefineService, flowVersionService, commonService } from '@/service';
+import {flowDefineService, flowVersionService, flowTagService } from '@/service';
 import { reactive, ref } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { Plus, Download, Upload } from '@element-plus/icons-vue';
@@ -30,6 +30,7 @@ const copyDrawerRef = ref();
 const selectedRows = ref([]);
 const isLoading = ref(false);
 const fileList = ref([]);
+const treeData = ref([]);
 
 const filter = ref<{
   flowName?: string;
@@ -240,13 +241,24 @@ async function onImportFlowDefine() {
     await queryFlowDefinePage();
   }
 }
+
+async function queryTagTree() {
+  const res = await flowTagService.queryTree({
+    appCode: props.appCode
+  });
+  if (res.success) {
+    treeData.value = res.result;
+  }
+}
+
+queryTagTree();
 </script>
 
 <template>
   <div class="page-flow-define">
     <el-container>
       <el-header class="page-header">
-        <FlowDefineFilter @search="onSearch" />
+        <FlowDefineFilter :treeData="treeData" @search="onSearch" />
         <el-button :icon="Plus" type="primary" @click="openflowDefineAdd">新建</el-button>
         <el-button :icon="Download" @click="exportFlowDefine">导出</el-button>
         <el-button :icon="Upload" @click="openImportDialog">导入</el-button>

@@ -21,6 +21,8 @@ public class FlowDefinitionInfoQueryVO {
 
     private String tagPath;
 
+    private Long userId;
+
     public String getFlowName() {
         return flowName;
     }
@@ -59,5 +61,13 @@ public class FlowDefinitionInfoQueryVO {
 
     public void setTagPath(String tagPath) {
         this.tagPath = tagPath;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }
