@@ -42,7 +42,7 @@ public class FlowOpenController {
      */
     @Operation(summary = "触发单参数流程")
     @GetMapping("/trigger/{flowVersion}/{flowKey}")
-    public ResponseDataResult<FlowResult> triggerFlow(@PathVariable String flowVersion, @PathVariable String flowKey, @RequestParam Map<String,Object> flowData){
+    public ResponseDataResult<FlowResult> triggerFlow(@PathVariable("flowVersion") String flowVersion, @PathVariable("flowKey") String flowKey, @RequestParam Map<String,Object> flowData){
         if(StringUtils.isEmpty(flowKey)){
             return ResponseDataResult.setErrorResponseResult(FLOW_KEY_IS_EMPTY);
         }
@@ -66,7 +66,7 @@ public class FlowOpenController {
      */
     @Operation(summary = "触发流程")
     @PostMapping("/trigger/{flowVersion}/{flowKey}")
-    public ResponseDataResult<FlowResult> triggerFlow(@PathVariable String flowVersion, @PathVariable String flowKey, @RequestBody TriggerDataParam triggerData){
+    public ResponseDataResult<FlowResult> triggerFlow(@PathVariable("flowVersion") String flowVersion, @PathVariable("flowKey") String flowKey, @RequestBody TriggerDataParam triggerData){
         if(StringUtils.isEmpty(flowKey)){
             return ResponseDataResult.setErrorResponseResult(FLOW_KEY_IS_EMPTY);
         }
@@ -84,7 +84,7 @@ public class FlowOpenController {
 
     @Operation(summary = "获取异步流程结果")
     @GetMapping("/getAsyncFlowResult/{flowInstanceId}")
-    public ResponseDataResult<Map<String,Object>> getAsyncFlowResult(@PathVariable String flowInstanceId){
+    public ResponseDataResult<Map<String,Object>> getAsyncFlowResult(@PathVariable("flowInstanceId") String flowInstanceId){
         Map<String,Object> flowResult = flowRuntimeService.getAsyncFlowResult(flowInstanceId);
         return ResponseDataResult.setResponseResult(flowResult);
     }

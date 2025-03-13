@@ -68,7 +68,7 @@ public class ApiController {
 
     @Operation(summary = "根据ID删除接口")
     @DeleteMapping("/delete/{apiId}")
-    public ResponseDataResult<Boolean> deleteApi(@PathVariable Long apiId){
+    public ResponseDataResult<Boolean> deleteApi(@PathVariable("apiId") Long apiId){
         apiService.deleteApi(apiId);
         return ResponseDataResult.setResponseResult();
     }
@@ -86,13 +86,13 @@ public class ApiController {
 
     @Operation(summary = "查询接口详情")
     @GetMapping("/info/{apiId}")
-    public ResponseDataResult<ApiInfoDTO> getApi(@PathVariable Long apiId){
+    public ResponseDataResult<ApiInfoDTO> getApi(@PathVariable("apiId") Long apiId){
         ApiInfoDTO apiInfoDTO = apiService.getApiInfo(apiId);
         return ResponseDataResult.setResponseResult(apiInfoDTO);
     }
     @Operation(summary = "根据编码查询接口详情")
     @GetMapping("/info/code/{apiCode}")
-    public ResponseDataResult<ApiInfoDTO> getApiByCode(@PathVariable String apiCode){
+    public ResponseDataResult<ApiInfoDTO> getApiByCode(@PathVariable("apiCode") String apiCode){
         ApiInfoDTO apiInfoDTO = apiService.getApiInfoByCode(apiCode);
         return ResponseDataResult.setResponseResult(apiInfoDTO);
     }
@@ -100,14 +100,14 @@ public class ApiController {
 
     @Operation(summary = "根据套件ID查询接口列表")
     @PostMapping("/getApiListBySuiteId/{suiteId}")
-    public ResponseDataResult<List<ApiDTO>> getApiListBySuiteId(@PathVariable Long suiteId){
+    public ResponseDataResult<List<ApiDTO>> getApiListBySuiteId(@PathVariable("suiteId") Long suiteId){
         List<ApiDTO> apiList = apiService.getApiListBySuiteId(suiteId);
         return ResponseDataResult.setResponseResult(apiList);
     }
 
     @Operation(summary = "根据套件编码查询接口列表")
     @PostMapping("/getApiListBySuiteCode/{suiteCode}")
-    public ResponseDataResult<List<ApiDTO>> getApiListBySuiteId(@PathVariable String suiteCode){
+    public ResponseDataResult<List<ApiDTO>> getApiListBySuiteId(@PathVariable("suiteCode") String suiteCode){
         List<ApiDTO> apiList = apiService.getApiListBySuiteCode(suiteCode);
         return ResponseDataResult.setResponseResult(apiList);
     }
@@ -121,7 +121,7 @@ public class ApiController {
 
     @Operation(summary = "调试接口")
     @PostMapping("/debug/{apiId}")
-    public ResponseDataResult<Map<String,Object>> debugApi(@PathVariable Long apiId,@RequestBody ApiDebugParam apiDebugParam){
+    public ResponseDataResult<Map<String,Object>> debugApi(@PathVariable("apiId") Long apiId,@RequestBody ApiDebugParam apiDebugParam){
         Map<String,Object> result = apiService.debugApi(apiId,apiDebugParam);
         return ResponseDataResult.setResponseResult(result);
     }

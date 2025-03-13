@@ -15,7 +15,7 @@ import net.somta.juggle.console.interfaces.param.app.AppUpdateParam;
 import net.somta.juggle.console.interfaces.param.mock.MockQueryParam;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.List;
 
 import static net.somta.juggle.common.constants.ApplicationConstants.JUGGLE_SERVER_VERSION;
@@ -38,7 +38,7 @@ public class MockController {
 
     @Operation(summary = "根据ID删除")
     @DeleteMapping("/delete/{id}")
-    public ResponseDataResult<Boolean> deleteObject(@PathVariable Long id){
+    public ResponseDataResult<Boolean> deleteObject(@PathVariable("id") Long id){
         mockService.delete(id);
         return ResponseDataResult.setResponseResult();
     }
@@ -52,7 +52,7 @@ public class MockController {
 
     @Operation(summary = "查询详情")
     @GetMapping("/info/{id}")
-    public ResponseDataResult<MockDTO> getObject(@PathVariable Long id){
+    public ResponseDataResult<MockDTO> getObject(@PathVariable("id") Long id){
         MockDTO mockDTO = mockService.get(id);
         return ResponseDataResult.setResponseResult(mockDTO);
     }

@@ -16,6 +16,8 @@ along with this program; if not, visit <https://www.gnu.org/licenses/gpl-3.0.htm
 */
 package net.somta.juggle.console.interfaces.interceptor;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import net.somta.core.helper.JsonSerializeHelper;
 import net.somta.core.protocol.ResponseDataResult;
 import net.somta.juggle.common.identity.IdentityContext;
@@ -31,8 +33,6 @@ import org.apache.hc.core5.net.URLEncodedUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.AsyncHandlerInterceptor;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import java.net.URI;
 import java.net.URISyntaxException;

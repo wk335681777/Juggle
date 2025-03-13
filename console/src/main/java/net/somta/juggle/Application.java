@@ -19,12 +19,14 @@ package net.somta.juggle;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
 
 /**
  * @author husong
  */
 @SpringBootApplication(scanBasePackages = "net.somta.juggle")
+//@EnableFeignClients(basePackages = {"com.pkh.cloud.auth.sdk.core"})
 public class Application {
     
     public static void main(String[] args) {

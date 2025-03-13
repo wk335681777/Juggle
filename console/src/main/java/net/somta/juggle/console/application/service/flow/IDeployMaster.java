@@ -1,14 +1,15 @@
 package net.somta.juggle.console.application.service.flow;
 
+import net.somta.juggle.console.interfaces.dto.flow.DeployDTO;
 import net.somta.juggle.core.model.ServerInfo;
 
 import java.util.List;
 
 public interface IDeployMaster {
 
-    void deployRouteDev(Long flowId);
+    DeployDTO deployRouteDev(Long flowId);
 
-    void deployRouteProd(Long flowVersionId);
+    DeployDTO deployRouteProd(Long flowVersionId);
 
     void stopRouteDev(Long flowId);
 

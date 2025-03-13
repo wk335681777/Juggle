@@ -1,6 +1,7 @@
 package net.somta.juggle.console.interfaces.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.annotation.Resource;
 import net.somta.core.protocol.ResponseDataResult;
 import net.somta.core.protocol.ResponsePaginationDataResult;
 import net.somta.juggle.console.application.service.IAppService;
@@ -12,7 +13,7 @@ import net.somta.juggle.console.interfaces.param.app.AppQueryParam;
 import net.somta.juggle.console.interfaces.param.app.AppUpdateParam;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
+//import jakarta.annotation.Resource;
 import java.util.List;
 
 import static net.somta.juggle.common.constants.ApplicationConstants.JUGGLE_SERVER_VERSION;
@@ -39,7 +40,7 @@ public class AppController {
 
     @Operation(summary = "根据ID删除")
     @DeleteMapping("/delete/{id}")
-    public ResponseDataResult<Boolean> deleteObject(@PathVariable Long id){
+    public ResponseDataResult<Boolean> deleteObject(@PathVariable("id") Long id){
         appService.delete(id);
         return ResponseDataResult.setResponseResult();
     }
@@ -53,7 +54,7 @@ public class AppController {
 
     @Operation(summary = "查询详情")
     @GetMapping("/info/{id}")
-    public ResponseDataResult<AppVO> getObject(@PathVariable Long id){
+    public ResponseDataResult<AppVO> getObject(@PathVariable("id") Long id){
         AppVO appVO = appService.get(id);
         return ResponseDataResult.setResponseResult(appVO);
     }

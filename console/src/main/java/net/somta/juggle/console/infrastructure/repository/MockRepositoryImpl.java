@@ -6,7 +6,7 @@ import net.somta.juggle.console.infrastructure.po.MockPO;
 import net.somta.juggle.console.interfaces.param.mock.MockQueryParam;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.List;
 
 @Component

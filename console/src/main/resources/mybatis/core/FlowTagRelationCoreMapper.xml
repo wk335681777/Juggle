@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.somta.juggle.console.infrastructure.mapper.flow.FlowTagRelationMapper" >
+<!-- Result Map-->
+<resultMap id="BaseResultMap" type="net.somta.juggle.console.infrastructure.po.flow.FlowTagRelationPO" >
+	<result column="id" property="id"/>
+	<result column="app_code" property="appCode"/>
+	<result column="tag_id" property="tagId"/>
+	<result column="flow_definition_id" property="flowDefinitionId"/>
+	<result column="deleted" property="deleted"/>
+	<result column="created_at" property="createdAt"/>
+	<result column="created_by" property="createdBy"/>
+	<result column="updated_at" property="updatedAt"/>
+	<result column="updated_by" property="updatedBy"/>
+</resultMap>
+
+<sql id="Example_Where_Clause">
+	where app_code = #{appCode}
+	<if test="tagId != null">
+		and tag_id = #{tagId}
+	</if>
+	<if test="flowDefinitionId != null">
+		and flow_definition_id = #{flowDefinitionId}
+	</if>
+</sql>
+       
+<!-- t_object table all fields -->
+<sql id="Base_Column_List" >
+	id, app_code, tag_id, flow_definition_id, created_at, created_by, updated_at, updated_by
+</sql>
+
+<insert id="add" parameterType="net.somta.juggle.console.infrastructure.po.flow.FlowTagRelationPO" >
+	insert into t_flow_tag_relation (app_code, tag_id, flow_definition_id, created_at, created_by, updated_at, updated_by)
+	values (#{appCode},#{tagId},#{flowDefinitionId},now(),#{createdBy},now(),#{updatedBy});
+</insert>
+
+<delete id="deleteById" parameterType="java.lang.Long">
+ delete from t_flow_tag_relation where id=#{id}
+</delete>
+
+<update id="update" parameterType="net.somta.juggle.console.infrastructure.po.flow.FlowTagRelationPO" >
+	update t_flow_tag_relation set
+	<trim  suffixOverrides="," >
+		<if test="tagId != null">
+			tag_id=#{tagId},
+		</if>
+		<if test="flowDefinitionId != null">
+			flow_definition_id=#{flowDefinitionId},
+		</if>
+		updated_at=now(),
+		<if test="updatedBy != null">
+			updated_by=#{updatedBy},
+		</if>
+	</trim> where id=#{id}
+</update>
+
+<select id="queryById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+	select <include refid="Base_Column_List" />
+	from t_flow_tag_relation where id = #{id}
+</select>
+
+<select id="queryListCount" resultType="java.lang.Long" parameterType="net.somta.juggle.console.interfaces.param.flow.FlowTagRelationQueryParam">
+	select count(*)
+	from t_flow_tag_relation
+	<include refid="Example_Where_Clause"/>
+</select>
+
+<select id="queryByList" resultMap="BaseResultMap" parameterType="net.somta.juggle.console.interfaces.param.flow.FlowTagRelationQueryParam">
+	select <include refid="Base_Column_List" />
+	from t_flow_tag_relation
+	<include refid="Example_Where_Clause"/>
+</select>
+
+</mapper>   

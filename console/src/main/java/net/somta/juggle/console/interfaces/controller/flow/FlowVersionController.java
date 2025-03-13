@@ -42,7 +42,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.Map;
 
 import static net.somta.juggle.common.constants.ApplicationConstants.JUGGLE_SERVER_VERSION;
@@ -105,7 +105,7 @@ public class FlowVersionController {
 
     @Operation(summary = "删除流程版本")
     @DeleteMapping("/delete/{flowVersionId}")
-    public ResponseDataResult<Boolean> deleteFlowVersion(@PathVariable Long flowVersionId){
+    public ResponseDataResult<Boolean> deleteFlowVersion(@PathVariable("flowVersionId") Long flowVersionId){
         FlowVersionAO flowVersionAo = flowVersionService.getFlowVersionInfo(flowVersionId);
         if(flowVersionAo == null){
             return ResponseDataResult.setErrorResponseResult(FLOW_NOT_EXIST);
@@ -136,7 +136,7 @@ public class FlowVersionController {
 
     @Operation(summary = "查询流程的最新部署版本")
     @GetMapping("/latest/{flowKey}")
-    public ResponseDataResult<String> getLatestDeployVersion(@PathVariable String flowKey){
+    public ResponseDataResult<String> getLatestDeployVersion(@PathVariable("flowKey") String flowKey){
         String currentLatestVersion = flowVersionService.getLatestDeployVersion(flowKey);
         if(StringUtils.isEmpty(currentLatestVersion)){
             return ResponseDataResult.setResponseResult("v1");
@@ -154,7 +154,7 @@ public class FlowVersionController {
      */
     @Operation(summary = "触发流程")
     @PostMapping("/trigger/{flowVersion}/{flowKey}")
-    public ResponseDataResult<FlowResult> triggerFlow(@PathVariable String flowVersion, @PathVariable String flowKey, @RequestBody TriggerDataParam triggerData){
+    public ResponseDataResult<FlowResult> triggerFlow(@PathVariable("flowVersion") String flowVersion, @PathVariable("flowKey") String flowKey, @RequestBody TriggerDataParam triggerData){
         if(StringUtils.isEmpty(flowKey)){
             return ResponseDataResult.setErrorResponseResult(FLOW_KEY_IS_EMPTY);
         }
@@ -173,14 +173,14 @@ public class FlowVersionController {
 
     @Operation(summary = "获取异步流程结果")
     @GetMapping("/getAsyncFlowResult/{flowInstanceId}")
-    public ResponseDataResult<Map<String,Object>> getAsyncFlowResult(@PathVariable String flowInstanceId){
+    public ResponseDataResult<Map<String,Object>> getAsyncFlowResult(@PathVariable("flowInstanceId") String flowInstanceId){
         Map<String,Object> flowResult = flowRuntimeService.getAsyncFlowResult(flowInstanceId);
         return ResponseDataResult.setResponseResult(flowResult);
     }
 
     @Operation(summary = "查询流程定义详情")
     @GetMapping("/info/{flowVersionId}")
-    public ResponseDataResult<FlowDefinitionInfoDTO> getFlowDefinitionInfo(@PathVariable Long flowVersionId){
+    public ResponseDataResult<FlowDefinitionInfoDTO> getFlowDefinitionInfo(@PathVariable("flowVersionId") Long flowVersionId){
         FlowVersionAO flowVersionAO = flowVersionService.getFlowVersionInfo(flowVersionId);
         FlowDefinitionInfoDTO flowDefinitionInfoDto = new FlowDefinitionInfoDTO();
         BeanUtils.copyProperties(flowVersionAO,flowDefinitionInfoDto);

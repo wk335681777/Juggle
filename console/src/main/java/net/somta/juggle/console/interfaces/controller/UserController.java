@@ -18,6 +18,7 @@ package net.somta.juggle.console.interfaces.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import net.somta.core.protocol.ResponseDataResult;
 import net.somta.juggle.common.identity.IdentityVO;
 import net.somta.juggle.common.utils.JwtUtil;
@@ -31,7 +32,6 @@ import net.somta.juggle.console.application.service.IUserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 

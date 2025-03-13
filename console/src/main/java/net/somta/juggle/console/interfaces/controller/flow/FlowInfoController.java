@@ -47,7 +47,7 @@ public class FlowInfoController {
 
     @Operation(summary = "删除流程")
     @DeleteMapping("/delete/{flowId}")
-    public ResponseDataResult<Boolean> deleteFlowInfo(@PathVariable Long flowId){
+    public ResponseDataResult<Boolean> deleteFlowInfo(@PathVariable("flowId") Long flowId){
         Boolean result = flowInfoService.deleteFlowInfo(flowId);
         return ResponseDataResult.setResponseResult(result);
     }

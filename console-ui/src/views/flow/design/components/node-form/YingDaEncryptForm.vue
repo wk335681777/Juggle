@@ -16,6 +16,7 @@ type YDa_SM4Data = RawData & {
   encryptMode: string;
   ak: string;
   sk: string;
+  path: string;
 };
 
 function getDefaultData() {
@@ -34,6 +35,7 @@ function getDefaultData() {
     sm4EncryptType: '',
     ak: '',
     sk: '',
+    path: '',
   };
 }
 
@@ -94,6 +96,7 @@ watch(() => nodeData.value.encryptMode, (newVal) => {
   nodeData.value.sm2PrivateKey = '';
   nodeData.value.encodingType = '';
   nodeData.value.sm4EncryptType = '';
+  nodeData.value.path = '';
 });
 </script>
 
@@ -147,7 +150,9 @@ watch(() => nodeData.value.encryptMode, (newVal) => {
           <el-option key="CBC" label="CBC" value="CBC" />
         </el-select>
       </el-form-item>
-
+      <el-form-item label="Path" required v-if="nodeData.encryptMode === '加密'" prop="path" :rules="[{ required: true, message: '不能为空', trigger: 'blur' }]">
+        <el-input v-model="nodeData.path" placeholder="请输入"></el-input>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit">确定</el-button>
         <el-button @click="onCancel">取消</el-button>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.somta.juggle.console.infrastructure.mapper.flow.FlowTagRelationMapper" >
+	<delete id="deleteFlowTagByFlowDefinitionId">
+		delete from t_flow_tag_relation
+		where flow_definition_id = #{flowDefinitionId}
+		  and app_code = #{appCode}
+	</delete>
+
+	<delete id="deleteFlowTagByFlowTagId">
+		delete from t_flow_tag_relation
+		where tag_id = #{flowTagId}
+		  and app_code = #{appCode}
+	</delete>
+
+	<insert id="batchAdd">
+		insert into t_flow_tag_relation (app_code, tag_id, flow_definition_id, created_at, created_by, updated_at, updated_by)
+		values
+		<foreach collection ="flowTagRelationPOList" item="item" separator =",">
+			(#{item.appCode},#{item.tagId},#{item.flowDefinitionId},now(),#{item.createdBy},now(),#{item.updatedBy})
+		</foreach>
+	</insert>
+
+	<select id="queryByFlowInstanceIds" resultType="net.somta.juggle.console.infrastructure.po.flow.FlowTagRelationPO">
+		select
+			id, app_code, tag_id, flow_definition_id, created_at, created_by, updated_at, updated_by
+		from t_flow_tag_relation
+		where flow_definition_id in
+		<foreach collection ="flowDefinitionIdList" item="item" separator ="," open="(" close=")">
+			#{item}
+		</foreach>
+	</select>
+</mapper>

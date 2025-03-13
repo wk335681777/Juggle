@@ -4,6 +4,7 @@ import FlowVersionList from './FlowVersionList.vue';
 import FlowDebug from './FlowDebug.vue';
 import FlowDebug2 from './FlowDebug2.vue';
 import RouterNest from '@/views/RouterNest.vue';
+import FlowTag from './FlowTag.vue';
 
 export const FlowRoutes = [
   {
@@ -40,6 +41,13 @@ export const FlowRoutes = [
         meta: { name: '流程调试' },
         beforeRouteLeave(to, from, next) {
         },
+      },
+      {
+        path: 'tag',
+        name: 'flow-tag',
+        component: FlowTag,
+        meta: { name: '流程标签' },
+        props: (route) => ({ appCode: route.params.appCode }),
       },
     ],
   },

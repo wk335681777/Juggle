@@ -11,7 +11,7 @@ import net.somta.juggle.console.interfaces.param.mock.MockQueryParam;
 import net.somta.juggle.console.interfaces.param.monitor.flowMonitor.FlowMonitorQueryParam;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import java.util.List;
 

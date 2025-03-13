@@ -61,7 +61,7 @@ public class ObjectController {
 
     @Operation(summary = "根据ID删除对象")
     @DeleteMapping("/delete/{objectId}")
-    public ResponseDataResult<Boolean> deleteObject(@PathVariable Long objectId){
+    public ResponseDataResult<Boolean> deleteObject(@PathVariable("objectId") Long objectId){
         objectService.deleteObject(objectId);
         return ResponseDataResult.setResponseResult();
     }
@@ -80,7 +80,7 @@ public class ObjectController {
 
     @Operation(summary = "查询对象详情")
     @GetMapping("/info/{objectId}")
-    public ResponseDataResult<ObjectInfoDTO> getObject(@PathVariable Long objectId){
+    public ResponseDataResult<ObjectInfoDTO> getObject(@PathVariable("objectId") Long objectId){
         ObjectInfoDTO objectInfoDto = objectService.getObjectInfo(objectId);
         return ResponseDataResult.setResponseResult(objectInfoDto);
     }

@@ -8,3 +8,4 @@ export * from './parameter';
 export * from './suite';
 export * from './template.ts';
 export * from './mock.ts';
+export * from './flowTag.ts'

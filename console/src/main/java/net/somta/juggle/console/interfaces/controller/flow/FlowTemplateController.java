@@ -45,7 +45,7 @@ public class FlowTemplateController {
 
     @Operation(summary = "删除流程模板")
     @DeleteMapping("/delete/{templateId}")
-    public ResponseDataResult<Boolean> deleteFlowTemplate(@PathVariable Long templateId){
+    public ResponseDataResult<Boolean> deleteFlowTemplate(@PathVariable("templateId") Long templateId){
         Boolean result = flowTemplateService.deleteFlowTemplate(templateId);
         return ResponseDataResult.setResponseResult(result);
     }
@@ -65,7 +65,7 @@ public class FlowTemplateController {
 
     @Operation(summary = "使用流程模板")
     @DeleteMapping("/apply/{templateId}")
-    public ResponseDataResult<Long> applyFlowTemplate(@PathVariable Long templateId){
+    public ResponseDataResult<Long> applyFlowTemplate(@PathVariable("templateId") Long templateId){
         Long flowDefinitionId = flowTemplateService.applyFlowTemplate(templateId);
         return ResponseDataResult.setResponseResult(flowDefinitionId);
     }

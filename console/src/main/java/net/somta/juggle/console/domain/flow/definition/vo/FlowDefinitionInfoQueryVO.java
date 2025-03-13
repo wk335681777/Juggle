@@ -19,6 +19,8 @@ public class FlowDefinitionInfoQueryVO {
 
     private String appCode;
 
+    private String tagPath;
+
     public String getFlowName() {
         return flowName;
     }
@@ -49,5 +51,13 @@ public class FlowDefinitionInfoQueryVO {
 
     public void setFlowKey(String flowKey) {
         this.flowKey = flowKey;
+    }
+
+    public String getTagPath() {
+        return tagPath;
+    }
+
+    public void setTagPath(String tagPath) {
+        this.tagPath = tagPath;
     }
 }

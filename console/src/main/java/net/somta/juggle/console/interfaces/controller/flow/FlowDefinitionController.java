@@ -24,6 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.PageInfo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import net.somta.core.protocol.ResponseDataResult;
 import net.somta.core.protocol.ResponsePaginationDataResult;
 import net.somta.juggle.common.param.TriggerDataParam;
@@ -33,6 +34,7 @@ import net.somta.juggle.console.application.service.flow.IFlowDefinitionService;
 import net.somta.juggle.console.domain.flow.definition.FlowDefinitionAO;
 import net.somta.juggle.console.domain.flow.definition.enums.FlowDefinitionErrorEnum;
 import net.somta.juggle.console.exception.BusinessException;
+import net.somta.juggle.console.interfaces.dto.flow.DeployDTO;
 import net.somta.juggle.console.interfaces.dto.flow.FlowDefinitionExportDTO;
 import net.somta.juggle.console.interfaces.dto.flow.FlowDefinitionInfoDTO;
 import net.somta.juggle.console.interfaces.param.flow.definition.*;
@@ -44,13 +46,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -72,9 +73,9 @@ public class FlowDefinitionController {
 
     private final IFlowDefinitionService flowDefinitionService;
     private final ObjectMapper objectMapper;
-    @Resource
+    @Autowired
     private IDeployMaster iDeployMaster;
-    @Resource
+    @Autowired
     private RestTemplate restTemplate;
 
     public FlowDefinitionController(IFlowDefinitionService flowDefinitionService,ObjectMapper objectMapper) {
@@ -89,7 +90,7 @@ public class FlowDefinitionController {
      */
     @Operation(summary = "创建流程定义")
     @PostMapping("/{appCode}/add")
-    public ResponseDataResult<Boolean> addFlowDefinition(@PathVariable String appCode, @RequestBody FlowDefinitionAddParam flowDefinitionAddParam) {
+    public ResponseDataResult<Boolean> addFlowDefinition(@PathVariable("appCode") String appCode, @RequestBody FlowDefinitionAddParam flowDefinitionAddParam) {
         if (flowDefinitionAddParam == null) {
             return ResponseDataResult.setErrorResponseResult(FlowDefinitionErrorEnum.FLOW_PARAM_ERROR);
         }
@@ -116,7 +117,7 @@ public class FlowDefinitionController {
      */
     @Operation(summary = "删除流程定义")
     @DeleteMapping("/delete/{flowDefinitionId}")
-    public ResponseDataResult<Boolean> deleteFlowDefinition(@PathVariable Long flowDefinitionId){
+    public ResponseDataResult<Boolean> deleteFlowDefinition(@PathVariable("flowDefinitionId") Long flowDefinitionId){
         Boolean result = flowDefinitionService.deleteFlowDefinition(flowDefinitionId);
         return ResponseDataResult.setResponseResult(result);
     }
@@ -143,12 +144,13 @@ public class FlowDefinitionController {
         if(flowDefinitionContentParam == null){
             return ResponseDataResult.setErrorResponseResult(FLOW_PARAM_ERROR);
         }
+
         Boolean result = flowDefinitionService.saveFlowDefinitionContent(flowDefinitionContentParam);
         try {
-//            String url = "http://localhost:30888/router/buildNode?id=" + flowDefinitionContentParam.getId() + "&env=DEV";
-//            String response = HttpUtil.get(url);
-            iDeployMaster.deployRouteDev(flowDefinitionContentParam.getId());
-//            logger.info("buildNode result: {}", response);
+            DeployDTO deployDTO = iDeployMaster.deployRouteDev(flowDefinitionContentParam.getId());
+            if (!deployDTO.isSuccess()) {
+                return ResponseDataResult.setErrorResponseResult(FLOW_PARAM_ERROR.getErrorCode(), deployDTO.getMessage());
+            }
             return ResponseDataResult.setResponseResult(result);
         } catch (Throwable e) {
             logger.error("buildNode error", e);
@@ -158,7 +160,7 @@ public class FlowDefinitionController {
 
     @Operation(summary = "查询流程定义详情")
     @GetMapping("/info/{flowDefinitionId}")
-    public ResponseDataResult<FlowDefinitionInfoDTO> getFlowDefinitionInfo(@PathVariable Long flowDefinitionId){
+    public ResponseDataResult<FlowDefinitionInfoDTO> getFlowDefinitionInfo(@PathVariable("flowDefinitionId") Long flowDefinitionId){
         FlowDefinitionAO flowDefinitionAo = flowDefinitionService.getFlowDefinitionInfo(flowDefinitionId);
         FlowDefinitionInfoDTO flowDefinitionInfoDto = IFlowDefinitionAssembler.IMPL.aoToDto(flowDefinitionAo);
         return ResponseDataResult.setResponseResult(flowDefinitionInfoDto);
@@ -166,7 +168,7 @@ public class FlowDefinitionController {
 
     @Operation(summary = "查询流程定义debug详情")
     @GetMapping("/debugInfo/{flowDefinitionId}")
-    public ResponseDataResult<FlowDefinitionInfoDTO> getDebugInfo(@PathVariable Long flowDefinitionId){
+    public ResponseDataResult<FlowDefinitionInfoDTO> getDebugInfo(@PathVariable("flowDefinitionId") Long flowDefinitionId){
         FlowDefinitionInfoDTO flowDefinitionInfoDTO = flowDefinitionService.getDebugInfo(flowDefinitionId);
         return ResponseDataResult.setResponseResult(flowDefinitionInfoDTO);
     }
@@ -179,7 +181,7 @@ public class FlowDefinitionController {
      */
     @Operation(summary = "获取流程定义分页列表")
     @PostMapping("/{appCode}/page")
-    public ResponsePaginationDataResult<FlowDefinitionInfoDTO> getFlowDefinitionPageList(@PathVariable String appCode, @RequestBody FlowDefinitionPageParam flowDefinitionPageParam){
+    public ResponsePaginationDataResult<FlowDefinitionInfoDTO> getFlowDefinitionPageList(@PathVariable("appCode") String appCode, @RequestBody FlowDefinitionPageParam flowDefinitionPageParam){
         flowDefinitionPageParam.setAppCode(appCode);
         PageInfo pageInfo = flowDefinitionService.getFlowDefinitionPageList(flowDefinitionPageParam);
         return ResponsePaginationDataResult.setPaginationDataResult(pageInfo.getTotal(),pageInfo.getList());
@@ -192,7 +194,7 @@ public class FlowDefinitionController {
      */
     @Operation(summary = "调试流程")
     @PostMapping("/debug/{flowKey}")
-    public ResponseDataResult<FlowResult> debugFlow(@PathVariable String flowKey, @RequestBody TriggerDataParam triggerData){
+    public ResponseDataResult<FlowResult> debugFlow(@PathVariable("flowKey") String flowKey, @RequestBody TriggerDataParam triggerData){
 //        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 //        if(StringUtils.isEmpty(flowKey)){
 //            return ResponseDataResult.setErrorResponseResult(FLOW_KEY_IS_EMPTY);
@@ -317,7 +319,7 @@ public class FlowDefinitionController {
     }
 
     @PostMapping("/{appCode}/import")
-    public ResponseDataResult<Void> uploadFile(@PathVariable String appCode, @RequestParam("file") MultipartFile file) {
+    public ResponseDataResult<Void> uploadFile(@PathVariable("appCode") String appCode, @RequestParam("file") MultipartFile file) {
         try {
             // 获取文件名
             String fileName = file.getOriginalFilename();
