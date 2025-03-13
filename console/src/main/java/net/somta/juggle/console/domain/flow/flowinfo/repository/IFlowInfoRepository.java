@@ -1,6 +1,5 @@
 package net.somta.juggle.console.domain.flow.flowinfo.repository;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import net.somta.juggle.console.domain.flow.FlowParametersInfoAO;
 import net.somta.juggle.console.domain.flow.flowinfo.FlowInfoAO;
 import net.somta.juggle.console.domain.flow.flowinfo.vo.FlowInfoQueryVO;
