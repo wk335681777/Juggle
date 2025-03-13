@@ -25,4 +25,8 @@ public interface IFlowInfoService {
 
     Boolean saveParamsFlowInfo(FlowInfoSaveParam flowInfoSaveParam);
 
+    PageInfo getFlowInfoParamsPageList(FlowInfoSaveParam flowInfoSaveParam);
+
+    Boolean deleteParamInfo(Long id);
+
 }

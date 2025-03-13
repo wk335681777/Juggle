@@ -26,6 +26,7 @@ import net.somta.juggle.console.domain.flow.FlowParametersInfoAO;
 import net.somta.juggle.console.domain.flow.flowinfo.FlowInfoAO;
 import net.somta.juggle.console.domain.flow.flowinfo.repository.IFlowInfoRepository;
 import net.somta.juggle.console.application.service.flow.IFlowInfoService;
+import net.somta.juggle.console.domain.flow.flowinfo.vo.FlowInfoParamesVO;
 import net.somta.juggle.console.domain.flow.flowinfo.vo.FlowInfoQueryVO;
 import net.somta.juggle.console.domain.flow.flowinfo.vo.FlowInfoVO;
 import net.somta.juggle.console.domain.flow.version.enums.FlowVersionStatusEnum;
@@ -110,4 +111,27 @@ public class FlowInfoInfoServiceImpl implements IFlowInfoService {
         return flowInfoRepository.saveParamesFlow(flowParametersInfoAO);
     }
 
+    @Override
+    public PageInfo getFlowInfoParamsPageList(FlowInfoSaveParam flowInfoSaveParam) {
+        FlowInfoParamesVO flowInfoParamesVO = new FlowInfoParamesVO();
+        flowInfoParamesVO.setFlowId(flowInfoSaveParam.getId());
+        flowInfoParamesVO.setAppCode(flowInfoSaveParam.getAppCode());
+        Page<FlowInfoParamesVO> page = PageHelper.startPage(flowInfoSaveParam.getPageNum(), flowInfoSaveParam.getPageSize());
+        List<FlowInfoParamesVO> flowInfoList = flowInfoRepository.queryFlowInfoParamsList(flowInfoParamesVO);
+        PageInfo pageInfo = new PageInfo(flowInfoList);
+        pageInfo.setTotal(page.getTotal());
+        return pageInfo;
+    }
+
+    @Override
+    public Boolean deleteParamInfo(Long id) {
+        FlowParametersInfoAO flowParametersInfoAO= flowInfoRepository.findById(id);
+        FlowInfoParamesVO flowInfoParamesVO = new FlowInfoParamesVO();
+        flowInfoParamesVO.setId(flowParametersInfoAO.getId());
+        flowInfoParamesVO.setAppCode(flowParametersInfoAO.getAppCode());
+        flowInfoParamesVO.setHeaders(flowInfoParamesVO.getHeaders());
+        flowInfoParamesVO.setBody(flowInfoParamesVO.getBody());
+
+        return flowInfoRepository.deletedParamsById(flowInfoParamesVO);
+    }
 }

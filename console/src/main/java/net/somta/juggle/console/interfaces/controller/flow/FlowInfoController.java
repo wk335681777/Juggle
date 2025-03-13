@@ -17,11 +17,11 @@ along with this program; if not, visit <https://www.gnu.org/licenses/gpl-3.0.htm
 package net.somta.juggle.console.interfaces.controller.flow;
 
 import com.github.pagehelper.PageInfo;
-import freemarker.template.TemplateHashModelEx2;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.somta.core.protocol.ResponseDataResult;
 import net.somta.core.protocol.ResponsePaginationDataResult;
+import net.somta.juggle.console.domain.flow.flowinfo.vo.FlowInfoParamesVO;
 import net.somta.juggle.console.interfaces.dto.flow.FlowInfoDTO;
 import net.somta.juggle.console.interfaces.param.flow.FlowInfoPageParam;
 import net.somta.juggle.console.application.service.flow.IFlowInfoService;
@@ -66,5 +66,29 @@ public class FlowInfoController {
         return ResponseDataResult.setResponseResult(result);
     }
 
+    @Operation(summary = "查看参数")
+    @GetMapping("/viewParams")
+    public ResponsePaginationDataResult<FlowInfoParamesVO> viewParamsFlowInfo(
+            @RequestParam String appCode,
+            @RequestParam Long id,
+            @RequestParam int pageNum,
+            @RequestParam int pageSize) {
+
+        FlowInfoSaveParam flowInfoSaveParam = new FlowInfoSaveParam();
+        flowInfoSaveParam.setAppCode(appCode);
+        flowInfoSaveParam.setId(id);
+        flowInfoSaveParam.setPageNum(pageNum);
+        flowInfoSaveParam.setPageSize(pageSize);
+
+        PageInfo pageInfo = flowInfoService.getFlowInfoParamsPageList(flowInfoSaveParam);
+        return ResponsePaginationDataResult.setPaginationDataResult(pageInfo.getTotal(), pageInfo.getList());
+    }
+
+    @Operation(summary = "删除参数")
+    @DeleteMapping("/deleteParam/{id}")
+    public ResponseDataResult<Boolean> deleteParamsInfo(@PathVariable Long id){
+        Boolean result = flowInfoService.deleteParamInfo(id);
+        return ResponseDataResult.setResponseResult(result);
+    }
 
 }

@@ -22,7 +22,7 @@
 			   );
 	</insert>
 
-	<select id="findByFlowId" parameterType="Long" resultType="net.somta.juggle.console.domain.flow.FlowParametersInfoAO">
+	<select id="findById" parameterType="Long" resultType="net.somta.juggle.console.domain.flow.FlowParametersInfoAO">
 		SELECT
 			id,
 			flow_id,
@@ -37,21 +37,15 @@
 		FROM
 			t_flow_parameter
 		WHERE
-			flow_id = #{flowId}
+			id = #{id}
 			LIMIT 1
 	</select>
 
-	<update id="updateParamsFlow" parameterType="net.somta.juggle.console.domain.flow.FlowParametersInfoAO">
-		UPDATE t_flow_parameter
-		SET
-			headers = #{headers},
-			body = #{body},
-			app_code = #{appCode},
-			updated_at = #{updatedAt},
-			updated_by = #{updatedBy}
-		WHERE
-			flow_id = #{flowId}
-	</update>
+	<delete id="deletedParamsById" parameterType="net.somta.juggle.console.domain.flow.flowinfo.vo.FlowInfoParamesVO">
+		DELETE FROM t_flow_parameter
+		WHERE id = #{id} AND app_code = #{appCode};
+	</delete>
+
 
 
 	<insert id="batchAddParameter" parameterType="java.util.List">
@@ -76,5 +70,14 @@
 		and source_id=#{sourceId}
 	</if>
 </select>
+
+	<select id="getParameterList" resultType="net.somta.juggle.console.infrastructure.po.flow.FlowInfoParamesPO" parameterType="net.somta.juggle.console.domain.flow.flowinfo.vo.FlowInfoParamesVO">
+		SELECT id, flow_id, headers, body
+		FROM t_flow_parameter
+		WHERE flow_id = #{flowId}
+		  AND deleted = 0
+		ORDER BY id DESC
+	</select>
+
 
 </mapper>   

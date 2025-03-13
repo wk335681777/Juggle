@@ -2,12 +2,13 @@
 import { reactive, ref, watch } from 'vue';
 import { useRoute, onBeforeRouteLeave } from 'vue-router';
 import { flowDefineService, flowVersionService } from '@/service';
-import { ElMessage } from 'element-plus';
+import {ElMessage, ElMessageBox} from 'element-plus';
 import CodeEditor from '@/components/common/CodeEditor.vue';
 import { DataType, FlowDefineInfo } from '@/typings';
-import {flowAPI} from "@/service/api";
-import {saveParamsFlow} from "@/service/api/flow.ts";
+import { flowAPI } from '@/service/api';
+import { deleteParamsFlow, viewParamsFlow} from '@/service/api/flow.ts';
 
+// 获取路由参数
 const route = useRoute();
 let paramsData = reactive({
   params: route.params,
@@ -15,60 +16,74 @@ let paramsData = reactive({
 });
 
 const codeEditRef = ref<InstanceType<typeof CodeEditor>>();
-
 const debugUrl = ref('');
 let flowResponseJson = ref('');
 const flowDefine = ref<FlowDefineInfo>({
   flowName: '',
-  flowKey: ''
+  flowKey: '',
 });
 let requestBody = ref('');
-
 const responseHeaderData = ref([]);
 
 queryFlowDefineInfo();
 
 function generateUUID() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    var r = Math.random() * 16 | 0,
-        v = c === 'x' ? r : (r & 0x3 | 0x8);
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    var r = (Math.random() * 16) | 0,
+      v = c === 'x' ? r : (r & 0x3) | 0x8;
     return v.toString(16);
   });
 }
-const debugId = generateUUID();
 
+const debugId = generateUUID(); // 生成 debugConnId
+
+const dialogVisible = ref(false);
+let eventSource; // 将 EventSource 声明在这里
+
+// 追踪是否点击了查看参数
+const isViewParamsClicked = ref(false);
+
+// 动态生成 EventSource URL，不将 debugConnId 传给后端
+const getEventSourceUrl = () => {
+  let baseUrl = `/camelLogStream/logStream?debugConnId=${debugId}`; // debugConnId 仅用于前端
+  if (isViewParamsClicked.value) {
+    baseUrl += `&appCode=${savedParams.value.appCode}&id=${savedParams.value.id}`;
+  }
+  return baseUrl;
+};
+
+// 查询流程定义信息
 async function queryFlowDefineInfo() {
   const res = await flowDefineService.getDebugInfo(paramsData.params.flowDefinitionId as number);
   if (res.success) {
-    debugUrl.value = res.result.debugUri + "?debugConnId=" + debugId;
+    debugUrl.value = res.result.debugUri; // 不需要拼接 debugConnId 到 debugUrl
     flowDefine.value = res.result;
-
     savedParams.value.id = res.result.id || 0;
     savedParams.value.appCode = res.result.appCode || '';
-
-    console.log("初始化 savedParams:", savedParams.value); // Debugging
+    console.log('初始化 savedParams:', savedParams.value);
   } else {
     ElMessage({ type: 'error', message: res.errorMsg });
   }
 }
 
-let timerId;
 async function sendFlowDebug() {
   if (!validate()) {
     return;
   }
-
   isLoading.value = true;
   const params = {
-    flowData: getParams(),
+    flowData: getParams(), // 这里的 getParams 已经排除了 debugConnId
   };
+
   const res = await flowDefineService.debugFlow(paramsData.params.flowKey as string, params);
   isLoading.value = false;
+
   if (res.success) {
     flowResponseJson.value = res.result;
   } else {
     ElMessage({ type: 'error', message: res.errorMsg });
   }
+
   responseHeaderData.value = Object.entries(res.response?.headers).map(([key, value]) => {
     return {
       headerKey: key,
@@ -77,6 +92,7 @@ async function sendFlowDebug() {
   });
 }
 
+// 获取流程调试参数
 async function getAsyncFlowResult(flowInstanceId: string) {
   const res = await flowVersionService.getAsyncFlowResult(flowInstanceId);
   if (res.success) {
@@ -89,6 +105,7 @@ async function getAsyncFlowResult(flowInstanceId: string) {
   }
 }
 
+// 验证参数是否为空
 function isEmpty(val: any) {
   return val === undefined || val === null || val === '';
 }
@@ -107,9 +124,12 @@ function validate() {
   return errors.length === 0;
 }
 
+// 获取参数
 function getParams() {
   const flowInputParams = flowDefine.value?.flowInputParams || [];
   const params: any = {};
+
+  // 只收集需要的参数，排除 debugConnId
   flowInputParams.forEach((param: any) => {
     if (!isEmpty(param.value)) {
       const dataType: DataType = param.dataType;
@@ -118,14 +138,16 @@ function getParams() {
       } else {
         params[param.paramKey] = param.value;
       }
-      console.log(param);
     }
   });
+
+  // 添加其他必要的参数（这里不包括 debugConnId）
   params['requestBody'] = requestBody.value;
-  params['uri'] = debugUrl.value;
+  params['uri'] = debugUrl.value; // 只使用 debugUrl，而不包括 debugConnId
   params['headers'] = headers.value;
   params['httpMethod'] = httpMethod.value;
-  return params;
+
+  return params; // 这里不包括 debugConnId
 }
 
 function resetParams() {
@@ -135,42 +157,46 @@ function resetParams() {
   });
 }
 
+const createEventSource = () => {
+  // 仅在前端传递 debugConnId 给 EventSource
+  const url = getEventSourceUrl(); // 这里使用了 debugConnId，但是它不会传递到后端
+  eventSource = new EventSource(url);
 
-const eventSource = new EventSource("/camelLogStream/logStream?debugConnId=" + debugId);
+  eventSource.onmessage = function (event) {
+    if (event.data == '' || event.data == '\n') {
+      return;
+    }
 
-eventSource.onmessage = function(event) {
-  if (event.data == '' || event.data == '\n') {
-    return;
-  }
+    const line = event.data.replace(/<br>/g, '\n');
+    addMessage(line);
+  };
 
-  const line = event.data.replace(/<br>/g, '\n');
-  addMessage(line);
+  eventSource.onerror = function (error) {
+    console.log('Error:', error);
+  };
 };
 
-eventSource.onerror = function(error) {
-  console.log("Error:", error);
-};
-
+// 监听页面离开事件，关闭 EventSource
 onBeforeRouteLeave((to, from, next) => {
   console.log('准备离开当前页面，执行清理操作');
-  eventSource.close();
+  if (eventSource) {
+    eventSource.close();
+  }
   next();
 });
 
-watch(flowResponseJson, (newJson) => {
+// 格式化 JSON
+watch(flowResponseJson, newJson => {
   try {
-    const jsonObject = JSON.parse(newJson); // 将原始字符串转为对象
-    flowResponseJson.value = JSON.stringify(jsonObject, null, 2); // 格式化为 JSON 字符串
+    const jsonObject = JSON.parse(newJson);
+    flowResponseJson.value = JSON.stringify(jsonObject, null, 2);
   } catch (error) {
-    flowResponseJson.value = newJson; // 如果解析失败，直接显示原始字符串
+    flowResponseJson.value = newJson;
   }
 });
 
-
 // 用来保存 HTTP headers 的数组
-const headers = ref([
-  { key: '_mock_', value: 'true' }, // 默认一行
-]);
+const headers = ref([{ key: '_mock_', value: 'true' }]);
 
 // 添加新的 HTTP header 行
 const addHeader = () => {
@@ -178,58 +204,52 @@ const addHeader = () => {
 };
 
 // 删除某一行
-const removeHeader = (index) => {
+const removeHeader = index => {
   headers.value.splice(index, 1);
 };
 
 // 提交 HTTP headers，发送请求或其他操作
 const submitHeaders = () => {
-  // 模拟提交的操作
   console.log('Submitting headers:', headers.value);
 };
 
 const httpMethod = ref('POST');
-// 状态管理：控制是否显示遮盖层
 const isLoading = ref(false);
-
 const messages = ref([]);
-const addMessage = (line) => {
-    messages.value.push(line);
+const addMessage = line => {
+  messages.value.push(line);
 };
 
-// 保存和查看参数功能
 const savedParams = ref({
-  id:0,
-  appCode:'',
+  id: 0,
+  appCode: '',
   headers: [],
-  body: ''
+  body: '',
 });
+
+// 保存参数
 const saveParams = async () => {
   const currentTab = activeTab.value;
-
   let paramsToSave = {
     id: savedParams.value.id,
     appCode: savedParams.value.appCode,
     headers: headers.value.map(header => ({
       key: header.key,
-      value: header.value
+      value: header.value,
     })),
-    body: requestBody.value
+    body: requestBody.value,
   };
 
-  // 如果当前激活的是 Headers 标签页，保存最新的 headers
   if (currentTab === 'requestHeader') {
     paramsToSave.headers = headers.value.map(header => ({
       key: header.key,
-      value: header.value
+      value: header.value,
     }));
-  }
-  // 如果当前激活的是 Body 标签页，保存最新的 body
-  else if (currentTab === 'body') {
+  } else if (currentTab === 'body') {
     paramsToSave.body = requestBody.value;
   }
 
-  console.log("最终提交参数:", JSON.stringify(paramsToSave, null, 2));
+  console.log('最终提交参数:', JSON.stringify(paramsToSave, null, 2));
 
   try {
     const res = await flowAPI.saveParamsFlow(paramsToSave);
@@ -243,17 +263,80 @@ const saveParams = async () => {
     console.error(error);
   }
 };
+const activeTab = ref('requestHeader');
+
+
 // 查看参数
-const viewParams = () => {
-  const currentTab = activeTab.value;
-  if (currentTab === 'requestHeader') {
-    ElMessage({ type: 'info', message: `保存的 Headers: ${JSON.stringify(savedParams.value.headers, null, 2)}` });
-  } else if (currentTab === 'body') {
-    ElMessage({ type: 'info', message: `保存的 Body: ${savedParams.value.body}` });
+const savedParamsData = ref([]);
+const totalRecords = ref(0);
+const currentPage = ref(1);
+const pageSize = ref(10);
+
+const viewParams = async () => {
+  try {
+    const response = await viewParamsFlow({
+      appCode: savedParams.value.appCode,
+      id: savedParams.value.id,
+      pageNum: currentPage.value,
+      pageSize: pageSize.value,
+    });
+
+    console.log('API响应:', response);
+debugger
+    if (response.success) {
+      debugger
+      savedParamsData.value = response.result;
+      totalRecords.value = response.total;
+      console.log('更新后：',savedParamsData);
+      dialogVisible.value = true;
+    } else {
+      ElMessage({ type: 'error', message: response.errorMsg });
+    }
+  } catch (error) {
+    ElMessage({ type: 'error', message: '无法加载参数' });
   }
 };
 
-const activeTab = ref('requestHeader');  // 用来记录当前激活的 Tab
+const resetDialog = () => {
+  dialogVisible.value = false;
+};
+const handlePageChange = newPage => {
+  // 更新当前页码
+  currentPage.value = newPage;
+  viewParams(); // 获取当前页的数据
+};
+
+//删除数据
+const deleteRow = async (row) => {
+  const { id } = row;
+
+  // 显示确认框
+  try {
+    const confirmResult = await ElMessageBox.confirm(
+        '确定删除这条数据吗?',
+        '提示',
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }
+    );
+
+    // 点击“确定”
+    if (confirmResult === 'confirm') {
+      const res = await deleteParamsFlow(id);
+
+      if (res.success) {
+        ElMessage({ type: 'success', message: '删除成功' });
+        viewParams(); // 重新加载数据
+      } else {
+        ElMessage({ type: 'error', message: res.errorMsg });
+      }
+    }
+  } catch (error) {
+    console.log('用户取消了删除');
+  }
+};
 </script>
 
 <template>
@@ -263,6 +346,58 @@ const activeTab = ref('requestHeader');  // 用来记录当前激活的 Tab
         <el-breadcrumb-item>{{ flowDefine.flowName }} - {{ flowDefine.flowKey }}</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
+
+    <el-dialog title="查看保存的参数" v-model="dialogVisible" width="50%" @close="resetDialog" style="z-index: 9999;">
+      <el-table :data="savedParamsData" style="width: 100%">
+        <el-table-column prop="id" label="id" width="50" />
+
+        <!-- headers列，超出宽度时显示省略号 -->
+        <el-table-column label="headers" width="280">
+          <template #default="{ row }">
+            <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 270px;">
+              <el-tooltip :content="row.headers" placement="top">
+                <span>{{ row.headers }}</span>
+              </el-tooltip>
+            </div>
+          </template>
+        </el-table-column>
+
+        <!-- body列，超出宽度时显示省略号 -->
+        <el-table-column label="body" width="280">
+          <template #default="{ row }">
+            <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 270px;">
+              <el-tooltip :content="row.body" placement="top">
+                <span>{{ row.body }}</span>
+              </el-tooltip>
+            </div>
+          </template>
+        </el-table-column>
+
+        <!-- 操作列：删除和启用按钮放在同一行 -->
+        <el-table-column label="操作" width="150">
+          <template #default="{ row }">
+            <div style="display: flex; gap: 2px;">
+              <el-button @click="enableRow(row)" type="success" size="small">启用</el-button>
+              <el-button @click="deleteRow(row)" type="danger" size="small">删除</el-button>
+            </div>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <!-- 分页 -->
+      <el-pagination
+        v-if="totalRecords > 0"
+        :current-page="currentPage"
+        :page-size="pageSize"
+        :total="totalRecords"
+        @current-change="handlePageChange"
+        layout="total, prev, pager, next, jumper"
+      />
+
+      <el-form-item>
+        <el-button @click="dialogVisible = false" type="primary">关闭</el-button>
+      </el-form-item>
+    </el-dialog>
 
     <el-row :gutter="16">
       <el-col :span="2">
@@ -389,7 +524,7 @@ const activeTab = ref('requestHeader');  // 用来记录当前激活的 Tab
   color: white;
 }
 .btn-add {
-  background-color: #4CAF50;
+  background-color: #4caf50;
 }
 .btn-remove {
   background-color: #f44336;
@@ -398,9 +533,9 @@ const activeTab = ref('requestHeader');  // 用来记录当前激活的 Tab
 .code-editor-container {
   position: relative;
   border: 1px solid #ccc; /* 添加边框 */
-  border-radius: 5px;      /* 可选：添加圆角效果 */
-  padding: 10px;           /* 可选：添加内边距 */
-  width: 100%
+  border-radius: 5px; /* 可选：添加圆角效果 */
+  padding: 10px; /* 可选：添加内边距 */
+  width: 100%;
 }
 
 .overlay {
@@ -425,7 +560,9 @@ const activeTab = ref('requestHeader');  // 用来记录当前激活的 Tab
 .card-content {
   font-size: 18px;
 }
-
+.el-dialog {
+  z-index: 9999 !important;
+}
 .black-tab {
   background-color: black !important;
   color: white;
