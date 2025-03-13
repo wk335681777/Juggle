@@ -24,7 +24,7 @@
 	id, app_code, name, code, parent_code, access_type, path, created_at, created_by, updated_at, updated_by, deleted
 </sql>
 
-<select id="queryTree" resultMap="BaseResultMap" parameterType="net.somta.juggle.console.interfaces.param.flow.FlowTagQueryParam">
+<select id="queryTagList" resultMap="BaseResultMap" parameterType="net.somta.juggle.console.interfaces.param.flow.FlowTagQueryParam">
 	select <include refid="Base_Column_List_Ext" />
 	from t_flow_tag
 	where 1=1 and deleted=0
@@ -35,7 +35,4 @@
 	and app_code = #{appCode}
 </select>
 
-	<delete id="deleteFlowTagByFlowDefinitionId">
-		delete from
-	</delete>
 </mapper>   

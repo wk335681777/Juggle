@@ -33,6 +33,7 @@ import net.somta.juggle.console.domain.flow.definition.FlowDefinitionAO;
 import net.somta.juggle.console.domain.flow.definition.repository.IFlowDefinitionRepository;
 import net.somta.juggle.console.domain.flow.definition.vo.FlowDefinitionInfoQueryVO;
 import net.somta.juggle.console.domain.flow.definition.vo.FlowDefinitionInfoVO;
+import net.somta.juggle.console.domain.flow.definition.vo.FlowTagRelationVo;
 import net.somta.juggle.console.domain.flow.flowinfo.FlowInfoAO;
 import net.somta.juggle.console.domain.flow.flowinfo.enums.FlowTypeEnum;
 import net.somta.juggle.console.domain.flow.flowinfo.repository.IFlowInfoRepository;
@@ -138,9 +139,9 @@ public class FlowDefinitionServiceImpl implements IFlowDefinitionService {
     public FlowDefinitionAO getFlowDefinitionInfo(Long flowDefinitionId) {
         FlowDefinitionAO flowDefinitionAo = flowDefinitionRepository.queryFlowDefinitionInfo(flowDefinitionId);
         List<VariableInfoVO> variableInfoVoList = variableInfoRepository.queryVariableInfoList(flowDefinitionAo.getId());
-        List<FlowTagRelationPO> flowTagRelationPOList = flowTagRelationMapper.queryByFlowInstanceIds(Arrays.asList(flowDefinitionId));
+        List<FlowTagRelationVo> flowTagRelationPOList = flowTagRelationMapper.queryByFlowInstanceIds(Arrays.asList(flowDefinitionId), IdentityContext.getIdentity().getUserId());
         flowDefinitionAo.setVariableInfoList(variableInfoVoList);
-        flowDefinitionAo.setFlowTagIdList(flowTagRelationPOList.stream().map(FlowTagRelationPO::getTagId).collect(Collectors.toList()));
+        flowDefinitionAo.setFlowTagIdList(flowTagRelationPOList.stream().map(FlowTagRelationVo::getTagId).collect(Collectors.toList()));
         return flowDefinitionAo;
     }
 

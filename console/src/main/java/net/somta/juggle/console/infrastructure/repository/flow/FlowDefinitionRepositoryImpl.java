@@ -20,15 +20,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import net.somta.core.helper.JsonSerializeHelper;
 import net.somta.juggle.common.identity.IdentityContext;
 import net.somta.juggle.console.domain.flow.definition.FlowDefinitionAO;
-import net.somta.juggle.console.domain.flow.definition.enums.VariableTypeEnum;
 import net.somta.juggle.console.domain.flow.definition.enums.FlowDefinitionErrorEnum;
+import net.somta.juggle.console.domain.flow.definition.enums.VariableTypeEnum;
 import net.somta.juggle.console.domain.flow.definition.repository.IFlowDefinitionRepository;
-import net.somta.juggle.console.domain.flow.definition.vo.FlowDefinitionInfoQueryVO;
-import net.somta.juggle.console.domain.flow.definition.vo.FlowDefinitionInfoVO;
-import net.somta.juggle.console.domain.flow.definition.vo.VariableDeleteVO;
-import net.somta.juggle.console.domain.flow.definition.vo.VariableInfoVO;
+import net.somta.juggle.console.domain.flow.definition.vo.*;
 import net.somta.juggle.console.domain.flow.version.view.FlowVersionInfoView;
-import net.somta.juggle.console.domain.flow.version.view.FlowVersionView;
 import net.somta.juggle.console.domain.flow.version.vo.FlowVersionQueryVO;
 import net.somta.juggle.console.domain.parameter.ParameterEntity;
 import net.somta.juggle.console.domain.parameter.enums.ParameterSourceTypeEnum;
@@ -41,18 +37,15 @@ import net.somta.juggle.console.infrastructure.converter.flow.IFlowDefinitionCon
 import net.somta.juggle.console.infrastructure.mapper.ParameterMapper;
 import net.somta.juggle.console.infrastructure.mapper.VariableInfoMapper;
 import net.somta.juggle.console.infrastructure.mapper.flow.FlowDefinitionMapper;
-import net.somta.juggle.console.infrastructure.mapper.flow.FlowTagMapper;
 import net.somta.juggle.console.infrastructure.mapper.flow.FlowTagRelationMapper;
 import net.somta.juggle.console.infrastructure.mapper.flow.FlowVersionMapper;
 import net.somta.juggle.console.infrastructure.po.ParameterPO;
 import net.somta.juggle.console.infrastructure.po.VariableInfoPO;
 import net.somta.juggle.console.infrastructure.po.flow.FlowDefinitionInfoPO;
 import net.somta.juggle.console.infrastructure.po.flow.FlowTagRelationPO;
-import net.somta.juggle.console.infrastructure.po.flow.FlowVersionPO;
 import net.somta.juggle.console.interfaces.dto.flow.FlowDefinitionExportDTO;
 import net.somta.juggle.console.interfaces.param.flow.FlowTagRelationQueryParam;
 import net.somta.juggle.console.interfaces.param.flow.definition.FlowDefinitionCopyParam;
-import net.somta.juggle.console.interfaces.param.flow.definition.FlowDefinitionDraftParam;
 import net.somta.juggle.core.enums.VariablePrefixEnum;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
@@ -226,10 +219,9 @@ public class FlowDefinitionRepositoryImpl implements IFlowDefinitionRepository {
 
     private void saveFlowTags(FlowDefinitionAO flowDefinitionAo) {
         List<Long> flowTagIdList = flowDefinitionAo.getFlowTagIdList();
-        if (CollectionUtils.isEmpty(flowTagIdList)) {
-            flowTagRelationMapper.deleteFlowTagByFlowDefinitionId(flowDefinitionAo.getId(), flowDefinitionAo.getAppCode());
-            return;
-        }
+        // 只能删除自己的标签，这里带有权限控制
+        List<FlowTagRelationVo> flowTagRelationVoList = flowTagRelationMapper.queryByFlowInstanceIds(Arrays.asList(flowDefinitionAo.getId()),
+                IdentityContext.getIdentity().getUserId());
 
         List<FlowTagRelationPO> poList = new ArrayList<>();
         for (Long flowTagId : flowTagIdList) {
@@ -242,8 +234,13 @@ public class FlowDefinitionRepositoryImpl implements IFlowDefinitionRepository {
             poList.add(po);
         }
 
-        flowTagRelationMapper.deleteFlowTagByFlowDefinitionId(flowDefinitionAo.getId(), flowDefinitionAo.getAppCode());
-        flowTagRelationMapper.batchAdd(poList);
+        for (FlowTagRelationVo flowTagRelationVo : flowTagRelationVoList) {
+            flowTagRelationMapper.deleteById(flowTagRelationVo.getId());
+        }
+
+        if (!poList.isEmpty()) {
+            flowTagRelationMapper.batchAdd(poList);
+        }
     }
 
 
@@ -280,15 +277,23 @@ public class FlowDefinitionRepositoryImpl implements IFlowDefinitionRepository {
             return flowDefinitionInfoVOList;
         }
 
-        List<FlowTagRelationPO> flowTagRelationPOList = flowTagRelationMapper.queryByFlowInstanceIds(flowDefinitionIdList);
-        for (FlowTagRelationPO flowTagRelationPO : flowTagRelationPOList) {
-            FlowDefinitionInfoVO flowDefinitionInfoVO = flowDefinitionInfoVOMap.get(flowTagRelationPO.getFlowDefinitionId());
+        List<FlowTagRelationVo> flowTagRelationPOList = flowTagRelationMapper.queryByFlowInstanceIds(flowDefinitionIdList, IdentityContext.getIdentity().getUserId());
+        for (FlowTagRelationVo flowTagRelationVo : flowTagRelationPOList) {
+            FlowDefinitionInfoVO flowDefinitionInfoVO = flowDefinitionInfoVOMap.get(flowTagRelationVo.getFlowDefinitionId());
             List<Long> flowTagList = flowDefinitionInfoVO.getFlowTagIdList();
+            List<String> flowTagNameList = flowDefinitionInfoVO.getFlowTagNameList();
             if (flowTagList == null) {
                 flowTagList = new ArrayList<>();
+                flowDefinitionInfoVO.setFlowTagIdList(flowTagList);
             }
 
-            flowTagList.add(flowTagRelationPO.getTagId());
+            if (flowTagNameList == null) {
+                flowTagNameList = new ArrayList<>();
+                flowDefinitionInfoVO.setFlowTagNameList(flowTagNameList);
+            }
+
+            flowTagList.add(flowTagRelationVo.getTagId());
+            flowTagNameList.add(flowTagRelationVo.getTagName());
         }
 
         return flowDefinitionInfoVOList;

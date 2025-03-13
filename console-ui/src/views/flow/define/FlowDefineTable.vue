@@ -55,16 +55,25 @@ function handleSelectionChange(rows) {
 <template>
   <el-table row-key="id" :reserve-selection="true" v-loading="loading" :data="dataRows" size="large" @selection-change="handleSelectionChange" header-cell-class-name="table-header">
     <!-- 多选框列 -->
-    <el-table-column type="selection" width="55"/>
+    <el-table-column type="selection" width="30"/>
+    <el-table-column prop="id" label="id" width="50" />
     <el-table-column prop="flowKey" label="流程编码" width="180" />
-    <el-table-column prop="flowName" label="流程名称" width="220" />
+    <el-table-column prop="flowName" label="流程名称" width="320" />
     <el-table-column prop="flowType" label="流程类型" width="100">
       <template #default="scope">
         <el-tag v-if="scope.row.flowType == 'single'" type="success">单流程</el-tag>
         <el-tag v-else type="warning">多流程</el-tag>
       </template>
     </el-table-column>
-    <el-table-column prop="remark" label="流程描述" width="320" show-overflow-tooltip />
+<!--    <el-table-column prop="remark" label="流程描述" width="320" show-overflow-tooltip />-->
+<!--    <el-option v-for="item in suiteList" :key="item.value" :label="item.label" :value="item.value" />-->
+
+    <el-table-column prop="flowTag" label="标签" width="220">
+      <template #default="scope">
+        <el-tag v-for="item in scope.row.flowTagNameList" type="success" >{{ item }}</el-tag>
+      </template>
+    </el-table-column>
+
 <!--    <el-table-column prop="createdAt" label="创建时间" width="140" />-->
     <el-table-column prop="updatedAt" label="修改时间" width="200" />
     <el-table-column label="操作" width="320">

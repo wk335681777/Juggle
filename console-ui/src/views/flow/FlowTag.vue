@@ -381,6 +381,10 @@ async function deleteTag() {
   }
 }
 
+async function refreshTag() {
+  queryTagTree();
+}
+
 </script>
 
 <template>
@@ -409,6 +413,8 @@ async function deleteTag() {
             <el-dropdown-item @click="openAddTagDialog">新增标签</el-dropdown-item>
             <el-dropdown-item v-if="menuOp.selectedNode.node.level !== 1" @click.native="openEditTagDialog">编辑标签</el-dropdown-item>
             <el-dropdown-item v-if="menuOp.selectedNode.node.level !== 1" @click.native="openDeleteTag">删除标签</el-dropdown-item>
+            <el-dropdown-item @click.native="refreshTag">刷新</el-dropdown-item>
+
           </el-dropdown-menu>
         </template>
       </el-dropdown>

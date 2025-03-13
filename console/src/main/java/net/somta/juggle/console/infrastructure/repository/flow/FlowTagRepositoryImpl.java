@@ -54,7 +54,7 @@ public class FlowTagRepositoryImpl implements IFlowTagRepository {
     }
 
     @Override
-    public List<FlowTagPO> queryTree(FlowTagQueryParam param) {
-        return flowTagMapper.queryTree(param);
+    public List<FlowTagPO> queryMyTagList(FlowTagQueryParam param) {
+        return flowTagMapper.queryTagList(param);
     }
 }

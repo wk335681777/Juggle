@@ -43,6 +43,7 @@ public class FlowDefinitionInfoDTO {
     private String remark;
 
     private List<Long> flowTagIdList;
+    private List<String> flowTagNameList;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createdAt;
@@ -173,6 +174,14 @@ public class FlowDefinitionInfoDTO {
 
     public void setFlowTagIdList(List<Long> flowTagIdList) {
         this.flowTagIdList = flowTagIdList;
+    }
+
+    public List<String> getFlowTagNameList() {
+        return flowTagNameList;
+    }
+
+    public void setFlowTagNameList(List<String> flowTagNameList) {
+        this.flowTagNameList = flowTagNameList;
     }
 
     @Override

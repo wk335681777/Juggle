@@ -23,13 +23,15 @@
 		</foreach>
 	</insert>
 
-	<select id="queryByFlowInstanceIds" resultType="net.somta.juggle.console.infrastructure.po.flow.FlowTagRelationPO">
+	<select id="queryByFlowInstanceIds" resultType="net.somta.juggle.console.domain.flow.definition.vo.FlowTagRelationVo">
 		select
-			id, app_code, tag_id, flow_definition_id, created_at, created_by, updated_at, updated_by
-		from t_flow_tag_relation
-		where flow_definition_id in
+			t1.id, t1.app_code, t1.tag_id, t1.flow_definition_id, t2.name as tagName
+		from t_flow_tag_relation t1 inner join t_flow_tag t2 on t1.tag_id=t2.id
+		where t1.flow_definition_id in
 		<foreach collection ="flowDefinitionIdList" item="item" separator ="," open="(" close=")">
 			#{item}
 		</foreach>
+		and (t2.access_type = 'public' or (t2.access_type = 'private' and t2.created_by = #{userId}))
+		order by t2.created_at
 	</select>
 </mapper>

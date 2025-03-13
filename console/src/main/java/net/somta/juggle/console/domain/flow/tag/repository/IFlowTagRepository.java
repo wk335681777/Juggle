@@ -22,5 +22,5 @@ public interface IFlowTagRepository {
 
     List<FlowTagPO> queryList(FlowTagQueryParam param);
 
-    List<FlowTagPO> queryTree(FlowTagQueryParam param);
+    List<FlowTagPO> queryMyTagList(FlowTagQueryParam param);
 }

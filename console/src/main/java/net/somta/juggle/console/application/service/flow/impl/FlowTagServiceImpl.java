@@ -1,7 +1,9 @@
 package net.somta.juggle.console.application.service.flow.impl;
 
+import net.somta.core.exception.BizException;
 import net.somta.juggle.common.identity.IdentityContext;
 import net.somta.juggle.console.application.service.flow.IFlowTagService;
+import net.somta.juggle.console.domain.flow.definition.enums.FlowTagErrorEnum;
 import net.somta.juggle.console.domain.flow.tag.repository.IFlowTagRepository;
 import net.somta.juggle.console.infrastructure.po.flow.FlowTagPO;
 import net.somta.juggle.console.interfaces.dto.flow.FlowTagDTO;
@@ -25,7 +27,16 @@ public class FlowTagServiceImpl implements IFlowTagService {
         IdentityContext.getIdentity().getUserId();
         FlowTagPO po = new FlowTagPO();
         BeanUtils.copyProperties(entity, po);
-        // todo: 检查code不能重复
+
+        FlowTagQueryParam param = new FlowTagQueryParam();
+        param.setAppCode(entity.getAppCode());
+        param.setCode(entity.getCode());
+        param.setOwnerId(IdentityContext.getIdentity().getUserId());
+        List<FlowTagPO> flowTagPOList = flowTagRepository.queryMyTagList(param);
+        if (!flowTagPOList.isEmpty()) {
+            throw new BizException(FlowTagErrorEnum.FLOW_TAG_CODE_EXIST_ERROR);
+        }
+
         po.setCreatedBy(IdentityContext.getIdentity().getUserId());
         po.setUpdatedBy(IdentityContext.getIdentity().getUserId());
 
@@ -83,7 +94,7 @@ public class FlowTagServiceImpl implements IFlowTagService {
     public List<FlowTagTreeDTO> queryTree(FlowTagQueryParam param) {
         Assert.hasText(param.getAppCode(), "appCode can't be empty");
         param.setOwnerId(IdentityContext.getIdentity().getUserId());
-        List<FlowTagPO> flowTagPOList = flowTagRepository.queryTree(param);
+        List<FlowTagPO> flowTagPOList = flowTagRepository.queryMyTagList(param);
 
         FlowTagTreeDTO root = getDefaultRoot(param.getAppCode());
         FlowTagTreeDTO person =getDefaultPersonRoot(param.getAppCode());
