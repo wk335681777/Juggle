@@ -20,6 +20,7 @@ import net.somta.juggle.common.identity.IdentityContext;
 import net.somta.juggle.console.domain.flow.FlowParametersInfoAO;
 import net.somta.juggle.console.domain.flow.flowinfo.FlowInfoAO;
 import net.somta.juggle.console.domain.flow.flowinfo.repository.IFlowInfoRepository;
+import net.somta.juggle.console.domain.flow.flowinfo.vo.FlowInfoParamesVO;
 import net.somta.juggle.console.domain.flow.flowinfo.vo.FlowInfoQueryVO;
 import net.somta.juggle.console.domain.flow.flowinfo.vo.FlowInfoVO;
 import net.somta.juggle.console.domain.flow.version.enums.FlowVersionStatusEnum;
@@ -29,10 +30,12 @@ import net.somta.juggle.console.infrastructure.mapper.ParameterMapper;
 import net.somta.juggle.console.infrastructure.mapper.flow.FlowInfoMapper;
 import net.somta.juggle.console.infrastructure.mapper.flow.FlowVersionMapper;
 import net.somta.juggle.console.infrastructure.po.flow.FlowInfoPO;
+import net.somta.juggle.console.infrastructure.po.flow.FlowInfoParamesPO;
 import net.somta.juggle.console.infrastructure.po.flow.FlowVersionPO;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -111,15 +114,37 @@ public class FlowInfoRepositoryImpl implements IFlowInfoRepository {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public FlowParametersInfoAO findByFlowId(Long flowId) {
-        return parameterMapper.findByFlowId(flowId);
+    public FlowParametersInfoAO findById(Long id) {
+       FlowParametersInfoAO flowParametersInfoAO= parameterMapper.findById(id);
+        return flowParametersInfoAO;
+    }
+
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Boolean deletedParamsById(FlowInfoParamesVO flowInfoParamesVO) {;
+        parameterMapper.deletedParamsById(flowInfoParamesVO);
+        return true;
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public Boolean updateParamsFlow(FlowParametersInfoAO flowParametersInfoAO) {;
-        parameterMapper.updateParamsFlow(flowParametersInfoAO);
-        return true;
+    public List<FlowInfoParamesVO> queryFlowInfoParamsList(FlowInfoParamesVO flowInfoParamesVO) {
+        List<FlowInfoParamesPO> flowInfoParamesList = parameterMapper.getParameterList(flowInfoParamesVO);
+
+        List<FlowInfoParamesVO> flowInfoVOList = new ArrayList<>();
+        for (FlowInfoParamesPO po : flowInfoParamesList) {
+            FlowInfoParamesVO vo = new FlowInfoParamesVO();
+            vo.setFlowId(po.getFlowId());
+            vo.setAppCode(po.getAppCode());
+            vo.setId(po.getId());
+            vo.setHeaders(po.getHeaders());
+            vo.setBody(po.getBody());
+
+            flowInfoVOList.add(vo);
+        }
+
+        return flowInfoVOList;
     }
 
 }
