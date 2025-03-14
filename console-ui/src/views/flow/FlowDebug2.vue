@@ -35,36 +35,27 @@ function generateUUID() {
   });
 }
 
-const debugId = generateUUID(); // 生成 debugConnId
+const debugId = generateUUID();
 
-const dialogVisible = ref(false);
-let eventSource; // 将 EventSource 声明在这里
-
-// 追踪是否点击了查看参数
-const isViewParamsClicked = ref(false);
-
-// 动态生成 EventSource URL，不将 debugConnId 传给后端
-const getEventSourceUrl = () => {
-  let baseUrl = `/camelLogStream/logStream?debugConnId=${debugId}`; // debugConnId 仅用于前端
-  if (isViewParamsClicked.value) {
-    baseUrl += `&appCode=${savedParams.value.appCode}&id=${savedParams.value.id}`;
-  }
-  return baseUrl;
-};
+const dialogVisible = ref(false);//弹窗
 
 // 查询流程定义信息
 async function queryFlowDefineInfo() {
   const res = await flowDefineService.getDebugInfo(paramsData.params.flowDefinitionId as number);
   if (res.success) {
-    debugUrl.value = res.result.debugUri; // 不需要拼接 debugConnId 到 debugUrl
+    debugUrl.value = res.result.debugUri + "?debugConnId=" + debugId;
     flowDefine.value = res.result;
+
     savedParams.value.id = res.result.id || 0;
     savedParams.value.appCode = res.result.appCode || '';
-    console.log('初始化 savedParams:', savedParams.value);
+
+    console.log("初始化 savedParams:", savedParams.value); // Debugging
   } else {
     ElMessage({ type: 'error', message: res.errorMsg });
   }
 }
+
+let timerId;
 
 async function sendFlowDebug() {
   if (!validate()) {
@@ -72,7 +63,7 @@ async function sendFlowDebug() {
   }
   isLoading.value = true;
   const params = {
-    flowData: getParams(), // 这里的 getParams 已经排除了 debugConnId
+    flowData: getParams(),
   };
 
   const res = await flowDefineService.debugFlow(paramsData.params.flowKey as string, params);
@@ -140,10 +131,8 @@ function getParams() {
       }
     }
   });
-
-  // 添加其他必要的参数（这里不包括 debugConnId）
   params['requestBody'] = requestBody.value;
-  params['uri'] = debugUrl.value; // 只使用 debugUrl，而不包括 debugConnId
+  params['uri'] = debugUrl.value;
   params['headers'] = headers.value;
   params['httpMethod'] = httpMethod.value;
 
@@ -156,25 +145,24 @@ function resetParams() {
     param.error = '';
   });
 }
-
-const createEventSource = () => {
-  // 仅在前端传递 debugConnId 给 EventSource
-  const url = getEventSourceUrl(); // 这里使用了 debugConnId，但是它不会传递到后端
-  eventSource = new EventSource(url);
-
-  eventSource.onmessage = function (event) {
-    if (event.data == '' || event.data == '\n') {
-      return;
-    }
-
-    const line = event.data.replace(/<br>/g, '\n');
-    addMessage(line);
-  };
-
-  eventSource.onerror = function (error) {
-    console.log('Error:', error);
-  };
+const eventSource = new EventSource("/camelLogStream/logStream?debugConnId=" + debugId);
+eventSource.onmessage = function(event) {
+  if (event.data == '' || event.data == '\n') {
+    return;
+  }
+  const line = event.data.replace(/<br>/g, '\n');
+  addMessage(line);
 };
+
+eventSource.onerror = function(error) {
+  console.log("Error:", error);
+};
+
+onBeforeRouteLeave((to, from, next) => {
+  console.log('准备离开当前页面，执行清理操作');
+  eventSource.close();
+  next();
+});
 
 // 监听页面离开事件，关闭 EventSource
 onBeforeRouteLeave((to, from, next) => {
@@ -275,15 +263,11 @@ const pageSize = ref(10);
 const viewParams = async () => {
   try {
     const response = await viewParamsFlow({
-      appCode: savedParams.value.appCode,
       id: savedParams.value.id,
-      pageNum: currentPage.value,
-      pageSize: pageSize.value,
     });
 
 
     if (response.success) {
-      debugger
       savedParamsData.value = response.result;
       totalRecords.value = response.total;
       console.log('更新后：',savedParamsData);

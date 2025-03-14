@@ -16,7 +16,7 @@ export async function saveParamsFlow(params: { appCode: string, headers:{ key: s
   return request.post('/v1/flow/saveParams', params);
 }
 
-export async function viewParamsFlow(params: {appCode: string, id: number, pageNum: number, pageSize: number}): ResponsePageResult {
+export async function viewParamsFlow(params: { id: number}): ResponsePageResult {
   return request.get('/v1/flow/viewParams', { params });
 }
 

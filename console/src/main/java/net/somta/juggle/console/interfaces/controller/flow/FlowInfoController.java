@@ -69,24 +69,16 @@ public class FlowInfoController {
     @Operation(summary = "查看参数")
     @GetMapping("/viewParams")
     public ResponsePaginationDataResult<FlowInfoParamesVO> viewParamsFlowInfo(
-            @RequestParam("appCode") String appCode,
-            @RequestParam("id") Long id,
-            @RequestParam("pageNum") int pageNum,
-            @RequestParam("pageSize") int pageSize) {
-
+            @RequestParam("id") Long id) {
         FlowInfoSaveParam flowInfoSaveParam = new FlowInfoSaveParam();
-        flowInfoSaveParam.setAppCode(appCode);
         flowInfoSaveParam.setId(id);
-        flowInfoSaveParam.setPageNum(pageNum);
-        flowInfoSaveParam.setPageSize(pageSize);
-
         PageInfo pageInfo = flowInfoService.getFlowInfoParamsPageList(flowInfoSaveParam);
         return ResponsePaginationDataResult.setPaginationDataResult(pageInfo.getTotal(), pageInfo.getList());
     }
 
     @Operation(summary = "删除参数")
     @DeleteMapping("/deleteParam/{id}")
-    public ResponseDataResult<Boolean> deleteParamsInfo(@PathVariable Long id){
+    public ResponseDataResult<Boolean> deleteParamsInfo(@PathVariable("id") Long id){
         Boolean result = flowInfoService.deleteParamInfo(id);
         return ResponseDataResult.setResponseResult(result);
     }
