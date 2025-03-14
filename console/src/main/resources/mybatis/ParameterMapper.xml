@@ -72,9 +72,9 @@
 </select>
 
 	<select id="getParameterList" resultType="net.somta.juggle.console.infrastructure.po.flow.FlowInfoParamesPO" parameterType="net.somta.juggle.console.domain.flow.flowinfo.vo.FlowInfoParamesVO">
-		SELECT id, flow_id, headers, body
+		SELECT id, flow_id, headers, body,created_by
 		FROM t_flow_parameter
-		WHERE flow_id = #{flowId}
+		WHERE flow_id = #{flowId} AND created_by=#{createdBy}
 		  AND deleted = 0
 		ORDER BY id DESC
 	</select>

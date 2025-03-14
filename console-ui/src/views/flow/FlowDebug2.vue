@@ -281,8 +281,7 @@ const viewParams = async () => {
       pageSize: pageSize.value,
     });
 
-    console.log('API响应:', response);
-debugger
+
     if (response.success) {
       debugger
       savedParamsData.value = response.result;
@@ -337,6 +336,39 @@ const deleteRow = async (row) => {
     console.log('用户取消了删除');
   }
 };
+
+
+const enableRow = (row) => {
+  // 清空之前的 body 和 headers
+  requestBody.value = '';
+  savedParams.value.headers = [];
+
+  // 启用选中的行数据
+  if (row.headers) {
+    try {
+      headers.value = row.headers && typeof row.headers === 'string' ? JSON.parse(row.headers) : [];
+    } catch (e) {
+      ElMessage({ type: 'error', message: '解析 headers 失败' });
+    }
+  }
+
+  if (row.body) {
+    requestBody.value = row.body;
+  }
+
+  console.log('启用成功，已回填数据:', row);
+  ElMessage({ type: 'success', message: '已启用该参数，并回填数据' });
+  // 自动关闭弹窗
+  dialogVisible.value = false;
+
+  // 在数据更新后确保视图也更新
+  this.$nextTick(() => {
+    console.log('视图已更新');
+  });
+};
+
+
+
 </script>
 
 <template>
@@ -421,7 +453,7 @@ const deleteRow = async (row) => {
       <el-tab-pane label="Headers" name="requestHeader">
         <div id="app">
           <div class="header-container">
-            <div v-for="(header, index) in headers" :key="index" class="header-row">
+            <div v-for="(header, index) in headers" :key="index">
               <input v-model="header.key" class="header-input" placeholder="Header 键" />
               <input v-model="header.value" class="header-input" placeholder="Header 值" />
               <button @click="removeHeader(index)" class="btn btn-remove">删除</button>
@@ -429,6 +461,7 @@ const deleteRow = async (row) => {
             <button @click="addHeader" class="btn btn-add">添加参数</button>
           </div>
         </div>
+
       </el-tab-pane>
 <!--      <el-tab-pane label="Params" name="params">-->
 

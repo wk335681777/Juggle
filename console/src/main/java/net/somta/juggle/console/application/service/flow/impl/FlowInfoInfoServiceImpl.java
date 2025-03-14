@@ -116,6 +116,7 @@ public class FlowInfoInfoServiceImpl implements IFlowInfoService {
         FlowInfoParamesVO flowInfoParamesVO = new FlowInfoParamesVO();
         flowInfoParamesVO.setFlowId(flowInfoSaveParam.getId());
         flowInfoParamesVO.setAppCode(flowInfoSaveParam.getAppCode());
+        flowInfoParamesVO.setCreatedBy(IdentityContext.getIdentity().getUserId());
         Page<FlowInfoParamesVO> page = PageHelper.startPage(flowInfoSaveParam.getPageNum(), flowInfoSaveParam.getPageSize());
         List<FlowInfoParamesVO> flowInfoList = flowInfoRepository.queryFlowInfoParamsList(flowInfoParamesVO);
         PageInfo pageInfo = new PageInfo(flowInfoList);

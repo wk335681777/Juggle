@@ -69,10 +69,10 @@ public class FlowInfoController {
     @Operation(summary = "查看参数")
     @GetMapping("/viewParams")
     public ResponsePaginationDataResult<FlowInfoParamesVO> viewParamsFlowInfo(
-            @RequestParam String appCode,
-            @RequestParam Long id,
-            @RequestParam int pageNum,
-            @RequestParam int pageSize) {
+            @RequestParam("appCode") String appCode,
+            @RequestParam("id") Long id,
+            @RequestParam("pageNum") int pageNum,
+            @RequestParam("pageSize") int pageSize) {
 
         FlowInfoSaveParam flowInfoSaveParam = new FlowInfoSaveParam();
         flowInfoSaveParam.setAppCode(appCode);
