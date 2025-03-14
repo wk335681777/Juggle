@@ -73,7 +73,6 @@ function initPage() {
 // queryFlowDefinePage();
 
 function onSearch(param: typeof filter.value) {
-  debugger
   filter.value = param;
   onPageChange(1);
 }
@@ -297,6 +296,7 @@ function handleNodeClick(node) {
   console.log("选择的分类:", node);
   selectedNode.value = node;
   filterRef.value.changeTag(node.path);
+  filter.value.tagPath = node.path;
   queryFlowDefinePage();
 }
 
