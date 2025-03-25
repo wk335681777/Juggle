@@ -17,15 +17,15 @@ function goToApp () {
       <li>
         <a @click="goToApp" rel="noopener noreferrer">我的应用</a>
       </li>
-      <li>
-        <a href="https://www.juggle.plus/docs/guide/introduce/" target="_blank" rel="noopener noreferrer">文档</a>
-      </li>
-      <li>
-        <a href="https://www.juggle.plus/blog" target="_blank" rel="noopener noreferrer">博客</a>
-      </li>
-      <li>
-        <a href="https://www.juggle.plus/docs/changelog" target="_blank" rel="noopener noreferrer">更新日志</a>
-      </li>
+<!--      <li>-->
+<!--        <a href="https://www.juggle.plus/docs/guide/introduce/" target="_blank" rel="noopener noreferrer">文档</a>-->
+<!--      </li>-->
+<!--      <li>-->
+<!--        <a href="https://www.juggle.plus/blog" target="_blank" rel="noopener noreferrer">博客</a>-->
+<!--      </li>-->
+<!--      <li>-->
+<!--        <a href="https://www.juggle.plus/docs/changelog" target="_blank" rel="noopener noreferrer">更新日志</a>-->
+<!--      </li>-->
     </ul>
   </div>
 </template>

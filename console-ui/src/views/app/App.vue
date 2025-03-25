@@ -55,11 +55,13 @@ const resetForm = () => {
 
 async function onSubmit() {
   isSubmitting.value = true;
-  await addApp(appForm.appName, appForm.appCode, appForm.remark);
+  const { appName, appCode, remark } = appForm.value;
+  await addApp(appName, appCode, remark);
   isSubmitting.value = false;
 }
 
 async function addApp(appName: string, appCode: string, remark: string) {
+  debugger
   const res = await appService.add({
     appName: appName,
     appCode: appCode,

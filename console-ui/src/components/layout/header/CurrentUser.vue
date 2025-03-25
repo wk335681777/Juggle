@@ -37,8 +37,8 @@ function extractColorByName(name) {
     </div>
     <template #dropdown>
       <el-dropdown-menu>
-        <el-dropdown-item @click="$router.push('/userPO')">用户信息</el-dropdown-item>
-        <el-dropdown-item @click="$router.push('/about')">关于我们</el-dropdown-item>
+<!--        <el-dropdown-item @click="$router.push('/userPO')">用户信息</el-dropdown-item>-->
+<!--        <el-dropdown-item @click="$router.push('/about')">关于我们</el-dropdown-item>-->
         <el-dropdown-item @click="logout" divided>退出</el-dropdown-item>
       </el-dropdown-menu>
     </template>
