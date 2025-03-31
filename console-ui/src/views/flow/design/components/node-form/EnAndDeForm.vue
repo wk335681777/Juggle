@@ -177,12 +177,14 @@ watch(() => nodeData.value.decrypt_type, (newVal) => {
         <el-select v-model="nodeData.encrypt_type" placeholder="请选择加密方式">
           <el-option key="RSA" label="RSA" value="RSA" />
           <el-option key="3DES" label="3DES" value="3DES" />
+          <el-option key="AES"  label="AES" value="AES"/>
         </el-select>
       </el-form-item>
       <el-form-item label="解密方式" prop="decrypt_type" required v-if="nodeData.en_decrypt === '解密'">
         <el-select v-model="nodeData.decrypt_type" placeholder="请选择解密方式">
           <el-option key="RSA" label="RSA" value="RSA" />
           <el-option key="3DES" label="3DES" value="3DES" />
+          <el-option key="AES"  label="AES" value="AES"/>
         </el-select>
       </el-form-item>
 
@@ -192,7 +194,7 @@ watch(() => nodeData.value.decrypt_type, (newVal) => {
       <el-form-item label="私钥" prop="private_key" required v-if="nodeData.en_decrypt === '加密' && nodeData.encrypt_type === 'RSA'">
         <el-input v-model="nodeData.private_key" placeholder="请输入私钥"></el-input>
       </el-form-item>
-      <el-form-item label="密钥" prop="secret" required v-if="nodeData.en_decrypt === '加密' && nodeData.encrypt_type === '3DES'">
+      <el-form-item label="密钥" prop="secret" required v-if="nodeData.en_decrypt === '加密' && nodeData.encrypt_type === '3DES' || nodeData.encrypt_type==='AES'">
         <el-input v-model="nodeData.secret" placeholder="请输入密钥"></el-input>
       </el-form-item>
 
@@ -203,7 +205,7 @@ watch(() => nodeData.value.decrypt_type, (newVal) => {
       <el-form-item label="私钥" prop="private_key" required v-if="nodeData.en_decrypt === '解密' && nodeData.decrypt_type === 'RSA'">
         <el-input v-model="nodeData.private_key" placeholder="请输入私钥"></el-input>
       </el-form-item>
-      <el-form-item label="密钥" prop="secret" required v-if="nodeData.en_decrypt === '解密' && nodeData.decrypt_type === '3DES'">
+      <el-form-item label="密钥" prop="secret" required v-if="nodeData.en_decrypt === '解密' && nodeData.decrypt_type === '3DES'|| nodeData.decrypt_type==='AES'">
         <el-input v-model="nodeData.secret" placeholder="请输入密钥"></el-input>
       </el-form-item>
 
