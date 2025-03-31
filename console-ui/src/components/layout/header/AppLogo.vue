@@ -13,6 +13,6 @@ const $router = useRouter();
   justify-content: center;
   font-size: 26px;
   padding: 0 24px;
-  width: 200px;
+  //width: 200px;
 }
 </style>

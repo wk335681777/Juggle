@@ -55,9 +55,8 @@ function handleSelectionChange(rows) {
 <template>
   <el-table row-key="id" :reserve-selection="true" v-loading="loading" :data="dataRows" size="large" @selection-change="handleSelectionChange" header-cell-class-name="table-header">
     <!-- 多选框列 -->
-    <el-table-column type="selection" width="30"/>
-    <el-table-column prop="id" label="id" width="50" />
-    <el-table-column prop="flowKey" label="流程编码" width="180" />
+    <el-table-column type="selection" width="50"/>
+    <el-table-column prop="flowKey" label="流程编码" width="200" />
     <el-table-column prop="flowName" label="流程名称" width="320" />
     <el-table-column prop="flowType" label="流程类型" width="100">
       <template #default="scope">

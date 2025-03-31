@@ -32,7 +32,7 @@ const onReset = () => {
   formValue.tagPath = '';
 };
 
-async function changeTag(path) {
+function changeTag(path) {
   formValue.tagPath = path;
 }
 

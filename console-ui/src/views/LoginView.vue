@@ -6,7 +6,7 @@ import EntryBg from '@/components/entry/EntryBg.vue';
 <template>
   <EntryBg />
   <div class="entry-view">
-    <div class="entry-view-title">Juggle</div>
+    <div class="entry-view-title">集成平台</div>
     <div class="entry-view-subtitle">一个零码+低码+AI的微服务编排&系统集成的强大编排工具平台</div>
     <div class="entry-view-form">
       <LoginForm />

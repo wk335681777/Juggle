@@ -1,5 +1,6 @@
 package net.somta.juggle.console.interfaces.param.app;
 
+import jakarta.validation.constraints.NotBlank;
 import net.somta.core.base.BaseModel;
 
 /**
@@ -8,8 +9,9 @@ import net.somta.core.base.BaseModel;
  */
 public class AppAddParam {
 
+    @NotBlank
     private String appName;
-
+    @NotBlank
     private String appCode;
 
     private String remark;
