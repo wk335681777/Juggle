@@ -342,7 +342,7 @@ function closeTagDialog() {
 
 async function onSubmitTag() {
   const params = { ...tagForm }
-  params.path = tagForm.path + '/' + tagForm.code;
+  params.path = tagForm.path + '/' + tagForm.code + '/';
   let res;
   if (params.id) {
     res = await flowTagService.update(params);
