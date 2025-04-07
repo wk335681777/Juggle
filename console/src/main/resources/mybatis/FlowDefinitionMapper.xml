@@ -38,6 +38,18 @@
         ORDER BY updated_at DESC
     </select>
 
+    <select id="queryFlowDefinitionDirect" resultType="net.somta.juggle.console.domain.flow.definition.vo.FlowDefinitionInfoVO">
+        SELECT flow_key, flow_name AS flowName
+        FROM t_flow_definition
+        WHERE app_code = #{appCode}
+        AND deleted = 0
+        AND flow_content LIKE '%direct%'  <!-- 静态过滤条件 -->
+        ORDER BY updated_at DESC
+    </select>
+
+
+
+
     <select id="batchGetByIds" resultType="net.somta.juggle.console.infrastructure.po.flow.FlowDefinitionInfoPO">
         select id, app_code, flow_key as flowKey, flow_name as flowName,flow_type as flowType,flow_content as flowContent, remark
         from t_flow_definition

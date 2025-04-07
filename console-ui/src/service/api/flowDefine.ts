@@ -30,6 +30,10 @@ export async function flowDefinePage(params: { appCode: string; pageNum: number;
   return request.post(`/v1/flow/definition/${params.appCode}/page`, params);
 }
 
+export async function flowDefineList(params: { appCode: string}): ResponsePageResult {
+  return request.post(`/v1/flow/definition/${params.appCode}/directList`, params);
+}
+
 export async function deleteFlowDefine(id: number): ResponseResult<boolean> {
   return request.delete(`/v1/flow/definition/delete/${id}`);
 }

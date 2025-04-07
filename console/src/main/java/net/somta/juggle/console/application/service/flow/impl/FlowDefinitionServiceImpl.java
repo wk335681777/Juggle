@@ -41,9 +41,9 @@ import net.somta.juggle.console.domain.flow.version.vo.FlowVersionQueryVO;
 import net.somta.juggle.console.domain.parameter.ParameterEntity;
 import net.somta.juggle.console.domain.flow.definition.repository.IVariableInfoRepository;
 import net.somta.juggle.console.domain.flow.definition.vo.VariableInfoVO;
+import net.somta.juggle.console.infrastructure.mapper.flow.FlowDefinitionMapper;
 import net.somta.juggle.console.infrastructure.mapper.flow.FlowTagRelationMapper;
 import net.somta.juggle.console.infrastructure.po.flow.FlowDefinitionInfoPO;
-import net.somta.juggle.console.infrastructure.po.flow.FlowTagRelationPO;
 import net.somta.juggle.console.interfaces.dto.flow.FlowDefinitionExportDTO;
 import net.somta.juggle.console.interfaces.dto.flow.FlowDefinitionInfoDTO;
 import net.somta.juggle.common.param.TriggerDataParam;
@@ -73,6 +73,7 @@ public class FlowDefinitionServiceImpl implements IFlowDefinitionService {
     private final IVariableInfoRepository variableInfoRepository;
     private final IFlowInfoRepository flowRepository;
     private final IFlowDefinitionRepository flowDefinitionRepository;
+    private final FlowDefinitionMapper flowDefinitionMapper;
     @Resource
     private IDeployMaster deployMaster;
     @Value("${camel.worker.rest.dev.port}")
@@ -80,11 +81,12 @@ public class FlowDefinitionServiceImpl implements IFlowDefinitionService {
     @Autowired
     private FlowTagRelationMapper flowTagRelationMapper;
 
-    public FlowDefinitionServiceImpl(IFlowRuntimeService flowRuntimeService, IVariableInfoRepository variableInfoRepository, IFlowInfoRepository flowRepository, IFlowDefinitionRepository flowDefinitionRepository) {
+    public FlowDefinitionServiceImpl(IFlowRuntimeService flowRuntimeService, IVariableInfoRepository variableInfoRepository, IFlowInfoRepository flowRepository, IFlowDefinitionRepository flowDefinitionRepository, FlowDefinitionMapper flowDefinitionMapper) {
         this.flowRuntimeService = flowRuntimeService;
         this.variableInfoRepository = variableInfoRepository;
         this.flowRepository = flowRepository;
         this.flowDefinitionRepository = flowDefinitionRepository;
+        this.flowDefinitionMapper = flowDefinitionMapper;
     }
 
     @Override
@@ -347,6 +349,7 @@ public class FlowDefinitionServiceImpl implements IFlowDefinitionService {
         }
     }
 
+
     @Override
     public Boolean draftFlowDefinition(FlowDefinitionDraftParam flowDefinitionDraftParam) {
         FlowVersionQueryVO flowVersionQueryVO = new FlowVersionQueryVO();
@@ -354,6 +357,11 @@ public class FlowDefinitionServiceImpl implements IFlowDefinitionService {
         flowVersionQueryVO.setFlowKey(flowDefinitionDraftParam.getFlowKey());
         flowVersionQueryVO.setFlowId(flowDefinitionDraftParam.getId());
         return flowDefinitionRepository.draftFlowDefinition(flowVersionQueryVO);
+    }
+
+    @Override
+    public List<FlowDefinitionInfoVO> getFlowDefinitionsByAppCode(String appCode) {
+        return flowDefinitionMapper.queryFlowDefinitionDirect(appCode);
     }
 
     public static void main(String[] args) {

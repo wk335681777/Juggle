@@ -45,6 +45,7 @@ import net.somta.juggle.core.model.node.data.MysqlNode;
         @JsonSubTypes.Type(value = HttpNode.class, name = "HTTP"),
         @JsonSubTypes.Type(value = DynamicRouteNode.class, name = "DYNAMIC_ROUTE"),
         @JsonSubTypes.Type(value = RecipientListNode.class, name = "RECIPIENT_LIST"),
+        @JsonSubTypes.Type(value = RedirectNode.class, name = "REDIRECT"),
         @JsonSubTypes.Type(value = TransformNode.class, name = "TRANSFORM"),
         @JsonSubTypes.Type(value = MarshalNode.class, name = "MARSHAL"),
         @JsonSubTypes.Type(value = UnmarshalNode.class, name = "UNMARSHAL"),

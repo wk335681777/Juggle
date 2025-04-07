@@ -81,6 +81,13 @@ const flowNodes = [
     type: ElementType.RECIPIENT_LIST,
     icon: IconCode,
   },
+
+  {
+    name: 'Redirect',
+    type: ElementType.REDIRECT,
+    icon: IconCode,
+  },
+
   {
     name: 'WebService',
     type: ElementType.WEBSERVICE,

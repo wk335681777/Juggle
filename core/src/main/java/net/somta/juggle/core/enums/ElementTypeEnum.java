@@ -56,6 +56,7 @@ public enum ElementTypeEnum {
     DIRECT,
     DYNAMIC_ROUTE,
     RECIPIENT_LIST,
+    REDIRECT,
     HTTP ,
     MARSHAL,
     UNMARSHAL ,

@@ -7,6 +7,7 @@ export function useFlowDataProvide() {
     flowKey: '',
     flowName: '',
     flowType: '',
+    appCode:'',
     flowContent: [],
     flowInputParams: [],
     flowOutputParams: [],

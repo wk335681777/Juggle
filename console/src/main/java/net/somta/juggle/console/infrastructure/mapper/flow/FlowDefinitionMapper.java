@@ -42,4 +42,7 @@ public interface FlowDefinitionMapper extends IBaseMapper {
     void batchAdd(@Param("list") List<FlowDefinitionInfoPO> flowDefinitionInfoPoLit);
 
     void batchUpdate(@Param("appCode") String appCode, @Param("list") List<FlowDefinitionInfoPO> flowDefinitionInfoPoLit);
+
+    List<FlowDefinitionInfoVO> queryFlowDefinitionDirect(@Param("appCode") String appCode);
+
 }

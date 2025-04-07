@@ -69,6 +69,10 @@ export const nodeMap = {
     nodeName: 'RecipientList',
     nodeHeaderColor: '#b471e7',
   },
+  [ElementType.REDIRECT]: {
+    nodeName: 'Redirect',
+    nodeHeaderColor: '#b471e7',
+  },
   [ElementType.WEBSERVICE]: {
     nodeName: 'WebService',
     nodeHeaderColor: '#b471e7',

@@ -36,6 +36,7 @@ export class DrawNodeHelper {
             case ElementType.SET_HEADER:
             case ElementType.UNMARSHAL:
             case ElementType.RECIPIENT_LIST:
+            case ElementType.REDIRECT:
             case ElementType.WEBSERVICE:
             case ElementType.EN_AND_DE://加解密
             case ElementType.YDA_SM4://英大国密
@@ -76,7 +77,7 @@ export class DrawNodeHelper {
         }
         if ([ElementType.METHOD, ElementType.CODE, ElementType.MYSQL,ElementType.LOG,ElementType.HTTP,ElementType.MARSHAL,
             ElementType.UNMARSHAL,ElementType.DIRECT,ElementType.DYNAMIC_ROUTE,ElementType.SET_HEADER,ElementType.TRANSFORM
-            ,ElementType.NETTY_HTTP,ElementType.CONVERT_BODY_TO,ElementType.RECIPIENT_LIST,ElementType.WEBSERVICE,
+            ,ElementType.NETTY_HTTP,ElementType.CONVERT_BODY_TO,ElementType.RECIPIENT_LIST,ElementType.REDIRECT,ElementType.WEBSERVICE,
             ElementType.EN_AND_DE,ElementType.YDA_SM4,ElementType.FEIGN,ElementType.SCRIPT,ElementType.SET_HEADERS,ElementType.SET_BODY].includes(data.type)) {
             this.drawAddIcon(container, node, type);
         }

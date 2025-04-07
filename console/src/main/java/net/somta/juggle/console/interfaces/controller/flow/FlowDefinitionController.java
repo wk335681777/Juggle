@@ -33,6 +33,7 @@ import net.somta.juggle.console.application.service.flow.IDeployMaster;
 import net.somta.juggle.console.application.service.flow.IFlowDefinitionService;
 import net.somta.juggle.console.domain.flow.definition.FlowDefinitionAO;
 import net.somta.juggle.console.domain.flow.definition.enums.FlowDefinitionErrorEnum;
+import net.somta.juggle.console.domain.flow.definition.vo.FlowDefinitionInfoVO;
 import net.somta.juggle.console.exception.BusinessException;
 import net.somta.juggle.console.interfaces.dto.flow.DeployDTO;
 import net.somta.juggle.console.interfaces.dto.flow.FlowDefinitionExportDTO;
@@ -56,6 +57,7 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static net.somta.juggle.common.constants.ApplicationConstants.JUGGLE_SERVER_VERSION;
 import static net.somta.juggle.console.domain.flow.definition.enums.FlowDefinitionErrorEnum.*;
@@ -173,7 +175,6 @@ public class FlowDefinitionController {
         return ResponseDataResult.setResponseResult(flowDefinitionInfoDTO);
     }
 
-
     /**
      * 获取流程列表
      * @param flowDefinitionPageParam 变量实体参数
@@ -185,6 +186,17 @@ public class FlowDefinitionController {
         flowDefinitionPageParam.setAppCode(appCode);
         PageInfo pageInfo = flowDefinitionService.getFlowDefinitionPageList(flowDefinitionPageParam);
         return ResponsePaginationDataResult.setPaginationDataResult(pageInfo.getTotal(),pageInfo.getList());
+    }
+
+    @Operation(summary = "获取流程定义包含 direct 列表")
+    @PostMapping("/{appCode}/directList")
+    public List<FlowDefinitionInfoVO> getFlowDefinitionDirectList(@PathVariable("appCode") String appCode) {
+        // 调用服务层方法获取所有流程定义
+        List<FlowDefinitionInfoVO> allFlows = flowDefinitionService.getFlowDefinitionsByAppCode(appCode);
+
+        // 返回所有流程定义
+        return allFlows;
+
     }
 
     /**

@@ -22,6 +22,7 @@ import FeignForm from "@/views/flow/design/components/node-form/FeignForm.vue";
 import ScriptForm from "@/views/flow/design/components/node-form/ScriptForm.vue";
 import SetHeadersForm from "@/views/flow/design/components/node-form/SetHeadersForm.vue";
 import SetBodyForm from "@/views/flow/design/components/node-form/SetBodyForm.vue";
+import RedirectForm from "@/views/flow/design/components/node-form/RedirectForm.vue";
 
 
 const nodeFormMap = {
@@ -41,6 +42,7 @@ const nodeFormMap = {
   [ElementType.SET_HEADER]: SetHeaderForm,
   [ElementType.TRANSFORM]: TransformForm,
   [ElementType.RECIPIENT_LIST]: RecipientListForm,
+  [ElementType.REDIRECT]: RedirectForm,
   [ElementType.WEBSERVICE]: WebServiceForm,
   [ElementType.EN_AND_DE]: EnAndDeForm,//加解密
   [ElementType.YDA_SM4]: YingDaEncryptForm,//英大国密
