@@ -79,7 +79,7 @@ public class MockServiceImpl implements IMockService {
             return ResponsePaginationDataResult.setPaginationDataResult(count, Collections.emptyList());
         }
 
-        List<MockPO> mockPOList = mockRepository.queryList(param);
+        List<MockPO> mockPOList = mockRepository.pageQuery(param);
         List<MockDTO> mockDTOList = MockConverter.convert(mockPOList);
 
         return ResponsePaginationDataResult.setPaginationDataResult(count, mockDTOList);

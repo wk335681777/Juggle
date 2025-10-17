@@ -22,4 +22,6 @@ public interface IMockRepository {
     MockPO getByMockKey(String appCode, String mockKey);
 
     List<MockPO> queryList(MockQueryParam param);
+
+    List<MockPO> pageQuery(MockQueryParam param);
 }

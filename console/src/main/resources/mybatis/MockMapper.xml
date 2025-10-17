@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.somta.juggle.console.infrastructure.mapper.MockMapper" >
+
+
+
+<select id="pageQuery" resultMap="BaseResultMap" parameterType="net.somta.juggle.console.interfaces.param.mock.MockQueryParam">
+	select id, app_code, name, mock_key, url, conditions, remark, created_at, created_by, updated_at, updated_by, deleted
+	from t_mock
+	where 1=1 and deleted=0
+	<if test="name != null and name != ''">
+		and name like concat("%", #{name}, "%")
+	</if>
+	<if test="url != null and url != ''">
+		and url like concat("%", #{url}, "%")
+	</if>
+	<if test="mockKey != null and mockKey != ''">
+		and mock_key = #{mockKey}
+	</if>
+	and app_code = #{appCode}
+	limit #{offset}, #{pageSize}
+</select>
+
+</mapper>

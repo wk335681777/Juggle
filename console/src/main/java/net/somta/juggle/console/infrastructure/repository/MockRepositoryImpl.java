@@ -55,4 +55,9 @@ public class MockRepositoryImpl implements IMockRepository {
     public List<MockPO> queryList(MockQueryParam param) {
         return mockMapper.queryByList(param);
     }
+
+    @Override
+    public List<MockPO> pageQuery(MockQueryParam param) {
+        return mockMapper.pageQuery(param);
+    }
 }
