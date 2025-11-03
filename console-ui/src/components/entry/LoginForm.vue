@@ -6,8 +6,8 @@ import { ElMessage } from 'element-plus';
 import { userService } from '@/service';
 const router = useRouter();
 
-const userName = ref('juggle');
-const password = ref('juggle');
+const userName = ref('');
+const password = ref('');
 const loading = ref(false);
 
 async function submit() {
