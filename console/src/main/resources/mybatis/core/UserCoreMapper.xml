@@ -36,9 +36,6 @@
 <update id="update" parameterType="net.somta.juggle.console.infrastructure.po.UserPO" >
 	update t_user set
 	<trim  suffixOverrides="," >
-		<if test="apiUrl != null and apiUrl != ''">
-			api_url=#{apiUrl},
-		</if>
 		<if test="password != null and password != ''">
 			password=#{password},
 		</if>
@@ -78,4 +75,4 @@
 </select>
 
 
-</mapper>   
+</mapper>

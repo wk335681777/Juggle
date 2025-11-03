@@ -90,7 +90,7 @@ public class UserController {
 
     @Operation(summary = "修改密码")
     @PutMapping("/updatePassword")
-    public ResponseDataResult<Boolean> updatePassword(UpdatePasswordParam updatePasswordParam){
+    public ResponseDataResult<Boolean> updatePassword(@RequestBody UpdatePasswordParam updatePasswordParam){
         UserAO userAo = userService.queryUserById(updatePasswordParam.getUserId());
         if(userAo == null){
             return ResponseDataResult.setErrorResponseResult(UserErrorEnum.USER_NOT_EXIST_ERROR);
