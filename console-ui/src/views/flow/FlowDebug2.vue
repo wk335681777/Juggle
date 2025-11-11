@@ -264,6 +264,8 @@ const viewParams = async () => {
   try {
     const response = await viewParamsFlow({
       id: savedParams.value.id,
+      pageNum: currentPage.value,
+      pageSize: pageSize.value,
     });
 
 
@@ -402,12 +404,12 @@ const enableRow = (row) => {
 
       <!-- 分页 -->
       <el-pagination
-        v-if="totalRecords > 0"
-        :current-page="currentPage"
-        :page-size="pageSize"
-        :total="totalRecords"
-        @current-change="handlePageChange"
-        layout="total, prev, pager, next, jumper"
+          v-if="totalRecords > 0"
+          v-model:current-page="currentPage"
+          :page-size="pageSize"
+          :total="totalRecords"
+          @current-change="handlePageChange"
+          layout="total, prev, pager, next, jumper"
       />
 
       <el-form-item>

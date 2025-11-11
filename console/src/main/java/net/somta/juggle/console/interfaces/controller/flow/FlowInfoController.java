@@ -66,13 +66,21 @@ public class FlowInfoController {
         return ResponseDataResult.setResponseResult(result);
     }
 
-    @Operation(summary = "查看参数")
+    @Operation(summary = "查看参数（分页）")
     @GetMapping("/viewParams")
     public ResponsePaginationDataResult<FlowInfoParamesVO> viewParamsFlowInfo(
-            @RequestParam("id") Long id) {
-        FlowInfoSaveParam flowInfoSaveParam = new FlowInfoSaveParam();
-        flowInfoSaveParam.setId(id);
-        PageInfo pageInfo = flowInfoService.getFlowInfoParamsPageList(flowInfoSaveParam);
+            @RequestParam("id") Long id,
+            @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
+            @RequestParam(value = "pageSize", defaultValue = "10") int pageSize){
+
+        if (id == null || id <= 0) {
+            throw new IllegalArgumentException("无效的流程ID");
+        }
+        FlowInfoSaveParam param = new FlowInfoSaveParam();
+        param.setId(id);
+        param.setPageNum(pageNum);
+        param.setPageSize(pageSize);
+        PageInfo pageInfo = flowInfoService.getFlowInfoParamsPageList(param);
         return ResponsePaginationDataResult.setPaginationDataResult(pageInfo.getTotal(), pageInfo.getList());
     }
 
